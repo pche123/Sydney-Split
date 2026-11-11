@@ -38,7 +38,7 @@ A real *line* should ideally name **one specific split within a hierarchy**, not
 
 - `index.html`: standalone public-facing app; ready for hosting once GitHub Pages is configured.
 - `src/app.js`, `src/index.template.html`, `src/atlas-data.json`, `src/compile.py`: editable source and reproducible compile step.
-- `data/`: compact, derived public ABS inputs; original large ABS downloads are not redistributed in this repo.
+- `data/`: derived public ABS inputs (SA1 table is also provided as bzip2 for repository distribution); original large ABS downloads are not redistributed in this repo.
 - `scripts/build_geography.py`, `scripts/build_derived.py`: documented regeneration steps from official ABS 2021 shapefile ZIPs and provided extracted SEIFA tables.
 - `tests/test_integrity.py`: offline data/HTML integrity check.
 - `docs/`: methods, coverage and methodological caveats, user-experience and research roadmap.
