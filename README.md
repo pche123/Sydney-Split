@@ -33,6 +33,15 @@ The invisible lines that cut Sydney in two: the Latte Line, the Red Rooster Line
 | Venue history | `python venue_history.py data/sydney_sa2_300.geojson venue_history.csv` (needs internet) | café, fast-food and chain counts per suburb, 2012–2026 |
 | App | `bash build_app.sh` | `sydney_split_app.html` (copy to `index.html`) |
 
+## Tokyo (work in progress)
+
+| Step | Command | Makes |
+|---|---|---|
+| Census downloads (2000–2015) | `python tokyo_download.py tokyo_timeline` | one zip per table, per year |
+| Venues | `python tokyo_places.py kanto-latest.osm.pbf tokyo_places.csv` | cafés, shops, bars, stations |
+| Neighbourhoods | `python build_tokyo.py <2020 folder> tokyo_places.csv out` | ~1,600 neighbourhoods (町) with Census and venue signals |
+| Lines and chain wars | `python tokyo_wars.py out` | tested lines, `tokyo_gallery.png` |
+
 ## How the checks work (short version)
 
 - **Is a line real?** We compare its border with 199+ random versions of Sydney that keep the same smoothness (Moran spectral randomisation, Wagner & Dray 2015), rerunning the whole search when many lines were tried.
