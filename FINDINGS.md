@@ -53,4 +53,21 @@ Short, plain conclusions from the tests. "Beats chance" means the line is cleane
 - **The Grey Flip:** in 2000 the inner wards were older than Tama (16.8% vs 14.1% aged 65+). By 2020 it had reversed (21.1% vs 25.3%). New towns built for young families in the 1970s–80s (Tama, Machida, Hachiōji) aged in place, some going from 10% to 45% aged 65+, while old downtown (Kuramae, Torigoe, Toranomon, Minato) got younger. Where old people live in 2020 is almost unrelated to where they lived in 2000 (rank correlation 0.06), even though the tower and living-alone maps barely changed (0.83, 0.85).
 - Caveat: the Census changed its job categories in 2010, so the hi-vis share drops at 2010 partly for that reason. Comparisons use each neighbourhood's rank within its year, which is unaffected.
 
-**Ramen data:** OpenStreetMap has about 2,800 ramen shops in Tokyo; from names and known chains we can tell the style of about 900 (classic shoyu 237, iekei 126, Hakata 126, tsukemen 98, Jiro-style 87, miso 79, kotteri 61). HotPepper listings are the next step.
+**HotPepper lines** (32,798 listings, restaurant data Powered by ホットペッパー Webサービス; "nearby" = within 1 km, about a 12–15 minute walk):
+
+| Line | Verdict | What it shows |
+|---|---|---|
+| Price Line | Beats chance, strongly | The typical dinner nearby costs most around Azabu, Shirokane and Minami-Aoyama and least around Jūjō and Ōji in Kita. It follows the Hi-Vis Line on 70% of neighbourhoods: expensive dinners sit on the laptop side. Across neighbourhoods, the typical dinner band runs from about ¥2,500 to ¥4,500. |
+| Late-Night Line | Beats chance | Places open past midnight lean towards renters and people living alone (Mishuku, Nakano, Mizue); early closers cluster around Higashi-Shinagawa, Yayoi and Nezu. It barely overlaps the Hi-Vis Line (52%): night life is its own map. |
+| Izakaya vs Italian & French | Beats chance | Izakaya dominate in the north and east (Nishiarai, Kamiya, Saginomiya); Italian and French hold their own in Shirokane, Minami-Azabu and Ōmiya in Suginami. Izakaya-leaning areas are younger, with more renters and people living alone. |
+| Bars vs Izakaya | Beats chance | Bars and bals outweigh izakaya in Shirokane, Azabu and Roppongi, and where more people are self-employed; izakaya hold the night out in Edogawa, Adachi and Akishima. |
+| Yakiniku Line | Beats chance | Yakiniku is a bigger share of the food in builder and driver areas (Akishima, Hachiōji, Higashiyamato), and a small one around Komaba and Hakusan. Same route as the Hi-Vis Line on 70% of neighbourhoods. |
+
+**Ramen Wars (OpenStreetMap + HotPepper merged):** 3,158 ramen shops, 1,208 with a known style (classic shoyu 418, Hakata 178, iekei 141, tsukemen 124, miso 97, Jiro-style 89, kotteri 64).
+
+| Match-up | Verdict | What it shows |
+|---|---|---|
+| Iekei vs Hakata tonkotsu | Could be chance (closest) | Iekei holds the outer suburbs and older areas (Machida, Hamura, Nerima's Doshida); Hakata holds Ryōgoku, Roppongi and Kamiya. Raw p = 0.026, but after correcting for five match-ups it is 0.13. |
+| Iekei vs classic shoyu | Could be chance | Mixed. |
+| Tsukemen vs other ramen | Could be chance | Tsukemen leans to Kanamechō and Senkawa in Toshima, Chōfu and Akasaka; other ramen to Hachiōji. Weaker than in the OSM-only run. |
+| Jiro-style vs classic shoyu; Miso vs Hakata | Could be chance | No real split: Tokyo's ramen styles mostly live side by side. |
