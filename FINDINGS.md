@@ -30,6 +30,26 @@ Short, plain conclusions from the tests. "Beats chance" means the line is cleane
 
 ## Tokyo (first pass)
 
+**In the app (454 neighbourhoods of about 30,000 people; verdicts corrected for trying several lines in each group):**
+
+| Line | Verdict | What it shows |
+|---|---|---|
+| Hi-Vis Line | Beats chance, strongly | A professional core from central Tokyo west to Kichijōji; hi-vis jobs in the east (Hanahata, Mutsugi, Nishi-Mizumoto) and the outer west. |
+| Factory Line, Laptop vs Hard Hat Line | Beats chance, strongly | Both retrace the Hi-Vis Line (90%+ of neighbourhoods). |
+| Boomer vs Builder Line | Beats chance | Older and fewer builders in Seijō and Tama; younger with more builders around Shinbori and Kasai. Only 57% the same route as the Hi-Vis Line. |
+| Living Alone Line, Grey Line | Beats chance | One-person homes in Nishi-Shinjuku and Kōenji; over-65s in the Tama new towns. |
+| Latte Line | Could be chance (close) | Cafés lead in Minami-Aoyama, Daita and Tsukiji, fast food in the north-east; same route as the Hi-Vis Line on 72%. Raw p = 0.03, 0.08 after correction: Tokyo's Latte Line is faint compared with Sydney's (p = 0.002). |
+| Coffee vs Alcohol | Beats chance | Cafés lean towards Todoroki and other family areas; izakaya and bars elsewhere. |
+| My Basket vs the Konbini | Beats chance | Mini-supermarkets in the dense inner wards; konbini everywhere else. |
+| Izakaya vs Italian & French | Beats chance | Izakaya in Nishiarai, Saginomiya and Ōmori; Italian and French hold their own in Jindaiji and the south-west. |
+| Konbini, Gyudon, Starbucks vs Doutor, Ramen Wars | Could be chance | Chains mostly compete shop by shop. |
+| Shrines vs Temples | Could be chance | No shrine side and temple side. Japan's Census doesn't ask about religion, so this counts buildings only; the shrine-vs-temple balance barely relates to the share of over-65s (rank correlation 0.07). |
+| Price, Late-Night, Bars vs Izakaya, Yakiniku | Could be chance at this scale | These pass on the finer 1,402-町 map below, but not after merging into larger neighbourhoods and correcting for several night-time lines. |
+
+**Grey Flip in the app:** only 48% of neighbourhoods are on the same side of the Grey Line in 2020 as in 2000, no better than two unrelated maps (about 52%). The Hi-Vis (86%), Living Alone (88%) and Tower (90%) lines barely moved.
+
+**Finer-grained checks (1,402 町):**
+
 1,402 neighbourhoods (町, all their 丁目 merged), about 13.6 million people. Census 2020 plus OpenStreetMap venues (Nov 2026).
 
 | Line | Verdict | What it shows |

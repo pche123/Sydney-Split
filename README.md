@@ -2,7 +2,7 @@
 
 The invisible lines that cut Sydney in two: the Latte Line, the Red Rooster Line and a dozen more, found in the Census, café and shop maps, and liquor licences. Every line is checked against random versions of Sydney, so you can tell real patterns from coincidences.
 
-**Open the app:** `index.html` (one self-contained file, works offline). With GitHub Pages enabled it lives at `https://pche123.github.io/Sydney-Split/`.
+**Open the app:** `index.html` (Sydney) and `tokyo.html` (Tokyo) (one self-contained file, works offline). With GitHub Pages enabled it lives at `https://pche123.github.io/Sydney-Split/`.
 
 ## What you can do
 
@@ -45,6 +45,7 @@ What we found so far, in plain words: [FINDINGS.md](FINDINGS.md).
 | Lines and chain wars | `python tokyo_wars.py out` | tested lines, `tokyo_gallery.png` |
 | 2000–2020 | `python tokyo_timeline.py tokyo_timeline <2020 folder> out` | Hi-Vis Line over time, ageing, towers |
 | HotPepper restaurants | `python hotpepper_tokyo.py YOUR_KEY hotpepper_tokyo.csv` | every listed Tokyo restaurant, incl. ramen style blurbs |
+| Tokyo app | `python tokyo_app_export.py out hotpepper_tokyo.csv tplaces.pkl app_data_tokyo.json` then `python make_tokyo_page.py app_template.html app_data_tokyo.json tokyo.html` | ~450 neighbourhoods, all lines re-tested, the Tokyo page |
 | HotPepper lines + Ramen Wars | `python tokyo_hp.py out hotpepper_tokyo.csv` | price, late-night, izakaya and ramen-style tests, `tokyo_hp_gallery.png` |
 
 ## How the checks work (short version)
