@@ -96,3 +96,31 @@ Short, plain conclusions from the tests. "Beats chance" means the line is cleane
 | Iekei vs classic shoyu | Could be chance | Mixed. |
 | Tsukemen vs other ramen | Could be chance | Tsukemen leans to Kanamechō and Senkawa in Toshima, Chōfu and Akasaka; other ramen to Hachiōji. Weaker than in the OSM-only run. |
 | Jiro-style vs classic shoyu; Miso vs Hakata | Could be chance | No real split: Tokyo's ramen styles mostly live side by side. |
+
+---
+
+## Sharp edges or gentle slopes? (experiments, November 2026)
+
+The line tests ask one question: *if you split the map in half, is the border shorter than chance?* These experiments ask a second one: *is the change concentrated at the border (a cliff), or is the border just the middle of a long, gentle hill (a slope)?* Code: `pipeline/experiments/`. Tables: `results/`.
+
+**In plain words**
+- **Almost every line is a slope, not a cliff, in both cities.** The patterns are real, but things change gradually over roughly 1–4 km. No line shows a step on top of the smooth trend once the tests are made fair (below). Closest calls: Tokyo's Indie Café Line (p = 0.04 at a 2 km scale, one of many tests, so not convincing) and Pho vs Pad Thai (passes one version, fails the stricter one).
+- **"Which shop is closer" lines can't be cliffs by design.** Distance to the nearest store changes smoothly as you walk, so those lines are always slopes. The tests confirm this strongly.
+- **Big correction: the Sydney Aldi Line doesn't hold up.** When the test simulates the actual shops (a "data-level" test, below) instead of a smoothed map, the Aldi Line goes from p = 0.024 to p = 0.83. It's based on only 340 supermarkets, and the old test was fooled by how few shops each area has.
+- **Some lines get stronger.** With the same data-level test, Tokyo's Latte Line (p = 0.003), Coffee vs Alcohol (0.004), Indie Café (0.01) and Izakaya vs Italian & French (0.01) all beat chance. Sydney's Latte Line stays very strong (0.001).
+- **Some get weaker.** Tokyo's Late-Night Line (0.92), Bars vs Izakaya (0.50) and Ramen vs Soba (0.48) look like chance at the 454-neighbourhood level. Sydney's Pho vs Pad Thai (0.55) and Bubble Tea (0.88) stay "could be chance".
+- **Not rechecked yet:** lines built from licence counts per resident (Sydney Late Night, Pokies, Small Bar) and Tokyo's Price Line. They need a different simulation.
+
+**What we learned about the method (the rigorous part)**
+1. **Sharpness statistics.** We tried three:
+   - *Jump concentration* (JC): how much steeper the change is on edges crossing the line than on other edges.
+   - *Step-over-smooth* (STEP): how much the side of the line explains, once the 10 smoothest map patterns are already in.
+   - *Regression discontinuity* (RD): fit a curve to each side of the border and measure the jump between them.
+   A fourth, gradient sparsity, was dropped: it measures the whole map, not the line.
+2. **The usual random-map null (MSR) is unfair to slopes.** A plain ramp or a "distance from the CBD" hill was called a cliff up to 64% of the time, when it should be 5%.
+3. **Fix for census maps: a distance-aware "slope" null.** Fit the smoothest surface that bends no faster than about 3 km (Gaussian-kernel ridge on real distances, penalty chosen by cross-validation). Keep that surface, scramble only the leftovers with MSR, and re-run everything. On simulated slopes, STEP is called a cliff ≤ 2.5% of the time and JC ≤ 8.5%, and real steps are still detected.
+4. **That fix fails for venue maps, and so did the original line test.** Venue maps are built from small, overlapping counts (an area plus its neighbours in Sydney; 1 km circles in Tokyo). We fed the original line test venue labels with *no geography at all*. It still said "line" 33–93% of the time on most lines, instead of 5%. Fake plateaus and uneven counts fool any test that works on the finished map.
+5. **Fix for venue maps: simulate the shops themselves.** Keep every venue where it is and randomly re-assign which ones are cafés and which are fast food. Then recount with the app's exact rule and formula, and re-run the test.
+   - **For the line test** ("data-level MSR"): the café-vs-fast-food preference surface is randomised with the same smoothness, which gives false-positive rates of 0–8%.
+   - **For sharpness**: the preference is re-drawn from a 2 km smoothed version of the data. This is well calibrated (2–9%) when the true pattern is broader than the test scale.
+6. **Lesson for the paper:** a permutation test is only as honest as its simulation. If the data are counts, simulate the counts, not the map.
