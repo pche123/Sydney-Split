@@ -54,6 +54,6 @@ What we found so far, in plain words: [FINDINGS.md](FINDINGS.md).
 
 ## Credits and licences
 
-ABS Census and ASGS data © Commonwealth of Australia (CC BY 4.0). Venue data © OpenStreetMap contributors (ODbL). Liquor licence data © NSW Liquor & Gaming (CC BY 4.0). A suburb's colour describes the area, not the people in it. The Census asks about birthplace, ancestry and religion, not race or ethnicity.
+ABS Census and ASGS data © Commonwealth of Australia (CC BY 4.0). Venue data © OpenStreetMap contributors (ODbL). Liquor licence data © NSW Liquor & Gaming (CC BY 4.0). Tokyo: Census data © Statistics Bureau of Japan via e-Stat. Restaurant listings Powered by ホットペッパー Webサービス (HotPepper Gourmet); check Recruit's current terms before any paid use. A suburb's colour describes the area, not the people in it. The Census asks about birthplace, ancestry and religion, not race or ethnicity.
 
 An earlier prototype is kept at the git tag `v0-chatgpt-prototype`.
