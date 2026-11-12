@@ -48,6 +48,29 @@ w = U.population.clip(lower=1)
 G = U.dissolve("N", aggfunc={"population": "sum", "CITY_NAME": "first"}).sort_index().reset_index()
 for c in shares: G[c] = (U[c].fillna(U[c].median()) * w).groupby(U.N).sum().values / w.groupby(U.N).sum().values
 G["density"] = G.population / (G.area / 1e6)
+# ---- extra 2020 Census tables from e-Stat's file section: foreign residents, education, commuting
+def estat(path, hdr):
+    t = pd.read_csv(path, encoding="cp932", header=None, skiprows=hdr + 1, dtype=str)
+    cols = pd.read_csv(path, encoding="cp932", header=None, skiprows=hdr, nrows=1, dtype=str).iloc[0].tolist()
+    t.columns = [f"{c}_{k}" if cols.count(c) > 1 else c for k, c in enumerate(cols)]
+    if "男女" in t: t = t[t["男女"] == "総数"]
+    t = t[t["地域階層レベル"].isin(["2", "3"]) & (t["町丁字コード"].str.len() == 4)]
+    t["U"] = t["市区町村コード"] + t["町丁字コード"]
+    return t.set_index("U")
+num = lambda x: pd.to_numeric(x, errors="coerce").fillna(0)
+xdir = os.path.join(os.path.dirname(os.path.abspath(tpl)), "extra")
+fo = estat(f"{xdir}/c919f8a5-h02_13.csv", 4); ed = estat(f"{xdir}/903ca4e4-h13_13.csv", 3); cm = estat(f"{xdir}/2e0e825e-h17_02_13.csv", 4)
+X = pd.DataFrame(index=U.U)
+X["pop_all"] = num(fo["総数"]).reindex(U.U).values; X["foreign"] = num(fo[fo.columns[-2]]).reindex(U.U).values
+X["grads"] = (num(ed["卒業者"]) - num(ed["（卒業者）不詳"])).reindex(U.U).values; X["degree"] = (num(ed["（卒業者）大学"]) + num(ed["（卒業者）大学院"])).reindex(U.U).values
+X["commuters"] = num(cm["総数"]).reindex(U.U).values
+for k, c in [("train", "鉄道・電車"), ("car", "自家用車"), ("bike", "自転車"), ("walk", "徒歩のみ"), ("bus", "乗合バス")]: X[k] = num(cm[c]).reindex(U.U).values
+X = X.fillna(0); XN = X.groupby(U.N.values).sum().sort_index()
+G["foreign_residents"] = XN.foreign.values / XN.pop_all.replace(0, np.nan).values
+G["uni_degree"] = XN.degree.values / XN.grads.replace(0, np.nan).values
+for k in ["train", "car", "bike", "walk", "bus"]: G[k + "_commute"] = XN[k].values / XN.commuters.replace(0, np.nan).values
+print("Tokyo-wide: foreign %.1f%%, degree %.1f%%, train %.1f%%, car %.1f%%" % (100 * XN.foreign.sum() / XN.pop_all.sum(), 100 * XN.degree.sum() / XN.grads.sum(),
+      100 * XN.train.sum() / XN.commuters.sum(), 100 * XN.car.sum() / XN.commuters.sum()))
 top = U.loc[U.groupby("N").population.idxmax()].set_index("N").sort_index()
 G["jp"] = top.CITY_NAME.values + top.NAME.values
 G["short"] = [place(x) for x in top.NAME.values]
@@ -122,7 +145,12 @@ LBL = {  # id: (label, more ..., fewer ...)
  "ind_health": ("Health & care workers", "more health & care workers", "fewer health & care workers"), "ind_construction": ("Construction", "more construction workers", "fewer construction workers"),
  "ind_transport": ("Transport & logistics", "more transport & logistics workers", "fewer transport & logistics workers"),
  "ind_retail": ("Retail & wholesale", "more retail & wholesale workers", "fewer retail & wholesale workers"),
- "self_employed": ("Self-employed", "more self-employed people", "fewer self-employed people"), "density": ("Density", "more people per km²", "fewer people per km²"),
+ "self_employed": ("Self-employed", "more self-employed people", "fewer self-employed people"),
+ "uni_degree": ("University graduates", "more university graduates", "fewer university graduates"),
+ "train_commute": ("Train commuters", "more people commuting by train", "fewer people commuting by train"),
+ "car_commute": ("Car commuters", "more people driving to work", "fewer people driving to work"),
+ "bike_commute": ("Bike commuters", "more people cycling to work", "fewer people cycling to work"),
+ "walk_commute": ("Walk to work", "more people walking to work", "fewer people walking to work"), "density": ("Density", "more people per km²", "fewer people per km²"),
 }
 census = list(LBL)
 Z = np.column_stack([rz(G[c]) for c in census])
@@ -165,6 +193,9 @@ L = [  # id, name, group, kind, spec, orange, blue, used-census
  ("the-factory-line", "The Factory Line", "Work", "share", rz(G.factory_workers), "More factory workers", "Fewer factory workers", ["factory_workers", "ind_manufacturing", "hivis_jobs"]),
  ("the-laptop-vs-hard-hat-line", "The Laptop vs Hard Hat Line", "Work", "share", rz(G.ind_it) - rz(G.builders), "More IT workers, fewer builders", "More builders, fewer IT workers", ["ind_it", "builders", "ind_construction"]),
  ("the-boomer-vs-builder-line", "The Boomer vs Builder Line", "Work", "share", rz(G.age_65_plus) - rz(G.builders), "Older residents, fewer builders", "Younger residents, more builders", ["age_65_plus", "builders", "ind_construction", "age_20_39"]),
+ ("the-degree-line", "The Degree Line", "Work", "share", rz(G.uni_degree), "More university graduates", "Fewer university graduates", ["uni_degree", "laptop_jobs", "professionals", "managers"]),
+ ("train-vs-car", "Train vs Car", "Around", "share", rz(G.train_commute) - rz(G.car_commute), "More people commute by train", "More people drive to work", ["train_commute", "car_commute"]),
+ ("the-bicycle-line", "The Bicycle Line", "Around", "share", rz(G.bike_commute), "More people cycle to work", "Fewer people cycle to work", ["bike_commute"]),
  ("the-living-alone-line", "The Living Alone Line", "Homes", "share", rz(G.living_alone) - rz(G.families_with_kids), "More people living alone", "More families with kids", ["living_alone", "families_with_kids", "kids_under_15"]),
  ("the-tower-line", "The Tower Line", "Homes", "share", rz(G.towers_11_floors_plus) - rz(G.detached_houses), "More homes in 11+ floor blocks", "More detached houses", ["towers_11_floors_plus", "detached_houses"]),
  ("the-grey-line", "The Grey Line", "Homes", "share", rz(G.age_65_plus), "More over-65s", "Fewer over-65s", ["age_65_plus", "age_20_39", "kids_under_15"]),
@@ -213,7 +244,7 @@ for lid, nm, grp, kind, spec, aw, bw, used in L:
                       side=s.astype(int).tolist(), cut=cut_path(s), n_a=int(s.sum()), n_b=int((~s).sum()), stores=[na, nb]))
     print(f"{nm:42s} p={p:.3f} cleanness {c:.3f} (random {np.median(null):.3f})")
 # correct for trying several match-ups within the chain wars and within the food/night lines
-for grp in ["Chains", "Food", "Night", "Worship", "Work", "Homes"]:
+for grp in ["Chains", "Food", "Night", "Worship", "Work", "Homes", "Around"]:
     ids = [k for k, l in enumerate(lines) if l["group"] == grp]; ps = np.array([lines[k]["p"] for k in ids]); o = np.argsort(ps)
     adj = np.maximum.accumulate([min(1, ps[k] * (len(ps) - r)) for r, k in enumerate(o)])
     for r, k in enumerate(o): lines[ids[k]]["p"] = round(float(adj[r]), 3)
@@ -315,7 +346,7 @@ VL = {"share_cafe": ("Cafés", "Food & shops"), "share_fast_food": ("Fast food",
       "hp_italian_share": ("Italian & French restaurants", "After dark"), "hp_bar_share": ("Bars & bals", "After dark"), "hp_korean_share": ("Korean restaurants", "Food & shops"),
       "dinner_price": ("Dinner price", "After dark"), "konbini_per_1k": ("Konbini per km²", "Food & shops"), "worship_per_1k": ("Shrines, temples & churches per km²", "People"),
       "stations_per_km2": ("Stations per km²", "Getting around")}
-CG = {"age_65_plus": "People", "age_20_39": "People", "kids_under_15": "People", "living_alone": "People", "families_with_kids": "People", "density": "People",
+CG = {"train_commute": "Getting around", "car_commute": "Getting around", "bike_commute": "Getting around", "walk_commute": "Getting around", "uni_degree": "People", "age_65_plus": "People", "age_20_39": "People", "kids_under_15": "People", "living_alone": "People", "families_with_kids": "People", "density": "People",
       "owners": "Homes", "renters": "Homes", "detached_houses": "Homes", "towers_11_floors_plus": "Homes"}
 signals = []
 for c, v in sig.items():
@@ -351,10 +382,17 @@ make = dict(signals=signals, I=I.tolist(), J=J.tolist(), L=[round(float(x) / 100
 HIVIS = ('<div class="box"><h3>What does "hi-vis" mean?</h3><p style="margin:0">Hi-vis is Australian slang for the bright, high-visibility vests '
          'worn on building sites, roads, warehouses and delivery routes (作業用の反射ベスト).</p><p class="small">Here it means factory, driving, building, cleaning and '
          'packing jobs, compared with managers and professionals. It describes jobs, not people.</p></div>')
+fr = G.foreign_residents.fillna(0).values; cityf = XN.foreign.sum() / XN.pop_all.sum(); lqf = fr / cityf
+a_, b_ = XN.foreign.values, (XN.pop_all - XN.foreign).values; Dfor = float(0.5 * np.abs(a_ / a_.sum() - b_ / b_.sum()).sum())
+top = np.argsort(-fr)[:6]
+HER = [dict(id="foreign", kind="foreign", name="Foreign residents", pct=round(100 * cityf, 1), people=int(XN.foreign.sum()), lq=[round(float(v), 2) for v in lqf],
+            peaks=[[G.short[i].split(" (")[0] + ", " + city(G.CITY_NAME[i]), round(100 * float(fr[i]), 1), round(float(lqf[i]), 1)] for i in top],
+            D=round(Dfor, 3), recent=None, D_rank=None, D_of=None, shares_with=[])]
+print("foreign residents:", HER[0]["pct"], "% ; D", HER[0]["D"], "; peaks", HER[0]["peaks"][:4])
 DATA = dict(w=1000, h=round(Hh, 1), areas=areas, empty=empty, lines=lines, labels=labels,
             meta=dict(sources="Japan 2020 Census small-area data (e-Stat) · © OpenStreetMap contributors (venues, Nov 2026) · Restaurant listings Powered by ホットペッパー Webサービス (Nov 2026)",
                       areas=n, worship_age=worship_age, explain={k: HIVIS for k in ("the-hi-vis-line", "the-factory-line", "the-laptop-vs-hard-hat-line")}, hp_credit="Powered by ホットペッパー Webサービス", hp_url="https://webservice.recruit.co.jp/"),
-            split={}, heritage=[], timeline=dict(years=[str(y) for y in YEARS], lines=tl_lines, groups=groups), make=make)
+            split={}, heritage=HER, timeline=dict(years=[str(y) for y in YEARS], lines=tl_lines, groups=groups), make=make)
 json.dump(DATA, open(outfile, "w"), separators=(",", ":"), ensure_ascii=False)
 G[["jp", "short", "name", "population"]].to_csv(f"{out}/neighbourhood_names.csv", index=False)
 print("written", outfile, round(os.path.getsize(outfile) / 1e6, 2), "MB")

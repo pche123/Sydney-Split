@@ -21,9 +21,7 @@ R("""      <button id="introLatte">Show me the Latte Line</button>""", """      
 R("""    <button class="introclose" id="introClose" aria-label="Close">Just let me explore</button>""",
   f"""    <button class="introclose" id="introClose" aria-label="Close">Just let me explore</button>
     <p class="hpnote">Restaurant listings: {HP}. Shown for fun and learning; not affiliated with HotPepper.</p>""")
-R("""      <button role="tab" data-mode="heritage">Heritage</button>
-      <button role="tab" data-mode="overlay">Overlay</button>
-""", "")
+R('<button role="tab" data-mode="heritage">Heritage</button>', '<button role="tab" data-mode="heritage">Foreign residents</button>')
 R('placeholder="e.g. Marrickville"', 'placeholder="e.g. Koenji"')
 R("""    <div id="tip" role="status"></div>""", f"""    <div id="tip" role="status"></div>
     <div class="hpcredit">Restaurant listings {HP}</div>""")
@@ -33,7 +31,7 @@ R("</style>", """.hpcredit { position: absolute; right: 14px; bottom: 14px; back
 </style>""")
 # --- lists and groups
 R('const GROUPS = [["Food", "Food & shops"], ["Night", "After dark"], ["Work", "Work (Census)"], ["Hidden", "Hidden lines (not just rich vs poor)"]];',
-  'const GROUPS = [["Work", "Work (Census)"], ["Homes", "People & homes (Census)"], ["Food", "Food & cafés"], ["Chains", "Chain wars"], ["Night", "After dark (HotPepper)"], ["Worship", "Shrines & temples"]];')
+  'const GROUPS = [["Work", "Work (Census)"], ["Homes", "People & homes (Census)"], ["Around", "Getting around (Census)"], ["Food", "Food & cafés"], ["Chains", "Chain wars"], ["Night", "After dark (HotPepper)"], ["Worship", "Shrines & temples"]];')
 R('const TL = DATA.timeline, TKINDS = [["lines", "Lines"], ["birth", "Birthplace"], ["religion", "Religion"]];',
   'const TL = DATA.timeline, TKINDS = [["lines", "Lines"], ["people", "People"], ["homes", "Homes & work"]];')
 R('head(tKind === "birth" ? "Born in…" : "Religion");', 'head(tKind === "people" ? "People" : "Homes & work");')
@@ -62,6 +60,22 @@ R("""    <footer>${DATA.meta.sources}. Covers 300 Sydney suburbs. Shop and café
 R("function render() {", """const WORSHIP = `<div class="box"><h3>Buildings, not beliefs</h3><p style="margin:0">This counts shrines and temples on the map, not what people believe.</p>
   <p class="small">Japan's Census doesn't ask about religion, so there is no data on who is Buddhist, Shinto or Christian in each neighbourhood. Many people visit both a shrine and a temple. Across neighbourhoods, the shrine-vs-temple balance barely relates to how many over-65s live there (rank correlation ${DATA.meta.worship_age}).</p></div>`;
 function render() {""")
+# --- foreign residents (heritage tab)
+FOREIGN = ("Foreign residents only: people living in Tokyo with a foreign nationality. Japan's Census doesn't ask about ethnicity, "
+           "ancestry or religion, so Japanese citizens of any background (including naturalised citizens and people with mixed heritage) "
+           "are counted as Japanese and not shown here. Maps show places, not people.")
+R('const KINDS = [["birth", "Birthplace"], ["ancestry", "Ancestry"], ["religion", "Religion"]];', 'const KINDS = [["foreign", "Foreign residents"]];')
+R('let mode = "lines", herKind = "birth",', 'let mode = "lines", herKind = "foreign",')
+R('  birth: "Migrants only: people born overseas. Their Australian-born kids aren\'t counted.",', f'  foreign: "{FOREIGN}",\n  birth: "",')
+R('function herLabel(h) { return h.kind === "birth" ?', 'function herLabel(h) { return h.kind === "foreign" ? "Foreign residents" : h.kind === "birth" ?')
+R('  heritage: "Where Sydney\'s communities live: birthplace, ancestry and religion.",', '  heritage: "Where Tokyo\'s foreign residents live. Census data only.",')
+R('  overlay: "Put a heritage map under a line. Overlap isn\'t cause.",', '  overlay: "Put the foreign-residents map under a line. Overlap isn\'t cause.",')
+R("  <li>Only people born overseas are counted. Their Australian-born kids aren't.</li>", "  <li>Only foreign nationals are counted. Japanese citizens of any background aren't.</li>")
+R("""  const clus = h.D == null ? "" : `<li>How clustered: <b>${h.D_rank === 1 ? "the most" :""", """  const clus = h.kind === "foreign" ? `<li>How clustered: about <b>${Math.round(h.D * 100)}%</b> of foreign residents would have to move house to be spread evenly across Sydney.</li>` : h.D == null ? "" : `<li>How clustered: <b>${h.D_rank === 1 ? "the most" :""")
+R("""        <li>Lives in similar places to: ${h.shares_with.join(" and ")}</li></ul></div>""", """        ${h.shares_with.length ? `<li>Lives in similar places to: ${h.shares_with.join(" and ")}</li>` : ""}</ul></div>""")
+R("""      <footer>ABS 2021 Census: country of birth (G09), year of arrival (G10), ancestry (G08), religion (G14). 300 urban SA2s. A place's colour describes the area, not anyone in it.</footer>`;""",
+  """      <footer>Japan 2020 Census, small-area table 2 (foreign population), e-Stat. Counts of foreign residents only; the small-area table doesn't say which countries people are from. A place's colour describes the area, not anyone in it.</footer>`;""")
+R('`${h.pct}% of Sydney · peak: ${h.peaks[0] ? h.peaks[0][0] : "-"}`', '`${h.pct}% of Sydney · highest: ${h.peaks[0] ? h.peaks[0][0] : "-"}`')
 # --- make your own
 R('if (k === "chain") { MK.A = "Red Rooster"; MK.B = "Messina"; }', 'if (k === "chain") { MK.A = "Iekei ramen"; MK.B = "Hakata tonkotsu ramen"; }')
 R("return dA.map((a, i) => Math.log(dB[i] + 200) - Math.log(a + 200));", "return dA.map((a, i) => Math.log(dB[i] + 50) - Math.log(a + 50));")
@@ -70,7 +84,7 @@ R("<footer>Calculated live in your browser from the 2021 Census, OpenStreetMap v
   "<footer>Calculated live in your browser from the 2020 Census, OpenStreetMap venues and HotPepper listings (Nov 2026). Restaurant listings Powered by ホットペッパー Webサービス.")
 R("<h3>Same route as the Latte Line?</h3><p style=\"margin:0\" id=\"mklatte\"></p>", "<h3>Same route as the Hi-Vis Line?</h3><p style=\"margin:0\" id=\"mklatte\"></p>")
 # --- routing and intro
-R('if (h === "heritage" || h === "overlay" || h === "timeline" || h === "make") { setMode(h); return; }', 'if (h === "timeline" || h === "make") { setMode(h); return; }')
+
 R('location.hash = "the-latte-line"; route(); };\n$("#introSuburb")', 'location.hash = "the-hi-vis-line"; route(); };\n$("#introSuburb")')
 R('if (mode !== "lines") { location.hash = "the-latte-line"; route(); }', 'if (mode !== "lines") { location.hash = "the-hi-vis-line"; route(); }')
 R("ss_intro_seen", "ts_intro_seen", 2)

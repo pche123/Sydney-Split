@@ -38,6 +38,9 @@ Short, plain conclusions from the tests. "Beats chance" means the line is cleane
 | Factory Line, Laptop vs Hard Hat Line | Beats chance, strongly | Both retrace the Hi-Vis Line (90%+ of neighbourhoods). |
 | Boomer vs Builder Line | Beats chance | Older and fewer builders in Seijō and Tama; younger with more builders around Shinbori and Kasai. Only 57% the same route as the Hi-Vis Line. |
 | Living Alone Line, Grey Line | Beats chance | One-person homes in Nishi-Shinjuku and Kōenji; over-65s in the Tama new towns. |
+| Degree Line | Beats chance, strongly | University graduates (43.5% of adults Tokyo-wide) concentrate in the professional core; follows the Hi-Vis Line closely. |
+| Train vs Car | Beats chance | 60% of commuters take the train and 10% drive. Train neighbourhoods (Kōenji, Higashi-Nakano) are younger, denser and full of office and IT workers; car neighbourhoods (Hachiōji, Ōme, the Adachi edge) have more builders, drivers and home owners. Same route as the Hi-Vis Line on 78%. |
+| Bicycle Line | Beats chance | Cycling to work forms its own belt across the flat east and north. |
 | Latte Line | Could be chance (close) | Cafés lead in Minami-Aoyama, Daita and Tsukiji, fast food in the north-east; same route as the Hi-Vis Line on 72%. Raw p = 0.03, 0.08 after correction: Tokyo's Latte Line is faint compared with Sydney's (p = 0.002). |
 | Coffee vs Alcohol | Beats chance | Cafés lean towards Todoroki and other family areas; izakaya and bars elsewhere. |
 | My Basket vs the Konbini | Beats chance | Mini-supermarkets in the dense inner wards; konbini everywhere else. |
@@ -45,6 +48,8 @@ Short, plain conclusions from the tests. "Beats chance" means the line is cleane
 | Konbini, Gyudon, Starbucks vs Doutor, Ramen Wars | Could be chance | Chains mostly compete shop by shop. |
 | Shrines vs Temples | Could be chance | No shrine side and temple side. Japan's Census doesn't ask about religion, so this counts buildings only; the shrine-vs-temple balance barely relates to the share of over-65s (rank correlation 0.07). |
 | Price, Late-Night, Bars vs Izakaya, Yakiniku | Could be chance at this scale | These pass on the finer 1,402-町 map below, but not after merging into larger neighbourhoods and correcting for several night-time lines. |
+
+**Foreign residents** (Census 2020, small-area table 2): 3.4% of the mapped area's residents, about 467,000 people. Most concentrated in Kita-Shinjuku (the Ōkubo area, 15.9%), Higashi- and Nishi-Nippori, Ikebukuro and Minami-Ōtsuka (12–14%), and Akasaka (11%). About 25% would have to move house to be spread evenly. The small-area table counts foreign nationals only, with no country breakdown; Japanese citizens of any background are not shown.
 
 **Grey Flip in the app:** only 48% of neighbourhoods are on the same side of the Grey Line in 2020 as in 2000, no better than two unrelated maps (about 52%). The Hi-Vis (86%), Living Alone (88%) and Tower (90%) lines barely moved.
 
