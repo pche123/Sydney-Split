@@ -30,6 +30,7 @@ The invisible lines that cut Sydney in two: the Latte Line, the Red Rooster Line
 | Fun lines | `python fun_test.py <SA2 shp>` | the curated food and night-time lines |
 | Street level | `python sa1_graph.py` then `python sa1_line.py works_transport_logistics professionals hivis_l15 15` | split suburbs |
 | 2001–2021 | `python harmonise.py` then `python timeline20.py` | timeline data and tests |
+| Venue history | `python venue_history.py data/sydney_sa2_300.geojson venue_history.csv` (needs internet) | café, fast-food and chain counts per suburb, 2012–2026 |
 | App | `bash build_app.sh` | `sydney_split_app.html` (copy to `index.html`) |
 
 ## How the checks work (short version)
