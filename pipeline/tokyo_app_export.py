@@ -240,10 +240,24 @@ FAMOUS = {("新宿区", "西新宿"): "Shinjuku", ("渋谷区", "道玄坂"): "S
           ("大田区", "蒲田"): "Kamata", ("足立区", "千住"): "Kita-Senju", ("北区", "赤羽"): "Akabane", ("江東区", "豊洲"): "Toyosu",
           ("港区", "六本木"): "Roppongi", ("目黒区", "自由が丘"): "Jiyugaoka", ("江戸川区", "西葛西"): "Nishi-Kasai", ("墨田区", "錦糸"): "Kinshicho",
           ("練馬区", "練馬"): "Nerima", ("葛飾区", "金町"): "Kanamachi", ("府中市", "宮町"): "Fuchu", ("中野区", "中野"): "Nakano", ("多摩市", "落合"): "Tama Center"}
-labels = []
-for (ci, na_), en in FAMOUS.items():
-    m = U[(U.CITY_NAME == ci) & (U.NAME == na_)]
-    if len(m): labels.append(dict(i=int(m.N.iloc[0]), t=en))
+MORE = {("中央区", "日本橋"): "Nihonbashi", ("中央区", "月島"): "Tsukishima", ("港区", "台場"): "Odaiba", ("港区", "港南"): "Shinagawa",
+        ("品川区", "東五反田"): "Gotanda", ("目黒区", "目黒"): "Meguro", ("渋谷区", "恵比寿"): "Ebisu", ("渋谷区", "神宮前"): "Harajuku",
+        ("渋谷区", "代々木"): "Yoyogi", ("世田谷区", "三軒茶屋"): "Sangenjaya", ("世田谷区", "玉川"): "Futako-Tamagawa", ("杉並区", "上荻"): "Ogikubo",
+        ("杉並区", "阿佐谷南"): "Asagaya", ("新宿区", "神楽坂"): "Kagurazaka", ("新宿区", "高田馬場"): "Takadanobaba", ("豊島区", "巣鴨"): "Sugamo",
+        ("北区", "王子"): "Oji", ("荒川区", "西日暮里"): "Nippori", ("台東区", "谷中"): "Yanaka", ("墨田区", "押上"): "Oshiage", ("江東区", "亀戸"): "Kameido",
+        ("江東区", "門前仲町"): "Monzen-Nakacho", ("葛飾区", "亀有"): "Kameari", ("足立区", "綾瀬"): "Ayase", ("板橋区", "高島平"): "Takashimadaira",
+        ("練馬区", "光が丘"): "Hikarigaoka", ("三鷹市", "下連雀"): "Mitaka", ("調布市", "小島町"): "Chofu", ("国分寺市", "本町"): "Kokubunji",
+        ("国立市", "中"): "Kunitachi", ("千代田区", "外神田"): "Akihabara", ("千代田区", "神田神保町"): "Jimbocho", ("文京区", "本郷"): "Hongo",
+        ("品川区", "大井"): "Oimachi", ("大田区", "大森北"): "Omori", ("世田谷区", "成城"): "Seijo", ("板橋区", "成増"): "Narimasu",
+        ("葛飾区", "柴又"): "Shibamata", ("江戸川区", "小岩"): "Koiwa", ("北区", "十条仲原"): "Jujo", ("中野区", "東中野"): "Higashi-Nakano"}
+labels, used = [], set()
+for tier, table in [(1, FAMOUS), (2, MORE)]:
+    for (ci, na_), en in table.items():
+        m = U[(U.CITY_NAME == ci) & (U.NAME == na_)]
+        if len(m) and int(m.N.iloc[0]) not in used:
+            labels.append(dict(i=int(m.N.iloc[0]), t=en, tier=tier)); used.add(int(m.N.iloc[0]))
+for i in range(n):
+    if i not in used: labels.append(dict(i=i, t=G.short[i].split(" (")[0], tier=3))
 print("labels", len(labels))
 
 # ------------------------------------------------------------------ timeline (2000-2020 on these neighbourhoods)
@@ -293,13 +307,12 @@ for k, (a, b) in {"share_cafe": ("cafe", "food"), "share_fast_food": ("fast_food
     sig[k] = np.where(C[b] >= 3, C[a] / np.maximum(C[b], 1), np.nan)
 sig["dinner_price"] = price
 sig["konbini_per_1k"] = C["konbini"] / (np.pi * WALK ** 2 / 1e6)
-sig["worship_per_1k"] = C["worship"] / (np.pi * WALK ** 2 / 1e6)
 sig["stations_per_km2"] = C["station"] / (np.pi * WALK ** 2 / 1e6)
 VL = {"share_cafe": ("Cafés", "Food & shops"), "share_fast_food": ("Fast food", "Food & shops"), "share_izakaya_bar": ("Izakaya & bars", "After dark"),
-      "share_ramen": ("Ramen", "Food & shops"), "share_soba_udon": ("Soba & udon", "Food & shops"), "share_sushi": ("Sushi", "Food & shops"),
-      "share_curry": ("Japanese curry", "Food & shops"), "share_indian_nepali": ("Indian & Nepali", "Food & shops"), "share_yakiniku": ("Yakiniku", "Food & shops"),
+      "share_ramen": ("Ramen shops", "Food & shops"), "share_soba_udon": ("Soba & udon shops", "Food & shops"), "share_sushi": ("Sushi places", "Food & shops"),
+      "share_curry": ("Japanese curry places", "Food & shops"), "share_indian_nepali": ("Indian & Nepali restaurants", "Food & shops"), "share_yakiniku": ("Yakiniku places", "Food & shops"),
       "share_indie_cafe": ("Independent cafés", "Food & shops"), "hp_late_share": ("Open past midnight", "After dark"), "hp_izakaya_share": ("Izakaya (HotPepper)", "After dark"),
-      "hp_italian_share": ("Italian & French", "After dark"), "hp_bar_share": ("Bars & bals", "After dark"), "hp_korean_share": ("Korean food", "Food & shops"),
+      "hp_italian_share": ("Italian & French restaurants", "After dark"), "hp_bar_share": ("Bars & bals", "After dark"), "hp_korean_share": ("Korean restaurants", "Food & shops"),
       "dinner_price": ("Dinner price", "After dark"), "konbini_per_1k": ("Konbini per km²", "Food & shops"), "worship_per_1k": ("Shrines, temples & churches per km²", "People"),
       "stations_per_km2": ("Stations per km²", "Getting around")}
 CG = {"age_65_plus": "People", "age_20_39": "People", "kids_under_15": "People", "living_alone": "People", "families_with_kids": "People", "density": "People",
@@ -308,7 +321,7 @@ signals = []
 for c, v in sig.items():
     if c in LBL: lab_, mo, le = LBL[c]; grp = CG.get(c, "Work")
     else:
-        lab_, grp = VL[c]; mo, le = f"more {lab_.lower()} in the food mix", f"fewer {lab_.lower()} in the food mix"
+        lab_, grp = VL[c]; mo, le = f"more {lab_.lower()}", f"fewer {lab_.lower()}"
     if c == "share_indie_cafe": mo, le = "more independent cafés", "more chain cafés"
     if c == "hp_late_share": mo, le = "more places open past midnight", "fewer places open past midnight"
     if c == "dinner_price": mo, le = "pricier dinners", "cheaper dinners"
@@ -328,13 +341,19 @@ for i, j in zip(I, J):
     try: seg = linemerge(parts) if parts else seg
     except Exception: pass
     ep.append(lp(seg.simplify(20)))
+inmap = G.geometry.union_all().buffer(300)
+from shapely import contains_xy
+WORSHIP_KEYS = {"Shinto shrines", "Buddhist temples", "Christian churches"}
 brands = [dict(name=k, n=int(len(v)), xy=[[round(float(x)), round(float(y))] for x, y in v],
-               vb=[[round(float((x - minx) * S), 1), round(float((maxy - y) * S), 1)] for x, y in v]) for k, v in PTS.items() if len(v) >= 8]
+               vb=[[round(float((x - minx) * S), 1), round(float((maxy - y) * S), 1)] for x, y in v]) for k, v in ((k, v[contains_xy(inmap, v[:, 0], v[:, 1])]) for k, v in PTS.items() if k not in WORSHIP_KEYS) if len(v) >= 8]
 make = dict(signals=signals, I=I.tolist(), J=J.tolist(), L=[round(float(x) / 1000, 3) for x in W], eig=eig, n=n,
             pop=[int(p) for p in G.population.values], ep=ep, rep=[[round(float(x)), round(float(y))] for x, y in rep], brands=brands)
+HIVIS = ('<div class="box"><h3>What does "hi-vis" mean?</h3><p style="margin:0">Hi-vis is Australian slang for the bright, high-visibility vests '
+         'worn on building sites, roads, warehouses and delivery routes (作業用の反射ベスト).</p><p class="small">Here it means factory, driving, building, cleaning and '
+         'packing jobs, compared with managers and professionals. It describes jobs, not people.</p></div>')
 DATA = dict(w=1000, h=round(Hh, 1), areas=areas, empty=empty, lines=lines, labels=labels,
             meta=dict(sources="Japan 2020 Census small-area data (e-Stat) · © OpenStreetMap contributors (venues, Nov 2026) · Restaurant listings Powered by ホットペッパー Webサービス (Nov 2026)",
-                      areas=n, worship_age=worship_age, hp_credit="Powered by ホットペッパー Webサービス", hp_url="https://webservice.recruit.co.jp/"),
+                      areas=n, worship_age=worship_age, explain={k: HIVIS for k in ("the-hi-vis-line", "the-factory-line", "the-laptop-vs-hard-hat-line")}, hp_credit="Powered by ホットペッパー Webサービス", hp_url="https://webservice.recruit.co.jp/"),
             split={}, heritage=[], timeline=dict(years=[str(y) for y in YEARS], lines=tl_lines, groups=groups), make=make)
 json.dump(DATA, open(outfile, "w"), separators=(",", ":"), ensure_ascii=False)
 G[["jp", "short", "name", "population"]].to_csv(f"{out}/neighbourhood_names.csv", index=False)

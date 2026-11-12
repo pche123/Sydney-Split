@@ -78,6 +78,7 @@ main { position: relative; min-width: 0; min-height: 0; }
 .halo { fill: none; stroke: #ffffff; stroke-width: 7; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; opacity: 0.9; }
 .cut.onramp { stroke: #111418; stroke-width: 3.2; }
 .cut2 { fill: none; stroke: #e5315a; stroke-width: 2.4; stroke-dasharray: 6 4; vector-effect: non-scaling-stroke; }
+.lbl.minor { font-weight: 500; fill: var(--muted); }
 .lbl { font: 600 11px var(--body); fill: var(--ink); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; pointer-events: none; }
 .yearbox { position: absolute; left: 14px; top: 14px; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 10px 12px; width: 300px; display: none; }
 .yb-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
@@ -96,6 +97,7 @@ main { position: relative; min-width: 0; min-height: 0; }
 .ctrl select { padding: 7px 8px; border-radius: 8px; border: 1px solid var(--rule); background: var(--panel); width: 100%; }
 .ctrl button { padding: 8px 10px; border-radius: 8px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); font-weight: 600; cursor: pointer; }
 .ctrl button.ghost { background: none; color: var(--ink); }
+.dotsw { display: flex; gap: 8px; align-items: center; font-size: 13px; margin-top: 10px; color: var(--muted); }
 .dot { stroke: #fff; stroke-width: 1; vector-effect: non-scaling-stroke; }
 .rule { font-size: 15px; border-left: 4px solid var(--side-a); padding: 4px 0 4px 10px; margin: 0; }
 .maptools { position: absolute; right: 14px; top: 14px; display: flex; flex-direction: column; gap: 6px; }
@@ -359,12 +361,14 @@ const cut2El = document.createElementNS(svgNS, "path"); cut2El.setAttribute("cla
 gCut.append(haloEl, cutEl, cut2El);
 for (const L of DATA.labels) {
   const a = DATA.areas[L.i], t = document.createElementNS(svgNS, "text");
-  t.setAttribute("x", a.cx); t.setAttribute("y", a.cy); t.setAttribute("text-anchor", "middle"); t.setAttribute("class", "lbl"); t.textContent = L.t;
+  t.setAttribute("x", a.cx); t.setAttribute("y", a.cy); t.setAttribute("text-anchor", "middle"); t.setAttribute("class", "lbl" + ((L.tier || 1) > 1 ? " minor" : "")); t.textContent = L.t; t.dataset.tier = L.tier || 1;
   gLbl.appendChild(t);
 }
 function scaleLabels() {
   const k = vb[2] / DATA.w; // keep labels a constant size on screen
-  gLbl.querySelectorAll("text").forEach((t) => { t.style.fontSize = (11 * k * DATA.w / map.clientWidth).toFixed(2) + "px"; t.style.strokeWidth = (3 * k * DATA.w / map.clientWidth).toFixed(2) + "px"; });
+  const show = k < 0.3 ? 3 : k < 0.55 ? 2 : 1;   // zoom in to see more place names
+  gLbl.querySelectorAll("text").forEach((t) => { const tier = +t.dataset.tier; t.style.display = tier <= show ? "" : "none";
+    const fs = tier > 1 ? 10 : 11; t.style.fontSize = (fs * k * DATA.w / map.clientWidth).toFixed(2) + "px"; t.style.strokeWidth = (3 * k * DATA.w / map.clientWidth).toFixed(2) + "px"; });
 }
 
 // tooltip
@@ -457,9 +461,9 @@ function mapLegend() {
   const el = $("#maplegend");
   if (mode === "make") {
     el.innerHTML = `<div><i style="background:var(--side-a)"></i><span></span></div><div><i style="background:var(--side-b)"></i><span></span></div>
-      <div><i style="background:var(--cut);height:3px"></i><span>The line</span></div>${MK.kind === "chain" ? `<div><i style="border-radius:50%;background:var(--side-a);border:1px solid #fff"></i><span class="d1"></span></div><div><i style="border-radius:50%;background:var(--side-b);border:1px solid #fff"></i><span class="d2"></span></div>` : ""}${GREY}`;
+      <div><i style="background:var(--cut);height:3px"></i><span>The line</span></div>${MK.kind === "chain" && MK.dots ? `<div><i style="border-radius:50%;background:var(--side-a);border:1px solid #fff"></i><span class="d1"></span></div><div><i style="border-radius:50%;background:var(--side-b);border:1px solid #fff"></i><span class="d2"></span></div>` : ""}${GREY}`;
     const sp = el.querySelectorAll("span"); sp[0].textContent = MK.aText || ""; sp[1].textContent = MK.bText || "";
-    if (MK.kind === "chain") { el.querySelector(".d1").textContent = MK.A + " stores"; el.querySelector(".d2").textContent = MK.B + " stores"; }
+    if (MK.kind === "chain" && MK.dots) { el.querySelector(".d1").textContent = MK.A + " stores"; el.querySelector(".d2").textContent = MK.B + " stores"; }
     return;
   }
   if (mode === "timeline" && tKind === "lines") {
@@ -508,6 +512,7 @@ function render() {
       <p class="small" style="margin:10px 0 6px">The blue side also has:</p><div class="chips cb"></div></div>
     ${l.id === "the-latte-line" ? "" : `<div class="box"><h3>Same route as the Latte Line?</h3><p style="margin:0"><b>${Math.round(l.latte_agree * 100)}%</b> of suburbs fall on matching sides.</p>
       <p class="small">${l.latte_agree >= 0.75 ? "This line mostly retraces the classic divide." : l.latte_agree >= 0.6 ? "Partly the classic divide, partly its own route." : "This line takes its own route across Sydney."}</p></div>`}
+    ${(DATA.meta.explain || {})[l.id] || ""}
     ${splitNote}
     <div class="box passport" id="passport"></div>
     <footer>${DATA.meta.sources}. Covers 300 Sydney suburbs. Shop and café locations come from OpenStreetMap, which volunteers map, so a few may be missing. A suburb's side describes the area, not the people in it.</footer>`;
@@ -576,7 +581,7 @@ $("#play").addEventListener("click", () => {
 const MKD = DATA.make, N = MKD.n, EI = MKD.I, EJ = MKD.J, EL = MKD.L, LSUM = EL.reduce((s, x) => s + x, 0);
 const EIG = new Float32Array(Uint8Array.from(atob(MKD.eig), (c) => c.charCodeAt(0)).buffer);   // N x N, row-major
 const SIG = Object.fromEntries(MKD.signals.map((s) => [s.id, s]));
-let MK = { kind: "line", A: "share_cafe", B: "share_fast_food", side: null, f: null, lam: 0 };
+let MK = { kind: "line", A: "share_cafe", B: "share_fast_food", side: null, f: null, lam: 0, dots: false };
 function invNorm(p) { // Acklam's approximation
   const a = [-39.6968302866538, 220.946098424521, -275.928510446969, 138.357751867269, -30.6647980661472, 2.50662827745924],
     b = [-54.4760987982241, 161.585836858041, -155.698979859887, 66.8013118877197, -13.2806815528857],
@@ -672,7 +677,8 @@ function buildMakeControls() {
     list.appendChild(sel("mkB", "2. Blue: closer to a…", opts, MK.B, false));
   }
   const go = document.createElement("div"); go.className = "ctrl";
-  go.innerHTML = `<button id="mkSurprise" class="ghost">Surprise me</button>`; list.appendChild(go);
+  go.innerHTML = `<button id="mkSurprise" class="ghost">Surprise me</button>` + (MK.kind === "chain" ? `<label class="dotsw"><input type="checkbox" id="mkDots"${MK.dots ? " checked" : ""}> Show the shops on the map</label>` : ""); list.appendChild(go);
+  if (MK.kind === "chain") $("#mkDots").onchange = (e) => { MK.dots = e.target.checked; render(); };
   $("#mkA").onchange = (e) => { MK.A = e.target.value; MK.lam = 0; $("#smooth").value = 0; render(); };
   $("#mkB").onchange = (e) => { MK.B = e.target.value || null; MK.lam = 0; $("#smooth").value = 0; render(); };
   $("#mkSurprise").onclick = () => {
@@ -711,8 +717,8 @@ function renderMake() {
     const art = (x) => (/^[AEIOUF]/.test(x) ? "an " : "a ") + x;
     MK.aText = `${cap(art(MK.A))} is closer than ${art(MK.B)}`; MK.bText = `${cap(art(MK.B))} is closer than ${art(MK.A)}`;
     ruleText = `Orange suburbs are closer to ${art(MK.A)} than to ${art(MK.B)}.`;
-    for (const [b, cls] of [[bA, "var(--side-a)"], [bB, "var(--side-b)"]]) for (const [x, y] of b.vb) {
-      const c = document.createElementNS(svgNS, "circle"); c.setAttribute("cx", x); c.setAttribute("cy", y); c.setAttribute("r", 4.5); c.setAttribute("class", "dot"); c.setAttribute("fill", cls); gDots.appendChild(c); }
+    if (MK.dots) for (const [b, cls] of [[bA, "var(--side-a)"], [bB, "var(--side-b)"]]) for (const [x, y] of b.vb) {
+      const c = document.createElementNS(svgNS, "circle"); c.setAttribute("cx", x); c.setAttribute("cy", y); c.setAttribute("r", 3); c.setAttribute("class", "dot"); c.setAttribute("fill", cls); gDots.appendChild(c); }
   }
   MK.f = f;
   const raw = splitOf(f), side = MK.lam > 0 ? minCutSides(f, MK.lam) : raw; MK.side = side;
