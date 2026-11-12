@@ -45,6 +45,7 @@ What we found so far, in plain words: [FINDINGS.md](FINDINGS.md).
 | Lines and chain wars | `python tokyo_wars.py out` | tested lines, `tokyo_gallery.png` |
 | 2000–2020 | `python tokyo_timeline.py tokyo_timeline <2020 folder> out` | Hi-Vis Line over time, ageing, towers |
 | HotPepper restaurants | `python hotpepper_tokyo.py YOUR_KEY hotpepper_tokyo.csv` | every listed Tokyo restaurant, incl. ramen style blurbs |
+| HotPepper lines + Ramen Wars | `python tokyo_hp.py out hotpepper_tokyo.csv` | price, late-night, izakaya and ramen-style tests, `tokyo_hp_gallery.png` |
 
 ## How the checks work (short version)
 
