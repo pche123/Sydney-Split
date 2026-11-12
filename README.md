@@ -12,6 +12,8 @@ The invisible lines that cut Sydney in two: the Latte Line, the Red Rooster Line
 - **Timeline**: 2001 → 2021, five Censuses on today's suburbs.
 - **Make your own**: pick any two things or any two chains; the map, verdict and a smoothness slider run live in the browser.
 
+What we found so far, in plain words: [FINDINGS.md](FINDINGS.md).
+
 ## Rebuild from the raw data
 
 1. Download into `data/` (all free):
@@ -41,6 +43,8 @@ The invisible lines that cut Sydney in two: the Latte Line, the Red Rooster Line
 | Venues | `python tokyo_places.py kanto-latest.osm.pbf tokyo_places.csv` | cafés, shops, bars, stations |
 | Neighbourhoods | `python build_tokyo.py <2020 folder> tokyo_places.csv out` | ~1,600 neighbourhoods (町) with Census and venue signals |
 | Lines and chain wars | `python tokyo_wars.py out` | tested lines, `tokyo_gallery.png` |
+| 2000–2020 | `python tokyo_timeline.py tokyo_timeline <2020 folder> out` | Hi-Vis Line over time, ageing, towers |
+| HotPepper restaurants | `python hotpepper_tokyo.py YOUR_KEY hotpepper_tokyo.csv` | every listed Tokyo restaurant, incl. ramen style blurbs |
 
 ## How the checks work (short version)
 

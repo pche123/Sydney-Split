@@ -79,9 +79,11 @@ LINES = [  # name, family, kind, spec, orange side, blue side
  ("Starbucks vs Komeda", "Chains", "brand", ("starbucks", "komeda"), "a Starbucks is closer", "a Komeda is closer"),
  ("Saizeriya vs Gusto", "Chains", "brand", ("saizeriya", "gusto"), "a Saizeriya is closer", "a Gusto is closer"),
  ("McDonald's vs Mos Burger", "Chains", "brand", ("mcdonalds", "mos_burger"), "a McDonald's is closer", "a Mos Burger is closer"),
- ("Ramen Wars: Iekei vs Hakata tonkotsu", "Ramen", "brand", ("iekei", "tonkotsu_hakata"), "an iekei (家系) shop is closer", "a Hakata tonkotsu shop is closer"),
- ("Ramen Wars: Jiro-style vs chūka soba", "Ramen", "brand", ("jiro", "chuka_soba"), "a Jiro-style shop is closer", "a classic chūka soba shop is closer"),
- ("Ramen Wars: Iekei vs chūka soba", "Ramen", "brand", ("iekei", "chuka_soba"), "an iekei shop is closer", "a classic chūka soba shop is closer"),
+ ("Ramen Wars: Iekei vs Hakata tonkotsu", "Ramen", "brand", ("ramen_iekei", "ramen_tonkotsu"), "an iekei (家系) shop is closer", "a Hakata tonkotsu shop is closer"),
+ ("Ramen Wars: Iekei vs classic shoyu", "Ramen", "brand", ("ramen_iekei", "ramen_shoyu_classic"), "an iekei shop is closer", "a classic shoyu / chūka soba shop is closer"),
+ ("Ramen Wars: Jiro-style vs classic shoyu", "Ramen", "brand", ("ramen_jiro", "ramen_shoyu_classic"), "a Jiro-style shop is closer", "a classic shoyu shop is closer"),
+ ("Ramen Wars: Miso vs Hakata tonkotsu", "Ramen", "brand", ("ramen_miso", "ramen_tonkotsu"), "a miso ramen shop is closer", "a Hakata tonkotsu shop is closer"),
+ ("Ramen Wars: Tsukemen vs everything else", "Ramen", "brand", ("ramen_tsukemen", "ramen"), "a tsukemen shop is closer", "another kind of ramen is closer"),
  ("CoCo Ichi vs Indian/Nepali curry", "Chains", "brand", ("coco_ichi", "indian_nepali"), "a CoCo Ichibanya is closer", "an Indian/Nepali curry house is closer"),
 ]
 hv = None; rows, sides = [], []
@@ -107,7 +109,7 @@ R["p_holm_in_family"] = np.nan
 for fam, grp in R.groupby("family"):
     ps = grp.p.values; o = np.argsort(ps); adj = np.maximum.accumulate([min(1, ps[k] * (len(ps) - r)) for r, k in enumerate(o)])
     R.loc[grp.index[o], "p_holm_in_family"] = np.round(adj, 3)
-R["verdict"] = np.where(R.p_holm_in_family <= 0.05, "Beats chance", "Just for fun")
+R["verdict"] = np.where(R.p_holm_in_family <= 0.05, "Beats chance", "Could be chance")
 R.to_csv(f"{out}/tokyo_lines_tested.csv", index=False); np.save(f"{out}/tokyo_sides.npy", np.column_stack(sides))
 
 LBL = {("新宿区", "西新宿"): "Shinjuku", ("渋谷区", "道玄坂"): "Shibuya", ("豊島区", "南池袋"): "Ikebukuro", ("中央区", "銀座"): "Ginza",
@@ -116,7 +118,7 @@ LBL = {("新宿区", "西新宿"): "Shinjuku", ("渋谷区", "道玄坂"): "Shib
        ("大田区", "蒲田"): "Kamata", ("足立区", "千住"): "Kita-Senju", ("北区", "赤羽"): "Akabane", ("江東区", "豊洲"): "Toyosu",
        ("港区", "六本木"): "Roppongi", ("目黒区", "自由が丘"): "Jiyugaoka", ("江戸川区", "西葛西"): "Nishi-Kasai", ("墨田区", "錦糸"): "Kinshicho",
        ("練馬区", "練馬"): "Nerima", ("葛飾区", "金町"): "Kanamachi", ("府中市", "宮町"): "Fuchu", ("中野区", "中野"): "Nakano"}
-fig, axs = plt.subplots(7, 3, figsize=(21, 40))
+fig, axs = plt.subplots(8, 3, figsize=(21, 46))
 for ax, (nm, fam, kind, spec, aw, bw), s, (_, r) in zip(axs.flat, LINES, sides, R.iterrows()):
     G.plot(ax=ax, color=np.where(s, "#e07a3f", "#3f7fb5"), edgecolor="white", linewidth=0.08)
     for (ci, na), en in LBL.items():

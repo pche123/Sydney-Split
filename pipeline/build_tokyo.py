@@ -88,6 +88,11 @@ V = {
  "mcdonalds": has("mcdonald|マクドナルド"), "mos_burger": has("mos burger|モスバーガー"),
  "hidakaya": has("日高屋|hidakaya"), "station": d.t.map(lambda q: q.get("railway") == "station" or q.get("public_transport") == "station"),
 }
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from ramen_styles import style, STYLES
+rs = pd.Series([style(q.get("name", ""), str(q.get("cuisine", "")) + " " + str(q.get("name:en", ""))) if r else None
+                for q, r in zip(d.t, ramen.values)], index=d.index)
+for k in STYLES: V["ramen_" + k] = rs.eq(k)
 for k, m in V.items(): print(f"{k:16s} {int(m.sum())}")
 pickle_keep = d[["osm_id", "lat", "lon"]].copy()
 for k, m in V.items(): pickle_keep[k] = m.values

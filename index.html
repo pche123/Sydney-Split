@@ -243,7 +243,7 @@ const byId = Object.fromEntries(lines.map((l) => [l.id, l]));
 const GROUPS = [["Food", "Food & shops"], ["Night", "After dark"], ["Work", "Work (Census)"], ["Hidden", "Hidden lines (not just rich vs poor)"]];
 let current = lines[0], compare = null, picked = null;
 
-function verdict(l) { return l.p <= 0.05 ? ["good", "Beats chance"] : ["meh", "Just for fun"]; }
+function verdict(l) { return l.p <= 0.05 ? ["good", "Beats chance"] : ["meh", "Could be chance"]; }
 
 // ---- modes & lists
 const her = DATA.heritage, herById = Object.fromEntries(her.map((h) => [h.id, h]));
