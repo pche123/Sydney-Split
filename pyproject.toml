@@ -1,0 +1,17 @@
+[project]
+name = "split-lines"
+version = "0.2.0"
+description = "Calibrated tests for informal urban lines (Sydney / Split, Tokyo / Split)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["numpy", "scipy", "pandas", "shapely>=2"]
+
+[project.optional-dependencies]
+pipeline = ["geopandas", "scikit-learn", "pykakasi", "openpyxl", "matplotlib"]
+dev = ["pytest"]
+
+[tool.setuptools]
+packages = ["linetests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

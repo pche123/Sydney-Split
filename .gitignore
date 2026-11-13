@@ -1,5 +1,6 @@
-data/
+/data/
 __pycache__/
 *.pkl
 *.gpkg
 *.npy
+.pytest_cache/

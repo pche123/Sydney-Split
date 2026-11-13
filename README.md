@@ -1,61 +1,70 @@
-# Sydney / Split
+# Split: the invisible lines that cut cities in two
 
-The invisible lines that cut Sydney in two: the Latte Line, the Red Rooster Line and a dozen more, found in the Census, café and shop maps, and liquor licences. Every line is checked against random versions of Sydney, so you can tell real patterns from coincidences.
+The Latte Line, the Hi-Vis Line, Ramen Wars: informal city divides, found in Census, venue and licence data, and tested properly. Every line is checked against random versions of its city that are just as smooth, and gets one of three verdicts: **Real line**, **Real pattern, gentle** or **Could be chance**.
 
-**Open the app:** `index.html` (Sydney) and `tokyo.html` (Tokyo) (one self-contained file, works offline). With GitHub Pages enabled it lives at `https://pche123.github.io/Sydney-Split/`.
+**Live:** [Sydney](https://pche123.github.io/Sydney-Split/) · [Tokyo](https://pche123.github.io/Sydney-Split/tokyo.html) · What we found, in plain words: [FINDINGS.md](FINDINGS.md)
 
-## What you can do
+## Repository
 
-- **Lines**: 15 named lines (Latte, Red Rooster, Aldi, Pokies, Late Night, Hi-Vis, Laptop vs Ute …), each with a "Beats chance / Just for fun" verdict, what else changes across it, and a suburb lookup.
-- **Heritage**: where Sydney's communities live, by birthplace (49 countries), ancestry (30) and religion (18).
-- **Overlay**: a community map under any line, shown side by side (never scored against each other).
-- **Timeline**: 2001 → 2021, five Censuses on today's suburbs.
-- **Make your own**: pick any two things or any two chains; the map, verdict and a smoothness slider run live in the browser.
+| Folder | What's in it |
+|---|---|
+| `app/` | The web app (TypeScript + Vite). One codebase; each city is a config (`app/src/config.ts`) plus a data file (`app/data/<city>.json`). Builds to one self-contained HTML file per city. |
+| `linetests/` | The statistical tests, as a small Python package: random-landscape null, record-level simulation, edge test. |
+| `pipeline/` | Turns raw data into each city's data file: `sydney/`, `tokyo/`, and `common/`. |
+| `experiments/` | The audit and simulation studies behind the paper and FINDINGS.md. |
+| `results/` | Result tables, including `verdicts.csv` (every line's audited verdict). |
+| `tests/` | Python tests (`pytest`); the app has its own (`app/tests`). |
 
-What we found so far, in plain words: [FINDINGS.md](FINDINGS.md).
+## Run the app
 
-## Rebuild from the raw data
+```bash
+cd app
+npm install
+npm run dev            # Sydney at http://localhost:5173 (npm run dev:tokyo for Tokyo)
+npm run build          # site/index.html (Sydney) and site/tokyo.html (Tokyo)
+npm test && npm run typecheck
+```
 
-1. Download into `data/` (all free):
-   - ABS 2021 boundaries: SA1 and SA2 shapefiles (GDA2020); 2011 and 2016 SA2 shapefiles from the ABS DataPacks page.
-   - ABS 2021 General Community Profile DataPacks, SA1 and SA2, NSW.
-   - ABS Time Series Profile DataPacks (2011, 2016, 2021 releases), SA2, NSW.
-   - OpenStreetMap places for Greater Sydney (cafés, restaurants, shops, pubs, stations, gyms), e.g. via Geofabrik + `osmium`, saved as `sydney_places.csv`.
-   - NSW Liquor & Gaming premises list (XLSX).
-2. In `pipeline/`:
+Pushing to `main` deploys the site to GitHub Pages (`.github/workflows/pages.yml`).
 
-| Step | Command | Makes |
+## Test a line yourself
+
+```python
+from linetests import MultiScaleNull, calibrated_map_test, calibrated_edge_map
+
+null = MultiScaleNull(polygons, I, J, W)   # areas, pairs that share a border, border length (m)
+calibrated_map_test(null, f)               # is it a line?  f = one number per area
+calibrated_edge_map(null, f)               # is it a cliff rather than a slope?
+```
+
+For maps built from counts (cafés vs fast food, licences per resident, nearest store), simulate the records with `linetests.Line`; `experiments/audit/lines_*.py` has worked examples. `pip install -e ".[dev]" && pytest` runs the library tests.
+
+## Rebuild the data
+
+Raw downloads go in `data/` (or set `SPLIT_RAW`). All sources are free; see the credits below.
+
+| City | Step | Command |
 |---|---|---|
-| Census signals | `python build_signals.py <GCP SA2 folder> SA2 signals_sa2.csv` | 56 Census signals per suburb |
-| Venue signals | `python parse_places.py sydney_places.csv places.pkl` then `python build_poi.py <SA2 shp> places.pkl <premises.xlsx> signals_sa2.csv signals_all.csv` | food, shop, pub and licence signals |
-| Line search | `python quirky.py <SA2 shp> signals_sa2.csv q_classic classic` (and `quirky`) | ranked lines with chance tests |
-| Fun lines | `python fun_test.py <SA2 shp>` | the curated food and night-time lines |
-| Street level | `python sa1_graph.py` then `python sa1_line.py works_transport_logistics professionals hivis_l15 15` | split suburbs |
-| 2001–2021 | `python harmonise.py` then `python timeline20.py` | timeline data and tests |
-| Venue history | `python venue_history.py data/sydney_sa2_300.geojson venue_history.csv` (needs internet) | café, fast-food and chain counts per suburb, 2012–2026 |
-| App | `bash build_app.sh` | `sydney_split_app.html` (copy to `index.html`) |
+| Sydney | Census signals | `python pipeline/sydney/build_signals.py <GCP SA2 folder> SA2 signals_sa2.csv` |
+| | Venue and licence signals | `python pipeline/sydney/parse_places.py sydney_places.csv places.pkl`, then `python pipeline/sydney/build_poi.py <SA2 shp> places.pkl <premises.xlsx> signals_sa2.csv signals_all.csv` |
+| | Line search | `python pipeline/sydney/quirky.py <SA2 shp> signals_sa2.csv q_classic classic` (and `quirky`) |
+| | Food and night lines | `python pipeline/sydney/fun_test.py <SA2 shp>` |
+| | 2001–2021 | `python pipeline/sydney/harmonise.py`, then `python pipeline/sydney/timeline20.py` |
+| | App data | `pipeline/sydney/build.sh <working folder>` → `app/data/sydney.json` |
+| Tokyo | Census downloads | `python pipeline/tokyo/tokyo_download.py tokyo_timeline` |
+| | Venues | `python pipeline/tokyo/tokyo_places.py kanto-latest.osm.pbf tokyo_places.csv` |
+| | Neighbourhoods | `python pipeline/tokyo/build_tokyo.py <2020 folder> tokyo_places.csv out` |
+| | 2000–2020 | `python pipeline/tokyo/tokyo_timeline.py tokyo_timeline <2020 folder> out` |
+| | Restaurants | `python pipeline/tokyo/hotpepper_tokyo.py YOUR_KEY hotpepper_tokyo.csv` |
+| | App data | `pipeline/tokyo/build.sh <working folder> hotpepper_tokyo.csv` → `app/data/tokyo.json` |
 
-## Tokyo (work in progress)
-
-| Step | Command | Makes |
-|---|---|---|
-| Census downloads (2000–2015) | `python tokyo_download.py tokyo_timeline` | one zip per table, per year |
-| Venues | `python tokyo_places.py kanto-latest.osm.pbf tokyo_places.csv` | cafés, shops, bars, stations |
-| Neighbourhoods | `python build_tokyo.py <2020 folder> tokyo_places.csv out` | ~1,600 neighbourhoods (町) with Census and venue signals |
-| Lines and chain wars | `python tokyo_wars.py out` | tested lines, `tokyo_gallery.png` |
-| 2000–2020 | `python tokyo_timeline.py tokyo_timeline <2020 folder> out` | Hi-Vis Line over time, ageing, towers |
-| HotPepper restaurants | `python hotpepper_tokyo.py YOUR_KEY hotpepper_tokyo.csv` | every listed Tokyo restaurant, incl. ramen style blurbs |
-| Tokyo app | `python tokyo_app_export.py out hotpepper_tokyo.csv tplaces.pkl app_data_tokyo.json`, `python apply_verdicts.py app_data_tokyo.json verdicts.csv Tokyo`, then `python make_tokyo_page.py app_template.html app_data_tokyo.json tokyo.html` | ~450 neighbourhoods, all lines re-tested, the Tokyo page |
-| HotPepper lines + Ramen Wars | `python tokyo_hp.py out hotpepper_tokyo.csv` | price, late-night, izakaya and ramen-style tests, `tokyo_hp_gallery.png` |
-
-## How the checks work (short version)
-
-- **Is a line real?** We compare its border with 199+ random versions of Sydney that keep the same smoothness (Moran spectral randomisation, Wagner & Dray 2015), rerunning the whole search when many lines were tried.
-- **Do two chains live in different Sydneys?** We shuffle which stores belong to which chain and see how often a split this clean appears.
-- **Did a suburb really change side?** Years that appear in two Census packs give a free estimate of measurement noise; only changes bigger than that are shown.
+| Result | Command (in `experiments/audit/`, with `SPLIT_SYDNEY_WORK` and `SPLIT_TOKYO_WORK` set) |
+|---|---|
+| Verdict table (`results/verdicts.csv`) | `final_census.py`, `final_data_lines.py`, `final_chains.py`, `final_edge.py`, `search_null.py`, `q1_geography.py`, then `assemble.py` |
+| MSR calibration failure (paper Section 4) | `audit_census.py 200 199` |
+| False alarms and power (paper Section 8) | `gp_check.py`, `power_check.py 60`, `power_step.py 60` |
+| Persistence over time | `timeline_audit.py` |
 
 ## Credits and licences
 
-ABS Census and ASGS data © Commonwealth of Australia (CC BY 4.0). Venue data © OpenStreetMap contributors (ODbL). Liquor licence data © NSW Liquor & Gaming (CC BY 4.0). Tokyo: Census data © Statistics Bureau of Japan via e-Stat. Restaurant listings Powered by ホットペッパー Webサービス (HotPepper Gourmet); check Recruit's current terms before any paid use. A suburb's colour describes the area, not the people in it. The Census asks about birthplace, ancestry and religion, not race or ethnicity.
-
-An earlier prototype is kept at the git tag `v0-chatgpt-prototype`.
+ABS Census and ASGS data © Commonwealth of Australia (CC BY 4.0). Venue data © OpenStreetMap contributors (ODbL). Liquor licence data © NSW Liquor & Gaming (CC BY 4.0). Tokyo Census data © Statistics Bureau of Japan via e-Stat. Restaurant listings Powered by ホットペッパー Webサービス (HotPepper Gourmet); check Recruit's current terms before any paid use. A place's colour describes the area, not the people in it.
