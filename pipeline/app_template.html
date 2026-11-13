@@ -21,6 +21,7 @@
   --empty: #dcdad4;
   --good: #1f7a4d;
   --meh: #8a6d1f;
+  --gentle: #2f6f9a;
   --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
   --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   color-scheme: light;
@@ -28,12 +29,12 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --paper: #14181b; --panel: #1c2125; --ink: #e8ebe7; --muted: #9aa4ab; --rule: #2e353a;
-    --side-a: #d98e2b; --side-b: #3f77a3; --cut: #f4f1e8; --empty: #3a4146; --good: #4fbf87; --meh: #d2b25a; color-scheme: dark;
+    --side-a: #d98e2b; --side-b: #3f77a3; --cut: #f4f1e8; --empty: #3a4146; --good: #4fbf87; --meh: #d2b25a; --gentle: #7fb6dc; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --paper: #14181b; --panel: #1c2125; --ink: #e8ebe7; --muted: #9aa4ab; --rule: #2e353a;
-  --side-a: #d98e2b; --side-b: #3f77a3; --cut: #f4f1e8; --empty: #3a4146; --good: #4fbf87; --meh: #d2b25a; color-scheme: dark;
+  --side-a: #d98e2b; --side-b: #3f77a3; --cut: #f4f1e8; --empty: #3a4146; --good: #4fbf87; --meh: #d2b25a; --gentle: #7fb6dc; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
@@ -61,6 +62,7 @@ nav h2:first-child { margin-top: 6px; }
 .pill { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 99px; white-space: nowrap; border: 1px solid currentColor; }
 .pill.good { color: var(--good); }
 .pill.meh { color: var(--meh); }
+.pill.gentle { color: var(--gentle); }
 
 main { position: relative; min-width: 0; min-height: 0; }
 #map { width: 100%; height: 100%; display: block; cursor: grab; touch-action: none; }
@@ -122,7 +124,7 @@ aside h2 { font: 800 28px/1.1 var(--display); margin: 0; text-wrap: balance; }
 .chip.a { border-color: var(--side-a); } .chip.b { border-color: var(--side-b); }
 .sure { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
 .sure strong { font: 800 18px var(--display); }
-.sure.good strong { color: var(--good); } .sure.meh strong { color: var(--meh); }
+.sure.good strong { color: var(--good); } .sure.meh strong { color: var(--meh); } .sure.gentle strong { color: var(--gentle); }
 .small { font-size: 13px; color: var(--muted); margin: 6px 0 0; }
 .passport ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .passport li { display: grid; grid-template-columns: 14px 1fr; gap: 8px; font-size: 13.5px; }
@@ -180,7 +182,7 @@ footer { font-size: 12px; color: var(--muted); }
     <ol>
       <li><b>You've heard of the Latte Line.</b> We used the Census, café and chicken-shop maps, and liquor licences to find it, plus a dozen more.</li>
       <li><b>Each line splits Sydney in two.</b> Orange is one side, blue is the other. Hover over any suburb to see which side it's on.</li>
-      <li><b>We check every line against random versions of Sydney,</b> so you can tell real patterns from coincidences.</li>
+      <li><b>We check every line against random versions of Sydney that are just as smooth,</b> so you can tell a real line from a gentle pattern or a coincidence.</li>
     </ol>
     <div class="introbtns">
       <button id="introLatte">Show me the Latte Line</button>
@@ -245,7 +247,7 @@ const byId = Object.fromEntries(lines.map((l) => [l.id, l]));
 const GROUPS = [["Food", "Food & shops"], ["Night", "After dark"], ["Work", "Work (Census)"], ["Hidden", "Hidden lines (not just rich vs poor)"]];
 let current = lines[0], compare = null, picked = null;
 
-function verdict(l) { return l.p <= 0.05 ? ["good", "Beats chance"] : ["meh", "Could be chance"]; }
+function verdict(l) { return l.tier === "line" ? ["good", "Real line"] : l.tier === "gentle" ? ["gentle", "Real pattern, gentle"] : ["meh", "Could be chance"]; }
 
 // ---- modes & lists
 const her = DATA.heritage, herById = Object.fromEntries(her.map((h) => [h.id, h]));
@@ -494,9 +496,12 @@ function render() {
   document.querySelectorAll(".line-btn").forEach((b) => b.setAttribute("aria-current", b.dataset.id === l.id));
   drawCompare();
   const [cls, txt] = verdict(l);
-  const sureText = l.p <= 0.05
-    ? `Only ${Math.max(1, Math.round(l.p * 100))} in 100 simulated "random Sydneys" with the same smoothness produced a line this clean. This one is a real pattern.`
-    : `Random Sydneys with the same smoothness often produce a line this clean, so the map may still tell a story, but the data can't prove it yet.`;
+  const sureText = l.tier === "line"
+    ? `Even next to random versions of Sydney that are just as smooth, this border is unusually clean: only ${Math.max(1, Math.round(l.p * 100))} in 100 drew one this clean, after allowing for how many lines we tried. It still changes gradually across a few kilometres rather than at a hard edge.`
+    : l.tier === "gentle"
+    ? `The pattern is real: Sydney clearly isn't random here. But a random Sydney that's just as smooth often draws a border this clean, so read it as a gentle slope across the city rather than a sharp line.`
+    : `Versions of Sydney with no real pattern often produce a split like this. The map may still tell a story, but the data can't show it yet.`;
+  const tech = `Technical: line test p = ${l.p}${l.p_geo != null ? `, any-geography p = ${l.p_geo}` : ""}${l.p_edge != null ? `, edge test p = ${l.p_edge}` : ""}. Random landscapes in real space, simulated from the data, then corrected for the number of lines tried.`;
   const splitNote = l.id === "the-hi-vis-line" ? `<div class="box"><h3>Suburbs split down the middle</h3><p style="margin:0">Looking street by street, this line runs right through ${Object.keys(DATA.split).length} suburbs, including Parramatta, Ultimo, Haymarket and Kogarah.</p><p class="small">Search for a suburb to see if it's one of them.</p></div>` : "";
   const adj = l.adjusted ? `<p class="small">We took out the effect of income and distance from the city first, so this isn't just the usual rich-vs-poor or inner-vs-outer split.</p>` : "";
   const d = $("#detail");
@@ -506,7 +511,7 @@ function render() {
       <div class="side"><span class="sw a"></span><div><b class="ta"></b><div class="ex ea"></div></div></div>
       <div class="side"><span class="sw b"></span><div><b class="tb"></b><div class="ex eb"></div></div></div>
     </div>
-    <div class="box"><h3>How sure are we?</h3><div class="sure ${cls}"><strong>${txt}</strong></div><p class="small">${sureText}</p><p class="small" style="font-size:11.5px">Technical: p = ${l.p}</p>${adj}</div>
+    <div class="box"><h3>How sure are we?</h3><div class="sure ${cls}"><strong>${txt}</strong></div><p class="small">${sureText}</p><p class="small" style="font-size:11.5px">${tech}</p>${adj}</div>
     <div class="box"><h3>What else changes across it</h3>
       <p class="small" style="margin:0 0 6px">The orange side also has:</p><div class="chips ca"></div>
       <p class="small" style="margin:10px 0 6px">The blue side also has:</p><div class="chips cb"></div></div>
@@ -756,10 +761,10 @@ function renderMake() {
     const msg = MK.kind === "chain"
       ? (good ? "Yes. Shuffle which stores belong to which chain and you rarely get a split this clean. These chains really do favour different parts of Sydney."
               : "Can't tell. Shuffle the stores between the two chains and you often get a split this clean, so the pattern may just be where shops cluster anyway.")
-      : (good ? `Yes. Only ${Math.max(1, Math.round(r.p * 100))} in 100 random Sydneys with the same smoothness gave a line this clean.`
-              : "Not clearly. Random Sydneys with the same smoothness often give a line this clean, so the map may still tell a story, but it can't be proven yet.");
-    box.innerHTML = `<h3>${MK.kind === "chain" ? "Do these chains live in different Sydneys?" : "Is this a real line?"}</h3><div class="sure ${good ? "good" : "meh"}"><strong>${good ? (MK.kind === "chain" ? "Different Sydneys" : "Real line") : (MK.kind === "chain" ? "Same Sydney" : "Could be chance")}</strong></div>
-      <p class="small">${msg}</p><p class="small" style="font-size:11.5px">Technical: line-ness ${r.obs.toFixed(3)}, p = ${r.p.toFixed(3)} (199 draws)</p>`;
+      : (good ? `Passes the quick check: only ${Math.max(1, Math.round(r.p * 100))} in 100 shuffled Sydneys gave a line this clean. The quick check is generous with smooth maps, so treat this as a pattern worth a closer look rather than a proven line.`
+              : "Not even the quick check. Shuffled Sydneys often give a line this clean, so the map may still tell a story, but it can't be shown yet.");
+    box.innerHTML = `<h3>${MK.kind === "chain" ? "Do these chains live in different Sydneys?" : "Is this a real line?"}</h3><div class="sure ${good ? "good" : "meh"}"><strong>${good ? (MK.kind === "chain" ? "Different Sydneys" : "Passes the quick check") : (MK.kind === "chain" ? "Same Sydney" : "Could be chance")}</strong></div>
+      <p class="small">${msg}</p><p class="small" style="font-size:11.5px">Technical: line-ness ${r.obs.toFixed(3)}, p = ${r.p.toFixed(3)} (quick Moran-rotation check, 199 draws; known to be lenient with smooth maps)</p>`;
   }, 30);
 }
 $("#smooth").addEventListener("input", (e) => { MK.lam = lamOf(+e.target.value); if (mode === "make") renderMake(); });
@@ -811,7 +816,7 @@ function renderPassport() {
     p.textContent = `Split suburb: the Hi-Vis Line runs through the middle of it. In one part ${sp[1]}% of workers are professionals; in the other, ${sp[2]}%.`;
     box.insertBefore(p, ul);
   }
-  for (const l of lines.filter((x) => x.p <= 0.05)) {
+  for (const l of lines.filter((x) => x.tier !== "chance")) {
     const li = document.createElement("li"), on = l.side[picked];
     li.innerHTML = `<span class="sw ${on ? "a" : "b"}"></span><span><b></b>: <span></span></span>`;
     li.querySelector("b").textContent = l.name.replace(/^The /, "");

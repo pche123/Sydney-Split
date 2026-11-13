@@ -1,0 +1,41 @@
+city,group,name,kind,p_app,old_verdict,p_line,p_corrected,p_geography,p_edge,verdict,edge,size
+Sydney,Food,The Latte Line,records,0.002,Beats chance,0.0198019801980198,0.11881188118811879,0.002,1.0,"Real pattern, gentle",slope,0.1
+Sydney,Food,The Red Rooster Line,records,0.018,Beats chance,0.0327868852459016,0.163934426229508,0.014,1.0,"Real pattern, gentle",slope,0.05
+Sydney,Food,The Charcoal Chook Line,records,0.234,Could be chance,0.2131147540983606,0.8524590163934423,0.244,0.4838709677419355,Could be chance,slope,0.1
+Sydney,Food,Pho vs Pad Thai,records,0.194,Could be chance,0.801980198019802,1.0,0.518,0.4838709677419355,Could be chance,slope,0.13
+Sydney,Food,The Aldi Line,records,0.024,Beats chance,0.8712871287128713,1.0,0.852,0.3548387096774194,Could be chance,slope,0.07
+Sydney,Food,The Bubble Tea Line,records,0.26,Could be chance,0.9405940594059404,1.0,0.724,0.032258064516129,Could be chance,slope,0.11
+Sydney,Hidden,The Tradie Belt,census,0.005,Beats chance,0.4554455445544554,0.678,,0.3902439024390244,"Real pattern, gentle",slope,0.0
+Sydney,Hidden,The Full House Line,census,0.015,Beats chance,0.0099009900990099,0.748,,0.902439024390244,"Real pattern, gentle",slope,0.02
+Sydney,Hidden,The Laptop vs Ute Line,census,0.015,Beats chance,0.0396039603960396,0.766,,0.1463414634146341,"Real pattern, gentle",slope,0.04
+Sydney,Hidden,The Boomer vs Builder Line,census,0.04,Beats chance,0.1287128712871287,0.856,,0.6585365853658537,"Real pattern, gentle",slope,0.04
+Sydney,Night,The Late Night Line,records,0.002,Beats chance,0.2772277227722772,0.8316831683168315,0.002,0.8387096774193549,"Real pattern, gentle",slope,0.05
+Sydney,Night,The Small Bar Line,records,0.002,Beats chance,0.3465346534653465,0.8316831683168315,0.006,0.032258064516129,"Real pattern, gentle",slope,0.07
+Sydney,Night,The Pokies Line,records,0.014,Beats chance,0.8811881188118812,0.8811881188118812,0.248,0.064516129032258,Could be chance,slope,0.09
+Sydney,Work,The Hi-Vis Line,census,0.005,Beats chance,0.0099009900990099,0.014,,1.0,Real line,slope,0.02
+Sydney,Work,The Factory Line,census,0.005,Beats chance,0.0198019801980198,0.038,,1.0,Real line,slope,0.05
+Tokyo,Around,The Bicycle Line,census,0.004,Beats chance,0.0327868852459016,0.0655737704918032,,1.0,"Real pattern, gentle",slope,0.0166666666666666
+Tokyo,Around,Train vs Car,census,0.004,Beats chance,0.5901639344262295,0.5901639344262295,,0.125,"Real pattern, gentle",slope,0.0833333333333333
+Tokyo,Chains,My Basket vs the Konbini,records,0.01,Beats chance,0.0163934426229508,0.081967213114754,0.002,1.0,"Real pattern, gentle",slope,0.1333333333333333
+Tokyo,Chains,Gyudon Wars: Matsuya vs Yoshinoya,records,0.126,Could be chance,0.0327868852459016,0.1311475409836064,0.022,1.0,"Real pattern, gentle",slope,0.1166666666666666
+Tokyo,Chains,Starbucks vs Doutor,records,0.072,Could be chance,0.0327868852459016,0.1311475409836064,0.02,0.9090909090909092,"Real pattern, gentle",slope,0.0333333333333333
+Tokyo,Chains,Ramen Wars: Iekei vs Hakata,records,0.256,Could be chance,0.1967213114754098,0.3934426229508196,0.112,1.0,Could be chance,slope,0.0666666666666666
+Tokyo,Chains,Konbini Wars: 7-Eleven vs FamilyMart,records,0.522,Could be chance,0.7213114754098361,0.7213114754098361,0.502,1.0,Could be chance,slope,0.0166666666666666
+Tokyo,Food,Coffee vs Alcohol,records,0.016,Beats chance,0.0594059405940594,0.2376237623762376,0.002,0.8181818181818182,"Real pattern, gentle",slope,0.02
+Tokyo,Food,The Latte Line,records,0.084,Could be chance,0.4554455445544554,1.0,0.002,0.8571428571428571,"Real pattern, gentle",slope,0.09
+Tokyo,Food,Ramen vs Soba,records,0.172,Could be chance,0.6633663366336634,1.0,0.334,0.0909090909090909,Could be chance,slope,0.1
+Tokyo,Food,The Indie Café Line,records,0.172,Could be chance,0.6633663366336634,1.0,0.01,0.6363636363636364,"Real pattern, gentle",slope,0.11
+Tokyo,Homes,The Living Alone Line,census,0.006,Beats chance,0.1475409836065573,0.44262295081967185,,0.9375,"Real pattern, gentle",slope,0.05
+Tokyo,Homes,The Tower Line,census,0.342,Could be chance,0.9016393442622952,1.0,,0.25,"Real pattern, gentle",slope,0.0333333333333333
+Tokyo,Homes,The Grey Line,census,0.006,Beats chance,0.5737704918032787,1.0,,0.625,"Real pattern, gentle",slope,0.05
+Tokyo,Night,Izakaya vs Italian & French,records,0.01,Beats chance,0.0198019801980198,0.09900990099009899,0.002,1.0,"Real pattern, gentle",slope,0.15
+Tokyo,Night,The Late-Night Line,records,0.404,Could be chance,1.0,1.0,0.584,0.0909090909090909,Could be chance,slope,0.03
+Tokyo,Night,Bars vs Izakaya,records,0.15,Could be chance,0.7227722772277227,1.0,0.018,0.0909090909090909,"Real pattern, gentle",slope,0.03
+Tokyo,Night,The Yakiniku Line,records,0.08,Could be chance,0.495049504950495,1.0,0.044,0.5454545454545454,"Real pattern, gentle",slope,0.06
+Tokyo,Night,The Price Line,records,0.212,Could be chance,0.3366336633663366,1.0,0.002,1.0,"Real pattern, gentle",slope,0.01
+Tokyo,Work,The Hi-Vis Line,census,0.01,Beats chance,0.4426229508196721,1.0,,0.935483870967742,"Real pattern, gentle",slope,0.0166666666666666
+Tokyo,Work,The Factory Line,census,0.01,Beats chance,0.2950819672131147,1.0,,0.935483870967742,"Real pattern, gentle",slope,0.0166666666666666
+Tokyo,Work,The Laptop vs Hard Hat Line,census,0.01,Beats chance,0.2786885245901639,1.0,,0.7419354838709677,"Real pattern, gentle",slope,0.05
+Tokyo,Work,The Boomer vs Builder Line,census,0.014,Beats chance,0.5901639344262295,1.0,,1.0,"Real pattern, gentle",slope,0.0
+Tokyo,Work,The Degree Line,census,0.01,Beats chance,0.3114754098360656,1.0,,1.0,"Real pattern, gentle",slope,0.0166666666666666
+Tokyo,Worship,Shrines vs Temples,records,0.4,Could be chance,0.6885245901639344,0.6885245901639344,0.38,1.0,Could be chance,slope,0.0666666666666666
