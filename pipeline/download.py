@@ -4,16 +4,17 @@
     python pipeline/download.py melbourne                 # everything automatic for Melbourne
     python pipeline/download.py osaka --only census,osm   # just some parts
     python pipeline/download.py london --out D:/split_raw
+    python pipeline/download.py all                       # every city in cities.py
 
 Parts: census (tables, all years), boundaries, osm, venues (licences, gaming, hygiene ratings).
 Files already on disk are skipped, so it is safe to re-run after a dropped connection.
 Anything that needs a key, a form or a fee is printed at the end as a manual step (see DATA_SOURCES.md).
 """
-import argparse, json, os, re, sys, time
+import argparse, json, os, re, subprocess, sys, time
 import requests
 
 sys.path.insert(0, os.path.dirname(__file__))
-from cities import CITIES, LONDON_BOROUGHS
+from cities import CITIES
 
 UA = {"User-Agent": "Mozilla/5.0 (split-lines data kit)"}
 MANUAL = []
@@ -84,6 +85,11 @@ def au(city, c, out, parts):
             u and get(u, f"{out}/venues/vic_gaming_by_venue.xlsx")
             u = ckan_latest("https://discover.data.vic.gov.au", "historical-gaming-expenditure-by-venue")
             u and get(u, f"{out}/venues/vic_gaming_by_venue_history.xlsx")
+        elif lic == "sa":
+            get("https://data.sa.gov.au/data/dataset/cf466291-8740-4b54-ae11-8c98c347f201/resource/"
+                "a15314ed-891d-4e14-8c1c-bf080894e9d9/download/lglicences20190819.xlsx", f"{out}/venues/sa_licences_2019.xlsx")
+            MANUAL.append("Adelaide licences: the newest open SA list is August 2019 (addresses and machine counts, no "
+                          "coordinates). It is downloaded; geocoding it is a later step. OSM pubs/bars/bottle shops are current.")
         elif lic == "qld":
             MANUAL.append("Brisbane licences: Queensland has no bulk list. Use OSM pubs/bars/bottle shops (automatic), "
                           "or search https://secure.olgr.qld.gov.au/forms/lls and save results, or ask OLGR for an extract "
@@ -150,31 +156,41 @@ def arcgis_geojson(service, where, path):
     print("  ok", os.path.relpath(path), len(feats), "areas")
 
 
+def norm(name):
+    return re.sub(r"[^a-z]", "", name.lower().replace("city of ", "").replace(" council", "").replace("st.", "st"))
+
+
 def uk(city, c, out, parts):
+    shared = os.path.join(os.path.dirname(out), "_uk_census")   # the same national files serve every English city
     if "census" in parts:
-        print("Nomis Census 2021 bulk tables (every geography incl. MSOA and LSOA)")
+        print("Nomis Census 2021 bulk tables (all of England and Wales, every geography; shared between cities)")
         for t in UK_TABLES:
-            get(f"{NOMIS}/census2021-{t}.zip", f"{out}/census/census2021-{t}.zip")
-        MANUAL.append("London timeline (2011): Nomis 2011 bulk tables, https://www.nomisweb.co.uk/sources/census_2011_ks "
-                      "(KS101EW population, KS605EW industry, KS608EW occupation) plus the MSOA 2011->2021 lookup on the "
-                      "ONS Open Geography Portal. Optional; the 2021 tables are enough for the lines.")
+            get(f"{NOMIS}/census2021-{t}.zip", f"{shared}/census2021-{t}.zip")
+        MANUAL.append(f"{c['name']} timeline (2011, optional): Nomis 2011 bulk tables, https://www.nomisweb.co.uk/sources/census_2011_ks "
+                      "(KS101EW population, KS605EW industry, KS608EW occupation) plus the 2011->2021 area lookups on the "
+                      "ONS Open Geography Portal. The 2021 tables are enough for the lines.")
     if "boundaries" in parts:
-        print("ONS boundaries (MSOA and LSOA 2021, London only)")
-        where = " OR ".join(f"MSOA21NM LIKE '{b} %'" for b in LONDON_BOROUGHS)
-        arcgis_geojson(MSOA, where, f"{out}/boundaries/msoa2021_london.geojson")
-        arcgis_geojson(LSOA, where.replace("MSOA21NM", "LSOA21NM"), f"{out}/boundaries/lsoa2021_london.geojson")
+        lvl = c["level"].upper(); svc = MSOA if lvl == "MSOA" else LSOA
+        print(f"ONS boundaries ({lvl} 2021, {c['name']} only)")
+        where = " OR ".join("{}21NM LIKE '{} %'".format(lvl, b.replace("'", "''")) for b in c["lads"])
+        arcgis_geojson(svc, where, f"{out}/boundaries/{c['level']}2021.geojson")
     if "venues" in parts:
         print("Food Standards Agency hygiene ratings (every food business, with type and location)")
+        want = {norm(b) for b in c["lads"]}
         try:
             auths = requests.get("https://api.ratings.food.gov.uk/Authorities", timeout=120,
                                  headers={**UA, "x-api-version": "2", "accept": "application/json"}).json()["authorities"]
-            for a in auths:
-                if a.get("RegionName") == "London":
-                    nm = re.sub(r"\W+", "_", a["Name"])
-                    get(a["FileName"], f"{out}/venues/fsa/{a['LocalAuthorityIdCode']}_{nm}.xml")
+            hit = [a for a in auths if norm(a["Name"]) in want]
+            print("  councils:", ", ".join(a["Name"] for a in hit), f"({len(hit)} of {len(want)})")
+            if len(hit) < len(want):
+                MANUAL.append(f"{c['name']}: only {len(hit)} of {len(want)} councils matched in the FSA list; "
+                              "download the missing XML files from https://ratings.food.gov.uk/open-data into venues/fsa/")
+            for a in hit:
+                nm = re.sub(r"\W+", "_", a["Name"])
+                get(a["FileName"], f"{out}/venues/fsa/{a['LocalAuthorityIdCode']}_{nm}.xml")
         except Exception as e:
-            MANUAL.append(f"FSA list failed ({e}). Download the London XML files by hand from https://ratings.food.gov.uk/open-data")
-        print("Gambling Commission premises register")
+            MANUAL.append(f"FSA list failed ({e}). Download the XML files by hand from https://ratings.food.gov.uk/open-data")
+        print("Gambling Commission premises register (all of Great Britain; venues.py keeps the city's part)")
         try:
             page = requests.get("https://www.gamblingcommission.gov.uk/public-register/premises/download", headers=UA, timeout=60).text
             href = re.search(r'href="([^"]+\.(?:xlsx|csv))"', page)
@@ -188,10 +204,14 @@ def uk(city, c, out, parts):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("city", choices=sorted(CITIES))
+    ap.add_argument("city", choices=sorted(CITIES) + ["all"])
     ap.add_argument("--out", default=os.environ.get("SPLIT_RAW", "data"))
     ap.add_argument("--only", default="census,boundaries,osm,venues")
     a = ap.parse_args()
+    if a.city == "all":
+        for city in CITIES:
+            subprocess.run([sys.executable, __file__, city, "--out", a.out, "--only", a.only])
+        return
     c, parts = CITIES[a.city], set(a.only.split(","))
     out = os.path.join(a.out, a.city)
     print(f"== {c['name']} -> {out}\n   study area: {c['study']}")
