@@ -1,7 +1,30 @@
 # Data sources
 
-Every file the new cities need, where it comes from, and whether a script fetches it.
+Every file the cities need, where it comes from, and whether a script fetches it.
 The study areas and codes for each city live in `pipeline/cities.py`.
+
+## The cities and why each is in
+
+| City | Study area | What it adds to the comparison |
+|---|---|---|
+| Sydney | SA2s in Greater Sydney with >= 1,000 residents and >= 300 per km2 (300 areas) | The reference city: harbour, sprawl, a strong Latte Line and pokies in pubs and clubs. |
+| Melbourne | SA2s in Greater Melbourne with >= 1,000 residents and >= 300 per km2 (about 330 areas) | Sydney's rival: flatter, tram grid, pokies capped by law at a different level; does the Latte Line move? |
+| Brisbane | SA2s in Greater Brisbane with >= 1,000 residents and >= 300 per km2 (about 230 areas) | Hilly river city with a younger boom; licence data are thin, so its lines lean on the census. |
+| Perth | SA2s in Greater Perth with >= 1,000 residents and >= 300 per km2 (about 180 areas) | No pub or club pokies at all: a natural experiment on the Pokies Line. |
+| Adelaide | SA2s in Greater Adelaide with >= 1,000 residents and >= 300 per km2 (about 170 areas) | Planned grid centre (Light's plan) ringed by parklands, an old wine state: grid and drinks contrasts. |
+| Tokyo | 23 special wards + Tama cities (no islands); 町 merged to ~30,000 people (454 areas) | The reference Japanese city: rail-shaped, many centres, konbini and ramen wars. |
+| Osaka | Osaka City (24 wards), Sakai and the inner ring (Toyonaka, Suita, Moriguchi, Ibaraki, Yao, Kadoma, Settsu, Higashiosaka); 町 merged to ~20,000 people (about 280 areas) | Merchant city, Tokyo's rival; Kansai food culture and its own chains. |
+| Kyoto | Kyoto City (11 wards), dropping the mountain areas of Sakyo, Kita and Ukyo; 町 merged to ~8,000 people (about 170 areas) | Old imperial grid, temples and students: does an 8th-century plan still show in today's lines? |
+| Nagoya | Nagoya City (16 wards); 町 merged to ~12,000 people (about 190 areas) | Car city (Toyota): wide roads, low rail use; Train vs Car should flip relative to Tokyo. |
+| Yokohama-Kawasaki | Yokohama (18 wards) and Kawasaki (7 wards); 町 merged to ~15,000 people (about 350 areas) | Tokyo's commuter belt: do Tokyo's lines carry across the city border, or reset? |
+| Kobe-Hanshin | Kobe (9 wards) plus Amagasaki, Nishinomiya and Ashiya along the bay; mountain 町 dropped; merged to ~10,000 people (about 250 areas) | Port city squeezed between mountains and sea: a thin strip, so lines can only run one way. |
+| Fukuoka | Fukuoka City (7 wards), mountain 町 dropped; merged to ~8,000 people (about 190 areas) | Home of Hakata tonkotsu ramen: the ramen wars on home turf; compact and young. |
+| Sapporo | Sapporo City (10 wards), mountain 町 dropped; merged to ~9,000 people (about 210 areas) | Modern planned grid (1870s), snow and subways: a young grid against Kyoto's ancient one. |
+| London | Greater London MSOAs (about 1,000 areas of ~9,000 people; merge pairs for ~500 if needed) | The UK reference: vast, many centres, deep heritage mix. |
+| Manchester | Greater Manchester's 10 boroughs, MSOAs (about 350 areas) | Post-industrial north, student city: Factory and Hi-Vis lines in their birthplace. |
+| Birmingham | Birmingham, Solihull and the Black Country (Sandwell, Dudley, Walsall, Wolverhampton), MSOAs (about 340 areas) | Car-built city with the Black Country next door: industry vs services on one map. |
+| Liverpool | Liverpool City Region (Liverpool, Knowsley, Sefton, Wirral, St Helens, Halton), MSOAs (about 200 areas) | Port city across the Mersey (Wirral): a river split, like Sydney's harbour. |
+| Brighton | Brighton and Hove, LSOAs (about 165 areas of ~1,700 people; the city has only ~37 MSOAs) | Small seaside city, students and London commuters: a coast line on the smallest scale. |
 
 ## Get the data (three commands per city)
 
@@ -69,7 +92,43 @@ Japanese census files come per prefecture, not per city, so each city's links be
 - Gambling premises: [Gambling Commission register](https://www.gamblingcommission.gov.uk/public-register/premises/download)
 - OpenStreetMap: [greater-london-latest.osm.pbf](https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf)
 
-## Australia: Melbourne, Brisbane, Perth (and Sydney)
+### Yokohama-Kawasaki (files cover all of Kanagawa Prefecture, code 14)
+
+- Census 2020 tables: [T001081](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001081&code=14&downloadType=2) · [T001082](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001082&code=14&downloadType=2) · [T001083](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001083&code=14&downloadType=2) · [T001084](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001084&code=14&downloadType=2) · [T001085](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001085&code=14&downloadType=2) · [T001086](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001086&code=14&downloadType=2) · [T001103](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001103&code=14&downloadType=2) · [T001104](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001104&code=14&downloadType=2) · [T001106](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001106&code=14&downloadType=2)
+- Map of 町丁 (2020): [boundaries](https://www.e-stat.go.jp/gis/statmap-search/data?dlserveyId=A002005212020&code=14&coordSys=1&format=shape&downloadType=5)
+- OpenStreetMap: [kanto-latest.osm.pbf](https://download.geofabrik.de/asia/japan/kanto-latest.osm.pbf)
+- Restaurants: HotPepper, `python pipeline/common/hotpepper.py yokohama KEY out.csv`
+
+### Kobe-Hanshin (files cover all of Hyogo Prefecture, code 28)
+
+- Census 2020 tables: [T001081](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001081&code=28&downloadType=2) · [T001082](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001082&code=28&downloadType=2) · [T001083](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001083&code=28&downloadType=2) · [T001084](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001084&code=28&downloadType=2) · [T001085](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001085&code=28&downloadType=2) · [T001086](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001086&code=28&downloadType=2) · [T001103](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001103&code=28&downloadType=2) · [T001104](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001104&code=28&downloadType=2) · [T001106](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001106&code=28&downloadType=2)
+- Map of 町丁 (2020): [boundaries](https://www.e-stat.go.jp/gis/statmap-search/data?dlserveyId=A002005212020&code=28&coordSys=1&format=shape&downloadType=5)
+- OpenStreetMap: [kansai-latest.osm.pbf](https://download.geofabrik.de/asia/japan/kansai-latest.osm.pbf)
+- Restaurants: HotPepper, `python pipeline/common/hotpepper.py kobe KEY out.csv`
+
+### Fukuoka (files cover all of Fukuoka Prefecture, code 40)
+
+- Census 2020 tables: [T001081](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001081&code=40&downloadType=2) · [T001082](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001082&code=40&downloadType=2) · [T001083](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001083&code=40&downloadType=2) · [T001084](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001084&code=40&downloadType=2) · [T001085](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001085&code=40&downloadType=2) · [T001086](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001086&code=40&downloadType=2) · [T001103](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001103&code=40&downloadType=2) · [T001104](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001104&code=40&downloadType=2) · [T001106](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001106&code=40&downloadType=2)
+- Map of 町丁 (2020): [boundaries](https://www.e-stat.go.jp/gis/statmap-search/data?dlserveyId=A002005212020&code=40&coordSys=1&format=shape&downloadType=5)
+- OpenStreetMap: [kyushu-latest.osm.pbf](https://download.geofabrik.de/asia/japan/kyushu-latest.osm.pbf)
+- Restaurants: HotPepper, `python pipeline/common/hotpepper.py fukuoka KEY out.csv`
+
+### Sapporo (files cover all of Hokkaido, code 01)
+
+- Census 2020 tables: [T001081](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001081&code=01&downloadType=2) · [T001082](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001082&code=01&downloadType=2) · [T001083](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001083&code=01&downloadType=2) · [T001084](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001084&code=01&downloadType=2) · [T001085](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001085&code=01&downloadType=2) · [T001086](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001086&code=01&downloadType=2) · [T001103](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001103&code=01&downloadType=2) · [T001104](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001104&code=01&downloadType=2) · [T001106](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001106&code=01&downloadType=2)
+- Map of 町丁 (2020): [boundaries](https://www.e-stat.go.jp/gis/statmap-search/data?dlserveyId=A002005212020&code=01&coordSys=1&format=shape&downloadType=5)
+- OpenStreetMap: [hokkaido-latest.osm.pbf](https://download.geofabrik.de/asia/japan/hokkaido-latest.osm.pbf)
+- Restaurants: HotPepper, `python pipeline/common/hotpepper.py sapporo KEY out.csv`
+
+### Manchester, Birmingham, Liverpool, Brighton
+
+The census tables, food-business files and gambling list above are national, so these cities reuse London's
+downloads (saved once in `_uk_census/`). Each city only adds its own map of areas (from the ONS map service,
+cut to its councils in `cities.py`) and the England-wide OpenStreetMap file,
+[england-latest.osm.pbf](https://download.geofabrik.de/europe/united-kingdom/england-latest.osm.pbf) (about 1.5 GB).
+Brighton uses the smaller LSOA areas because it has only about 37 MSOAs.
+
+## Australia: Melbourne, Brisbane, Perth, Adelaide (and Sydney)
 
 | Data | Link | Gives | Licence | How |
 |---|---|---|---|---|
@@ -80,6 +139,7 @@ Japanese census files come per prefecture, not per city, so each city's links be
 | OSM | [Geofabrik Australia](https://download.geofabrik.de/australia-oceania/australia.html) | chains, cafes, pubs, bars, bottle shops, breweries | ODbL | auto |
 | VIC liquor licences | [data.vic: Victorian liquor licences by location](https://discover.data.vic.gov.au/dataset/victorian-liquor-licences-by-location) | every licence with category and coordinates, monthly | CC BY 4.0 | auto |
 | VIC gaming by venue | [data.vic: Current](https://discover.data.vic.gov.au/dataset/current-gaming-expenditure-by-venue) and [Historical gaming expenditure by venue](https://discover.data.vic.gov.au/dataset/historical-gaming-expenditure-by-venue) | machines and player losses per venue (names, no coordinates: matched to licences) | CC BY 4.0 | auto |
+| SA licences and gaming (Adelaide) | [data.sa.gov.au: Liquor & Gaming Licences](https://data.sa.gov.au/data/dataset/liquor-gaming-licences) | newest open list is August 2019: addresses and machine counts, no coordinates | CC BY | auto (geocoding later) |
 | QLD licences and gaming | [OLGR licence search](https://secure.olgr.qld.gov.au/forms/lls) | one-at-a-time search only; no bulk file | — | manual (or skip) |
 | WA licences | [Search of licensed premises](https://www.wa.gov.au/organisation/racing-gaming-and-liquor/search-of-licensed-premises) | the department sells the list (about $70) | paid | manual (or skip) |
 | NSW premises list (Sydney) | [data.nsw: Liquor licence premises list](https://data.nsw.gov.au/data/dataset/nsw-liquor-licence-premises-list) | licences, coordinates, machines | CC BY | auto |
@@ -87,7 +147,7 @@ Japanese census files come per prefecture, not per city, so each city's links be
 Brisbane and Perth fall back to OSM pubs, bars and bottle shops. WA has no poker machines outside the casino,
 so Perth has no Pokies line: that is a real difference between the cities, not missing data.
 
-## Japan: Osaka, Kyoto, Nagoya (and Tokyo)
+## Japan: Osaka, Kyoto, Nagoya, Yokohama-Kawasaki, Kobe-Hanshin, Fukuoka, Sapporo (and Tokyo)
 
 | Data | Link | Gives | Licence | How |
 |---|---|---|---|---|
@@ -95,10 +155,10 @@ so Perth has no Pokies line: that is a real difference between the cities, not m
 | Census small areas 2000–2015 | same, older `statsId`s (in `download.py`) | timeline | e-Stat terms | auto |
 | Boundaries | same, `dlserveyId=A00200521{year}&code={pref}` | 町丁 maps per census year | e-Stat terms | auto |
 | Foreign residents, degrees, commute mode | [e-Stat database, 2020 Census](https://www.e-stat.go.jp/stat-search/database?toukei=00200521) (町丁・字等 tables), or the [e-Stat API](https://www.e-stat.go.jp/api/) with a free appId | the Degree, Train vs Car and Bicycle lines | e-Stat terms | manual |
-| OSM | Geofabrik [Kansai](https://download.geofabrik.de/asia/japan/kansai.html) (Osaka, Kyoto), [Chubu](https://download.geofabrik.de/asia/japan/chubu.html) (Nagoya) | konbini, chains, shrines, temples, stations | ODbL | auto |
+| OSM | Geofabrik [Kansai](https://download.geofabrik.de/asia/japan/kansai.html) (Osaka, Kyoto, Kobe), [Chubu](https://download.geofabrik.de/asia/japan/chubu.html) (Nagoya), [Kanto](https://download.geofabrik.de/asia/japan/kanto.html) (Yokohama), [Kyushu](https://download.geofabrik.de/asia/japan/kyushu.html) (Fukuoka), [Hokkaido](https://download.geofabrik.de/asia/japan/hokkaido.html) (Sapporo) | konbini, chains, shrines, temples, stations | ODbL | auto |
 | HotPepper Gourmet | [Recruit Web Service](https://webservice.recruit.co.jp/register) (free key) | every listed restaurant: genre, budget, hours, text; drinks filters | credit "Powered by ホットペッパー Webサービス" | key, then script |
 
-## UK: London (maybe)
+## UK: London, Manchester, Birmingham, Liverpool, Brighton
 
 | Data | Link | Gives | Licence | How |
 |---|---|---|---|---|
