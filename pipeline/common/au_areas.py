@@ -19,8 +19,12 @@ from cities import CITIES
 MIN_POP, MIN_DENSITY = 1000, 300
 
 
+NEEDED = ("2021_GCP_SA2", "2021_TSP_SA2", "SA2_2021_AUST")   # the big SA1/suburb/LGA files are left zipped
+
+
 def unzip_all(root):
     for z in glob.glob(f"{root}/**/*.zip", recursive=True):
+        if not os.path.basename(z).startswith(NEEDED): continue
         d = z[:-4]
         if not os.path.isdir(d):
             print("  unzip", os.path.relpath(z)); zipfile.ZipFile(z).extractall(d)
