@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Split</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introTitle" hidden>
+  <div class="introcard">
+    <h2 id="introTitle"></h2>
+    <ol id="introList"></ol>
+    <div class="introbtns">
+      <button id="introLatte"></button>
+      <button id="introSuburb" class="ghost"></button>
+      <button id="introPlay" class="ghost">Make my own line</button>
+    </div>
+    <button class="introclose" id="introClose" aria-label="Close">Just let me explore</button>
+    <p class="hpnote" id="introCredit" hidden></p>
+  </div>
+</div>
+<div class="app">
+  <header>
+    <h1><span class="cityname"></span> <span>/</span> Split</h1>
+    <div class="cityswitch" id="cityswitch" role="navigation" aria-label="City"></div>
+    <div class="tabs" role="tablist">
+      <button role="tab" data-mode="lines">Lines</button>
+      <button role="tab" data-mode="heritage" id="herTab">Heritage</button>
+      <button role="tab" data-mode="overlay">Overlay</button>
+      <button role="tab" data-mode="timeline">Timeline</button>
+      <button role="tab" data-mode="make">Make your own</button>
+    </div>
+    <p id="tagline"></p>
+    <button class="helpbtn" id="helpbtn" aria-label="What is this?">What is this?</button>
+    <div class="find">
+      <label for="suburb" id="suburbLabel"></label>
+      <input id="suburb" list="suburbs" autocomplete="off" enterkeyhint="search">
+      <datalist id="suburbs"></datalist>
+    </div>
+  </header>
+  <nav id="list" aria-label="Lines"></nav>
+  <div class="mpick" id="mpick" hidden>
+    <label for="mpickSel" id="mpickLabel">Line</label>
+    <select id="mpickSel"></select>
+  </div>
+  <main>
+    <svg id="map" role="img"></svg>
+    <div class="compare">
+      <label for="cmp">Compare with another line</label>
+      <select id="cmp"><option value="">None</option></select>
+      <span class="agree" id="agree"></span>
+    </div>
+    <div class="yearbox" id="yearbox">
+      <div class="yb-top"><button id="play" aria-label="Play through the years">▶ Play</button><span id="yearlabel"></span></div>
+      <input type="range" id="year" min="0" max="4" step="1" value="4" aria-label="Census year">
+      <div class="yb-ticks" id="yearticks"></div>
+    </div>
+    <div class="smoothbox" id="smoothbox">
+      <label for="smooth"><b>Smooth the line</b> <span class="small" id="smoothinfo">Drag to simplify the border</span></label>
+      <input type="range" id="smooth" min="0" max="20" step="1" value="0">
+    </div>
+    <div class="maptools">
+      <button id="zin" aria-label="Zoom in">+</button>
+      <button id="zout" aria-label="Zoom out">−</button>
+      <button id="zreset" aria-label="Reset view">⟲</button>
+    </div>
+    <div class="maplegend" id="maplegend"></div>
+    <div class="hpcredit" id="mapCredit" hidden></div>
+    <div id="tip" role="status"></div>
+  </main>
+  <aside id="detail" aria-live="polite"></aside>
+</div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>
