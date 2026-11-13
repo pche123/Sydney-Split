@@ -1,0 +1,16 @@
+p_raw,p_cal,size,edge,city,line,kind
+0.846,0.8571428571428571,0.0,231.0432166344408,Tokyo,the-latte-line,records
+0.936,0.8181818181818182,0.0,250.72439345226584,Tokyo,coffee-vs-alcohol,records
+0.368,0.0909090909090909,0.0,285.036347464245,Tokyo,ramen-vs-soba,records
+0.874,0.6363636363636364,0.0,247.4651871074344,Tokyo,the-indie-cafe-line,records
+0.288,0.0909090909090909,0.0,274.22161211737057,Tokyo,the-late-night-line,records
+0.986,1.0,0.0,238.98842644145031,Tokyo,izakaya-vs-bistro,records
+0.256,0.0909090909090909,0.0,278.25338164842645,Tokyo,bars-vs-izakaya,records
+0.804,0.5454545454545454,0.0,255.20447269791225,Tokyo,the-yakiniku-line,records
+0.962,1.0,0.0,212.50364405224872,Tokyo,the-price-line,records
+1.0,1.0,0.0,224.5529996072225,Tokyo,my-basket-vs-the-konbini,records
+0.968,1.0,0.0,269.3404629292914,Tokyo,konbini-wars,records
+0.97,1.0,0.0,212.15560993932533,Tokyo,gyudon-wars,records
+0.978,0.9090909090909092,0.0,193.40843301981317,Tokyo,starbucks-vs-doutor,records
+0.988,1.0,0.2,115.07417885296496,Tokyo,ramen-wars,records
+0.974,1.0,0.0,242.81971839587317,Tokyo,shrines-vs-temples,records

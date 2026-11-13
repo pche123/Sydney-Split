@@ -1,0 +1,16 @@
+mode,line,score,p_search_msr,p_search_landscape
+quirky,average_household_size vs works_construction,0.457,0.005,0.678
+quirky,average_household_size vs works_transport_logistics,0.47,0.015,0.748
+quirky,works_media_tech vs tradies,0.474,0.015,0.766
+quirky,median_age_persons vs works_construction,0.491,0.04,0.856
+quirky,works_manufacturing vs care_service_workers,0.504,0.13,0.902
+quirky,works_manufacturing vs tradies,0.509,0.16,0.922
+quirky,volunteers vs mortgaged,0.51,0.17,0.926
+quirky,works_health_care vs drive_to_work,0.512,0.185,0.936
+quirky,works_construction vs bus_commute,0.516,0.21,0.954
+quirky,kids_0_14 vs volunteers,0.518,0.215,0.96
+quirky,median_rent_weekly vs bus_commute,0.521,0.225,0.968
+quirky,share_houses vs train_commute,0.522,0.225,0.97
+quirky,bus_commute,0.527,0.29,0.974
+quirky,three_plus_cars vs owned_outright,0.53,0.335,0.976
+quirky,uni_students vs works_transport_logistics,0.531,0.35,0.976

@@ -1,0 +1,11 @@
+p_raw,p_cal,size,edge,ell_km,city,line,kind
+0.854,0.935483870967742,0.0,73.58762629395366,16.1,Tokyo,the-hi-vis-line,census
+0.892,0.935483870967742,0.0,69.31424033207938,17.4,Tokyo,the-factory-line,census
+0.698,0.7419354838709677,0.0,101.768474931428,18.6,Tokyo,the-laptop-vs-hard-hat-line,census
+0.85,1.0,0.0,219.58618817960075,1.7,Tokyo,the-boomer-vs-builder-line,census
+0.97,1.0,0.0,57.107889971501926,15.6,Tokyo,the-degree-line,census
+0.374,0.125,0.0,143.12383335896766,25.1,Tokyo,train-vs-car,census
+0.94,1.0,0.0,124.6336967345862,6.5,Tokyo,the-bicycle-line,census
+0.864,0.9375,0.0,177.5944966046073,9.5,Tokyo,the-living-alone-line,census
+0.24,0.25,0.0,220.18154300716472,7.4,Tokyo,the-tower-line,census
+0.566,0.625,0.0,195.06828964439921,21.3,Tokyo,the-grey-line,census
