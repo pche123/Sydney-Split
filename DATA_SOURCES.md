@@ -33,6 +33,42 @@ far-northern-beaches SA2s dropped by hand before); `jp_areas.py` on Tokyo gives 
 slightly stricter 町 filter); `venues.py` on the NSW list finds 877 venues with machines (45,918 machines).
 The download URLs were checked by hand, but this sandbox cannot reach the sites, so the first real run is the test.
 
+## Direct links, city by city
+
+Japanese census files come per prefecture, not per city, so each city's links below are the prefecture's files.
+
+### Osaka (files cover all of Osaka Prefecture, code 27; `jp_areas.py` cuts out the city)
+
+- Census 2020 tables (population, age, household size, family, tenure, building, industry, occupation, extra): [T001081](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001081&code=27&downloadType=2) · [T001082](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001082&code=27&downloadType=2) · [T001083](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001083&code=27&downloadType=2) · [T001084](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001084&code=27&downloadType=2) · [T001085](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001085&code=27&downloadType=2) · [T001086](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001086&code=27&downloadType=2) · [T001103](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001103&code=27&downloadType=2) · [T001104](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001104&code=27&downloadType=2) · [T001106](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001106&code=27&downloadType=2)
+- Map of 町丁 (2020): [boundaries](https://www.e-stat.go.jp/gis/statmap-search/data?dlserveyId=A002005212020&code=27&coordSys=1&format=shape&downloadType=5)
+- Older years: the same links with the 2015/2010/2005/2000 table codes in `download.py`, and `A00200521{year}` for the maps
+- OpenStreetMap: [kansai-latest.osm.pbf](https://download.geofabrik.de/asia/japan/kansai-latest.osm.pbf)
+- Restaurants: HotPepper (free key from [Recruit](https://webservice.recruit.co.jp/register)), then `python pipeline/common/hotpepper.py osaka KEY out.csv`
+
+### Kyoto (files cover all of Kyoto Prefecture, code 26; `jp_areas.py` cuts out the city)
+
+- Census 2020 tables (population, age, household size, family, tenure, building, industry, occupation, extra): [T001081](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001081&code=26&downloadType=2) · [T001082](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001082&code=26&downloadType=2) · [T001083](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001083&code=26&downloadType=2) · [T001084](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001084&code=26&downloadType=2) · [T001085](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001085&code=26&downloadType=2) · [T001086](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001086&code=26&downloadType=2) · [T001103](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001103&code=26&downloadType=2) · [T001104](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001104&code=26&downloadType=2) · [T001106](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001106&code=26&downloadType=2)
+- Map of 町丁 (2020): [boundaries](https://www.e-stat.go.jp/gis/statmap-search/data?dlserveyId=A002005212020&code=26&coordSys=1&format=shape&downloadType=5)
+- Older years: the same links with the 2015/2010/2005/2000 table codes in `download.py`, and `A00200521{year}` for the maps
+- OpenStreetMap: [kansai-latest.osm.pbf](https://download.geofabrik.de/asia/japan/kansai-latest.osm.pbf)
+- Restaurants: HotPepper (free key from [Recruit](https://webservice.recruit.co.jp/register)), then `python pipeline/common/hotpepper.py kyoto KEY out.csv`
+
+### Nagoya (files cover all of Aichi Prefecture, code 23; `jp_areas.py` cuts out the city)
+
+- Census 2020 tables (population, age, household size, family, tenure, building, industry, occupation, extra): [T001081](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001081&code=23&downloadType=2) · [T001082](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001082&code=23&downloadType=2) · [T001083](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001083&code=23&downloadType=2) · [T001084](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001084&code=23&downloadType=2) · [T001085](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001085&code=23&downloadType=2) · [T001086](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001086&code=23&downloadType=2) · [T001103](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001103&code=23&downloadType=2) · [T001104](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001104&code=23&downloadType=2) · [T001106](https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001106&code=23&downloadType=2)
+- Map of 町丁 (2020): [boundaries](https://www.e-stat.go.jp/gis/statmap-search/data?dlserveyId=A002005212020&code=23&coordSys=1&format=shape&downloadType=5)
+- Older years: the same links with the 2015/2010/2005/2000 table codes in `download.py`, and `A00200521{year}` for the maps
+- OpenStreetMap: [chubu-latest.osm.pbf](https://download.geofabrik.de/asia/japan/chubu-latest.osm.pbf)
+- Restaurants: HotPepper (free key from [Recruit](https://webservice.recruit.co.jp/register)), then `python pipeline/common/hotpepper.py nagoya KEY out.csv`
+
+### London
+
+- Census 2021 tables (each zip has every area level; `uk_areas.py` uses the MSOA file): [TS001](https://www.nomisweb.co.uk/output/census/2021/census2021-ts001.zip) · [TS003](https://www.nomisweb.co.uk/output/census/2021/census2021-ts003.zip) · [TS004](https://www.nomisweb.co.uk/output/census/2021/census2021-ts004.zip) · [TS007A](https://www.nomisweb.co.uk/output/census/2021/census2021-ts007a.zip) · [TS017](https://www.nomisweb.co.uk/output/census/2021/census2021-ts017.zip) · [TS021](https://www.nomisweb.co.uk/output/census/2021/census2021-ts021.zip) · [TS030](https://www.nomisweb.co.uk/output/census/2021/census2021-ts030.zip) · [TS044](https://www.nomisweb.co.uk/output/census/2021/census2021-ts044.zip) · [TS045](https://www.nomisweb.co.uk/output/census/2021/census2021-ts045.zip) · [TS054](https://www.nomisweb.co.uk/output/census/2021/census2021-ts054.zip) · [TS058](https://www.nomisweb.co.uk/output/census/2021/census2021-ts058.zip) · [TS059](https://www.nomisweb.co.uk/output/census/2021/census2021-ts059.zip) · [TS060](https://www.nomisweb.co.uk/output/census/2021/census2021-ts060.zip) · [TS061](https://www.nomisweb.co.uk/output/census/2021/census2021-ts061.zip) · [TS062](https://www.nomisweb.co.uk/output/census/2021/census2021-ts062.zip) · [TS063](https://www.nomisweb.co.uk/output/census/2021/census2021-ts063.zip) · [TS066](https://www.nomisweb.co.uk/output/census/2021/census2021-ts066.zip) · [TS067](https://www.nomisweb.co.uk/output/census/2021/census2021-ts067.zip) · [TS037](https://www.nomisweb.co.uk/output/census/2021/census2021-ts037.zip)
+- Map of MSOAs: [ONS Open Geography Portal, MSOA Dec 2021 BGC](https://geoportal.statistics.gov.uk/) (`download.py` pulls just London from the ONS map service)
+- Food businesses (pubs, restaurants, takeaways): [FSA open data](https://ratings.food.gov.uk/open-data), one XML file per borough
+- Gambling premises: [Gambling Commission register](https://www.gamblingcommission.gov.uk/public-register/premises/download)
+- OpenStreetMap: [greater-london-latest.osm.pbf](https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf)
+
 ## Australia: Melbourne, Brisbane, Perth (and Sydney)
 
 | Data | Link | Gives | Licence | How |
