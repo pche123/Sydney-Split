@@ -2,7 +2,7 @@
 
 The Latte Line, the Hi-Vis Line, Ramen Wars: informal city divides, found in Census, venue and licence data, and tested properly. Every line is checked against random versions of its city that are just as smooth, and gets one of three verdicts: **Real line**, **Real pattern, gentle** or **Could be chance**.
 
-**Live:** [Sydney](https://pche123.github.io/Sydney-Split/) · [Tokyo](https://pche123.github.io/Sydney-Split/tokyo.html) · What we found, in plain words: [FINDINGS.md](FINDINGS.md)
+**Live:** [Sydney](https://pche123.github.io/Sydney-Split/) · [Tokyo](https://pche123.github.io/Sydney-Split/tokyo.html) · What we found, in plain words: [FINDINGS.md](FINDINGS.md) · Data for new cities: [DATA_SOURCES.md](DATA_SOURCES.md)
 
 ## Repository
 
