@@ -1,0 +1,16 @@
+mode,line,score,p_search_msr,p_search_landscape
+classic,works_transport_logistics vs professionals,0.169,0.005,0.014
+classic,works_manufacturing,0.189,0.005,0.038
+classic,retirees_65plus vs labourers,0.325,0.09,0.59
+classic,big_households_6plus vs bus_commute,0.328,0.1,0.6
+classic,uni_students,0.351,0.24,0.742
+classic,kids_0_14 vs average_num_psns_per_bedroom,0.361,0.355,0.816
+classic,works_health_care vs walk_to_work,0.365,0.4,0.828
+classic,no_car vs care_service_workers,0.369,0.44,0.84
+classic,private_high_school vs four_plus_bedrooms,0.373,0.51,0.858
+classic,big_households_6plus vs four_plus_bedrooms,0.374,0.515,0.87
+classic,young_adults_20_34 vs high_rise_9plus,0.38,0.56,0.902
+classic,works_manufacturing vs train_commute,0.385,0.635,0.91
+classic,trade_certificate vs cycle_to_work,0.388,0.66,0.916
+classic,works_hospitality vs care_service_workers,0.399,0.775,0.938
+classic,average_num_psns_per_bedroom vs labourers,0.405,0.81,0.956

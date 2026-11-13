@@ -1,0 +1,7 @@
+p_raw,p_cal,size,cleanness,null_mean,ell_km,noise_share,city,line,definition,p_app
+0.004,0.009900990099009901,0.02,0.1690445855946076,0.4406869946495841,8.6,0.0,Sydney,the-hi-vis-line,works_transport_logistics vs professionals,0.005
+0.01,0.019801980198019802,0.05,0.18932437454409518,0.42524649716306595,14.3,0.03,Sydney,the-factory-line,works_manufacturing,0.005
+0.031,0.039603960396039604,0.04,0.4743148167882946,0.6164026768420316,4.5,0.22,Sydney,the-laptop-vs-ute-line,works_media_tech vs tradies,0.015
+0.373,0.45544554455445546,0.0,0.4573181845748185,0.4910414350325097,8.6,0.08,Sydney,the-tradie-belt,average_household_size vs works_construction,0.005
+0.022,0.009900990099009901,0.02,0.47003859154367583,0.6187665576100662,3.7,0.14,Sydney,the-full-house-line,average_household_size vs works_transport_logistics,0.015
+0.149,0.12871287128712872,0.04,0.49106068542451264,0.5737365522237787,4.5,0.15,Sydney,the-boomer-vs-builder-line,median_age_persons vs works_construction,0.04

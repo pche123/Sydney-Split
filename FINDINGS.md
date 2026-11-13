@@ -101,6 +101,8 @@ Short, plain conclusions from the tests. "Beats chance" means the line is cleane
 
 ## Sharp edges or gentle slopes? (experiments, November 2026)
 
+> **Superseded by the full audit below.** The "data-level MSR" p-values in this section later turned out to be miscalibrated too, so the Tokyo upgrades listed here do not hold. The method lessons still stand.
+
 The line tests ask one question: *if you split the map in half, is the border shorter than chance?* These experiments ask a second one: *is the change concentrated at the border (a cliff), or is the border just the middle of a long, gentle hill (a slope)?* Code: `pipeline/experiments/`. Tables: `results/`.
 
 **In plain words**
@@ -124,3 +126,65 @@ The line tests ask one question: *if you split the map in half, is the border sh
    - **For the line test** ("data-level MSR"): the café-vs-fast-food preference surface is randomised with the same smoothness, which gives false-positive rates of 0–8%.
    - **For sharpness**: the preference is re-drawn from a 2 km smoothed version of the data. This is well calibrated (2–9%) when the true pattern is broader than the test scale.
 6. **Lesson for the paper:** a permutation test is only as honest as its simulation. If the data are counts, simulate the counts, not the map.
+
+
+---
+
+## Full audit: getting the maths right (November 2026)
+
+Every line in both cities was re-tested with a calibrated method. Code: `pipeline/linetests/` (the reusable library) and `pipeline/experiments/audit/`. Full table: `results/verdicts.csv`.
+
+### What was wrong
+
+**The random-map test (MSR) itself was miscalibrated.** It makes "random maps with the same smoothness" by shuffling patterns inside bands of 12 map patterns, from smoothest to roughest. But real maps put almost all their variation in the first few, smoothest patterns. Shuffling within a band smears that variation into rougher patterns, so the "random" maps come out rougher than real ones, and any smooth map looks like a clean line.
+
+We checked this by simulating smooth random landscapes in real space (no line on purpose), averaging them over the real suburbs, and running the test:
+
+| Landscape scale | How often MSR said "line" (should be 5%) |
+|---|---|
+| 1 km | 5–7% |
+| 3 km | 18–34% |
+| 10 km | 100% |
+
+Every line p-value in both apps used this test.
+
+### The fix: a random-landscape null
+
+Model the map as a smooth random landscape in **real space**: a mix of scales from 0.7 to 50 km, each suburb seeing the average over its own area, plus local noise. Fit how much of each scale the map has (maximum likelihood), simulate fresh landscapes from that fit, and ask whether the real border is shorter than theirs.
+
+- **Records, not maps.** Venue, licence, price and chain lines simulate the records themselves (each café or fast-food outlet, each licence, each listing, each store) from a latent landscape. They then rebuild the map with the app's exact counting rule.
+- **Double bootstrap.** Fitting the landscape is itself uncertain, so each p-value is calibrated by running the whole test (refit included) on about 100 worlds simulated from the fit.
+- **Validated:**
+  - On random landscapes, the map-level test said "line" 0–3% of the time, and the record-level tests 0–13% before calibration (the double bootstrap corrects for this).
+  - Search-wide: the whole 1,596-candidate Sydney census search was re-run under a joint landscape null (principal components of all 56 signals, each with its own fitted landscape).
+
+### Three questions, kept separate
+
+1. **Is there any geography at all?** Could the map come from records with no spatial pattern?
+2. **Is it a line?** Is the border cleaner than a random landscape that is just as smooth would give? (The landscape null, corrected for searching or for testing several lines in a group.)
+3. **Is it a cliff?** Is there a jump at the border on top of the landscape? This is a generalised-least-squares "edge" test. On simulated data it said "cliff" 0–2% of the time with no step, 43% with a 1 SD step and 98% with a 1.5 SD step. The plain border-length test only caught 18% of the 1.5 SD steps, so the edge test is the better tool for sharpness.
+
+### Results in plain words
+
+**Real lines (pass question 2 after correction):**
+- **Sydney's Hi-Vis Line** (search-wide p = 0.014). It survives everything: the stricter null, the whole-search correction, and 20 years of persistence (93% of suburbs on the same side in 2001 and 2021; random landscapes give 58%, p = 0.001).
+- **Sydney's Factory Line** (search-wide p = 0.038). Persistence: 84% vs 60% expected.
+
+**Real patterns, but gentle:** the map clearly has geography, but the border isn't cleaner than a smooth landscape would draw anyway.
+- Sydney: the Latte Line (0.02 on its own, 0.12 after correcting for the six food lines), the Red Rooster Line, the Late Night and Small Bar Lines, and all four Hidden lines. The Hidden lines pass one by one, but none survive the search correction (0.68–0.86).
+- Tokyo: every census line (Hi-Vis, Factory, Laptop vs Hard Hat, Degree, Boomer vs Builder, Train vs Car, Bicycle, Living Alone, Grey, Tower), plus Coffee vs Alcohol, Latte, Indie Café, Izakaya vs Italian & French, Bars vs Izakaya, Yakiniku, Price, My Basket, Gyudon Wars and Starbucks vs Doutor.
+- Closest Tokyo calls: Bicycle (0.07), My Basket (0.08) and Izakaya vs Italian & French (0.10) after correction.
+- Why Tokyo has no "real lines": the Tama-to-bay gradient is so broad and smooth that random landscapes at that scale also split the map cleanly.
+
+**Could be chance (no detectable geography in the border):**
+- Sydney: Aldi, Pokies, Charcoal Chook, Pho vs Pad Thai, Bubble Tea.
+- Tokyo: Late-Night, Ramen vs Soba, Konbini Wars, Ramen Wars, Shrines vs Temples.
+
+**No cliffs anywhere.** After correcting for 40 tests, no line in either city has an edge on top of its landscape. Every line is a slope, typically changing over 4–20 km.
+
+**Persistence still holds.** The over-time results survive the new null: Laptop vs Ute 89% (p = 0.001) and Boomer vs Builder 77% (p = 0.009).
+
+### For new cities
+- Use `pipeline/linetests/`. Don't use MSR.
+- Report the three questions separately, and correct for the number of lines tried (or re-run the whole search under the joint null).
+- Simulate the records whenever the map is built from counts.
