@@ -157,7 +157,11 @@ def arcgis_geojson(service, where, path):
 
 
 def norm(name):
-    return re.sub(r"[^a-z]", "", name.lower().replace("city of ", "").replace(" council", "").replace("st.", "st"))
+    """'City of London Corporation' -> 'london', 'Kingston-Upon-Thames' -> 'kingstonuponthames', 'St. Helens' -> 'sthelens'."""
+    n = name.lower()
+    for w in ("city of ", " corporation", " city council", " council", " metropolitan borough", " borough"):
+        n = n.replace(w, "")
+    return re.sub(r"[^a-z]", "", n)
 
 
 def uk(city, c, out, parts):
