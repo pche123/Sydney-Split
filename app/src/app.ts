@@ -32,6 +32,11 @@ export function start(DATA: CityData, C: CityConfig) {
   $("#introList").innerHTML = C.intro.items.map((t) => `<li>${t}</li>`).join("");
   $("#introLatte").textContent = C.intro.refButton;
   $("#introSuburb").textContent = C.intro.placeButton;
+  if (C.dataNotes?.length) {
+    const li = C.dataNotes.map((n) => `<li>${n}</li>`).join("");
+    for (const id of ["#introNotes", "#mapNotes"]) { $(`${id} ul`).innerHTML = li; $(id).hidden = false; }
+    $("#introNotes summary").textContent = `About the data in ${C.name}`;
+  }
   if (C.creditHtml) {
     $("#introCredit").innerHTML = `${C.creditHtml}. Shown for fun and learning; not affiliated.`; $("#introCredit").hidden = false;
     $("#mapCredit").innerHTML = C.creditHtml; $("#mapCredit").hidden = false;

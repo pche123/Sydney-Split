@@ -26,6 +26,9 @@ The study areas and codes for each city live in `pipeline/cities.py`.
 | Liverpool | Liverpool City Region (Liverpool, Knowsley, Sefton, Wirral, St Helens, Halton), MSOAs (about 200 areas) | Port city across the Mersey (Wirral): a river split, like Sydney's harbour. |
 | Brighton | Brighton and Hove, LSOAs (about 165 areas of ~1,700 people; the city has only ~37 MSOAs) | Small seaside city, students and London commuters: a coast line on the smallest scale. |
 
+Each city's caveats (old lists, missing sources, census taken in lockdown, areas left out) are kept in
+`DATA_NOTES` in `pipeline/cities.py` and shown in that city's app under "About the data", on the map and in the intro.
+
 ## Get the data (three commands per city)
 
 ```bash

@@ -18,6 +18,7 @@ export interface CityConfig {
   tag: Record<string, string>;
   intro: { title: string; items: string[]; refButton: string; placeButton: string };
   creditHtml?: string;                  // shown in the intro and on the map
+  dataNotes?: string[];                 // city-specific caveats, under "About the data" on the map and in the intro
   asks: string;
   warnBullet: string;
   peakWord: string;
@@ -52,6 +53,13 @@ const LINKS = [
 const HP = '<a href="https://webservice.recruit.co.jp/" target="_blank" rel="noopener">Powered by ホットペッパー Webサービス</a>';
 
 export const SYDNEY: CityConfig = {
+  dataNotes: [
+    "People: 2021 Census, counted on 10 August 2021 during Sydney's lockdown, so work-from-home and travel-to-work figures are unusual.",
+    "Suburbs: the 300 SA2 areas with at least 1,000 residents and 300 people per km². The Central Coast, Blue Mountains, a few far-northern-beaches suburbs, parks, the airport and industrial land are left out (grey).",
+    "Pubs, bars, bottle shops and pokies: the NSW liquor licence list as at 1 November 2026. Machine counts are operating machines at each venue.",
+    "Shops and chains: OpenStreetMap, mapped by volunteers. Coverage is good in the city and thinner in some outer suburbs.",
+    "Timeline: earlier censuses are matched onto today's areas, so small shifts can come from redrawn boundaries, not people moving.",
+  ],
   id: "sydney", name: "Sydney", place: "suburb", places: "suburbs", placeholder: "e.g. Marrickville",
   refLine: "the-latte-line", refName: "Latte Line", storageKey: "ss_intro_seen",
   groups: [["Food", "Food & shops"], ["Night", "After dark"], ["Work", "Work (Census)"], ["Hidden", "Hidden lines (not just rich vs poor)"]],
@@ -110,6 +118,14 @@ const FOREIGN = "Foreign residents only: people living in Tokyo with a foreign n
   + "are counted as Japanese and not shown here. Maps show places, not people.";
 
 export const TOKYO: CityConfig = {
+  dataNotes: [
+    "People: 2020 Census (October 2020, during COVID).",
+    "Areas: the 23 wards and the Tama cities; the islands are left out. Neighbourhoods (町) are merged into areas of about 30,000 people.",
+    "Restaurants: only those listed on HotPepper, which leans towards places that use the site; many small old shops are missing.",
+    "Foreign residents, degrees and how people commute come from separate census tables (e-Stat), not the small-area release.",
+    "Konbini, chains, shrines and temples: OpenStreetMap, mapped by volunteers.",
+    "Timeline: 2000 to 2020, each census matched onto today's areas.",
+  ],
   id: "tokyo", name: "Tokyo", place: "neighbourhood", places: "neighbourhoods", placeholder: "e.g. Koenji",
   refLine: "the-hi-vis-line", refName: "Hi-Vis Line", storageKey: "ts_intro_seen",
   groups: [["Work", "Work (Census)"], ["Homes", "People & homes (Census)"], ["Around", "Getting around (Census)"], ["Food", "Food & cafés"],

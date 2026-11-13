@@ -158,6 +158,13 @@ footer { font-size: 12px; color: var(--muted); }
 .hpcredit a, .hpnote a { color: inherit; }
 .hpnote { font-size: 12px; color: var(--muted); margin: 10px 0 0; text-align: center; }
 .mpick { display: none; }
+.datanotes { position: absolute; right: 58px; top: 14px; background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: 5px 9px; font-size: 12.5px; max-width: 340px; z-index: 2; }
+.datanotes .short { display: none; }
+.datanotes summary { cursor: pointer; color: var(--muted); list-style: none; }
+.datanotes summary::-webkit-details-marker { display: none; }
+.datanotes[open] summary { color: var(--ink); margin-bottom: 4px; }
+.datanotes ul { margin: 0; padding-left: 16px; display: grid; gap: 5px; max-height: 50vh; overflow: auto; }
+.datanotes.intro { position: static; max-width: none; margin: 10px 0 0; text-align: left; }
 
 /* tablets: list + map side by side, the story underneath */
 @media (max-width: 1100px) {
@@ -190,7 +197,7 @@ footer { font-size: 12px; color: var(--muted); }
   .mpick select { width: 100%; min-height: 46px; font-size: 16px; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--ink); background: var(--panel); }
   .mpick .mverdict { font-size: 13px; }
   main { height: 60svh; min-height: 320px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
-  .compare, .yearbox, .smoothbox { left: 8px; right: 8px; top: 8px; width: auto; max-width: none; padding: 6px 8px; font-size: 12.5px; }
+  .compare, .yearbox, .smoothbox { left: 8px; right: 90px; top: 8px; width: auto; max-width: none; padding: 6px 8px; font-size: 12.5px; }
   .compare { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
   .compare label { font-size: 12px; color: var(--muted); }
   .compare select { flex: 1; min-width: 0; min-height: 34px; font-size: 16px; padding: 2px 6px; }
@@ -204,6 +211,10 @@ footer { font-size: 12px; color: var(--muted); }
   .maplegend div { grid-template-columns: 11px 1fr; gap: 6px; }
   .maplegend i { width: 11px; height: 11px; }
   .maplegend.folded div:nth-child(n+3) { display: none; }
+  .datanotes { right: 8px; top: 8px; max-width: calc(100% - 16px); font-size: 12px; }
+  .datanotes .long { display: none; }
+  .datanotes .short { display: inline; }
+  .datanotes.intro { max-width: none; }
   .hpcredit { right: 8px; bottom: 56px; font-size: 10.5px; padding: 3px 6px; max-width: 136px; text-align: right; }
   #tip { max-width: 72%; font-size: 13px; }
   aside { border: none; padding: 14px 14px 36px; overflow: visible; gap: 12px; }
