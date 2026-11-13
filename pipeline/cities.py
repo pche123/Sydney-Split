@@ -118,6 +118,41 @@ LONDON_BOROUGHS = ["City of London", "Barking and Dagenham", "Barnet", "Bexley",
                    "Tower Hamlets", "Waltham Forest", "Wandsworth", "Westminster"]
 
 
+# City- and country-specific caveats. Each city's app shows these under "About the data" (on the map and in the intro).
+# Add to these whenever a source turns out to be old, partial, odd or missing.
+AU_CENSUS = "People: 2021 Census, counted on 10 August 2021."
+JP_CENSUS = "People: 2020 Census (October 2020, during COVID)."
+UK_CENSUS = ("People: Census 2021, counted on 21 March 2021 while England was still under COVID rules, so the "
+             "census office warns that travel-to-work figures are unusual.")
+JP_SHARED = ["Restaurants: only those listed on HotPepper, which leans towards places that use the site; many small old shops are missing.",
+             "Foreign residents, degrees and how people commute come from separate census tables, not the small-area release."]
+UK_SHARED = ["Pubs, restaurants and takeaways: Food Standards Agency hygiene-rating records (every food business councils inspect).",
+             "Betting shops, arcades and bingo: the Gambling Commission register, listed by postcode and placed at the postcode's centre.",
+             "Scotland is not included anywhere: it held its own census in 2022 with different tables."]
+DATA_NOTES = {
+    "melbourne": [AU_CENSUS + " Melbourne was in lockdown, so work-from-home and travel-to-work figures are unusual.",
+                  "Pokies: machines and player losses by venue from the Victorian regulator; venues have no coordinates and are placed by matching their names to the liquor licence list, so a few may be missing."],
+    "brisbane": [AU_CENSUS,
+                 "Pubs, bars and bottle shops: OpenStreetMap only. Queensland publishes no bulk licence list, so venue lines are thinner than in Sydney or Melbourne."],
+    "perth": [AU_CENSUS,
+              "No Pokies line: Western Australia allows poker machines only at the casino. That is a real difference, not missing data.",
+              "Pubs, bars and bottle shops: OpenStreetMap only. WA sells its licence list rather than publishing it."],
+    "adelaide": [AU_CENSUS,
+                 "Licences and pokies: the newest open South Australian list is from August 2019, placed on the map from its addresses. Venues that opened or closed since are wrong; current OpenStreetMap pubs and bottle shops are used alongside."],
+    "osaka": [JP_CENSUS, "Area: Osaka City, Sakai and the inner ring of cities around them."] + JP_SHARED,
+    "kyoto": [JP_CENSUS, "Area: Kyoto City without its mountain districts (few residents)."] + JP_SHARED,
+    "nagoya": [JP_CENSUS, "Area: Nagoya City's 16 wards."] + JP_SHARED,
+    "yokohama": [JP_CENSUS, "Area: Yokohama and Kawasaki together, treated as one city because they are one built-up belt."] + JP_SHARED,
+    "kobe": [JP_CENSUS, "Area: Kobe plus Amagasaki, Nishinomiya and Ashiya along the bay; Kobe's mountain and rural districts are left out."] + JP_SHARED,
+    "fukuoka": [JP_CENSUS, "Area: Fukuoka City without its mountain districts."] + JP_SHARED,
+    "sapporo": [JP_CENSUS, "Area: Sapporo City without its mountain districts (most of Minami ward)."] + JP_SHARED,
+    "london": [UK_CENSUS, "Areas: the 33 boroughs, as MSOAs (about 8,000 people each)."] + UK_SHARED,
+    "manchester": [UK_CENSUS, "Area: Greater Manchester's ten boroughs, as MSOAs."] + UK_SHARED,
+    "birmingham": [UK_CENSUS, "Area: Birmingham, Solihull and the Black Country, as MSOAs; Coventry is left out."] + UK_SHARED,
+    "liverpool": [UK_CENSUS, "Area: the Liverpool City Region, including the Wirral across the Mersey, as MSOAs."] + UK_SHARED,
+    "brighton": [UK_CENSUS, "Areas: Brighton and Hove only, as the smaller LSOAs (about 1,700 people each) because the city has only about 37 MSOAs."] + UK_SHARED,
+}
+
 CITIES["london"]["lads"] = LONDON_BOROUGHS
 
 
