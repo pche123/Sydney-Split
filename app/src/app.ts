@@ -334,8 +334,7 @@ export function start(DATA: CityData, C: CityConfig) {
       <div class="box"><h3>What else changes across it</h3>
         <p class="small" style="margin:0 0 6px">The orange side also has:</p><div class="chips ca"></div>
         <p class="small" style="margin:10px 0 6px">The blue side also has:</p><div class="chips cb"></div></div>
-      ${l === ref ? "" : `<div class="box"><h3>Same route as the ${C.refName}?</h3><p style="margin:0"><b>${Math.round(l.latte_agree * 100)}%</b> of ${places} fall on matching sides.</p>
-        <p class="small">${l.latte_agree >= 0.75 ? "This line mostly retraces the classic divide." : l.latte_agree >= 0.6 ? "Partly the classic divide, partly its own route." : `This line takes its own route across ${City}.`}</p></div>`}
+      ${familyBox(l)}
       ${(DATA.meta.explain || {})[l.id] || ""}
       ${C.lineExtra ? C.lineExtra(l, DATA) : ""}
       ${C.splitNote ? C.splitNote(l, DATA) : ""}
@@ -347,6 +346,27 @@ export function start(DATA: CityData, C: CityConfig) {
     l.more.forEach((t) => d.querySelector(".ca")!.appendChild(chip(t, "a")));
     l.less.forEach((t) => d.querySelector(".cb")!.appendChild(chip(t, "b")));
     renderPassport();
+  }
+  // ---------- line families: lines that trace the same divide (from correlating line scores across 16 cities)
+  const FAMILY: Record<string, [string, string]> = {};
+  const fam = (ids: string[], name: string, what: string) => ids.forEach((i) => (FAMILY[i] = [name, what]));
+  fam(["the-hi-vis-line", "the-degree-line", "the-laptop-vs-hard-hat-line", "the-factory-line", "the-laptop-vs-ute-line", "the-tradie-belt"], "The work and class divide",
+    "Jobs and degrees. In every city we tested, the Hi-Vis and Degree lines are close to mirror images of each other.");
+  fam(["flats-vs-houses", "the-no-car-line", "the-renters-line", "the-living-alone-line", "train-vs-car", "the-bicycle-line", "the-tower-line"], "The inner-city divide",
+    "Flats, renting, living alone and getting around without a car: the dense centre against the suburbs.");
+  fam(["the-grey-line", "the-boomer-vs-builder-line"], "The age divide", "Where older people live. It follows its own route and moves the most over time.");
+  fam(["coffee-vs-alcohol", "drink-out-vs-drink-in", "the-pub-line", "the-late-night-line", "the-late-night-line"], "The night-out divide", "Where people go out to drink, against where they drink at home.");
+  fam(["the-latte-line"], "Between two families", "Partly the work and class divide, partly the night-out divide; how much of each depends on the city.");
+  function familyBox(l: Line) {
+    const rel = lines.filter((o) => o !== l && o.group !== "Chains").map((o) => {
+      let m = 0; o.side.forEach((v, i) => (m += Number(v === l.side[i]))); m /= N;
+      return { o, agree: Math.max(m, 1 - m), mirror: m < 0.5 };
+    }).sort((x, y) => y.agree - x.agree).slice(0, 3).filter((r) => r.agree >= 0.62);
+    const f = FAMILY[l.id];
+    const list = rel.length ? rel.map((r) => `<li><b>${r.o.name}</b>: ${Math.round(r.agree * 100)}% of ${places} match${r.mirror ? ", as a mirror image (its blue side is this line's orange)" : ""}</li>`).join("")
+      : `<li>No other line here follows the same route closely.</li>`;
+    return `<div class="box"><h3>Which divide is this?</h3>${f ? `<p style="margin:0"><b>${f[0]}.</b> ${f[1]}</p>` : ""}
+      <p class="small" style="margin:8px 0 4px">Lines in ${City} that follow the same route (two unrelated maps still match on 55–60%):</p><ul class="small" style="margin:0;padding-left:18px">${list}</ul></div>`;
   }
   function chip(t: string, c: string) { const s = document.createElement("span"); s.className = "chip " + c; s.textContent = t; return s; }
 

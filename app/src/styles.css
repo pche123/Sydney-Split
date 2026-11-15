@@ -255,3 +255,6 @@ footer { font-size: 12px; color: var(--muted); }
 .area.x { fill: url(#disagree); }
 .sw-x { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; background: repeating-linear-gradient(45deg, var(--side-a) 0 3px, var(--side-b) 3px 6px); }
 #maplegend i.sw-x { border-radius: 3px; }
+
+.cmplink { border: 1px solid var(--rule); background: var(--panel); border-radius: 8px; padding: 6px 10px; font-weight: 600; text-decoration: none; color: var(--ink); white-space: nowrap; }
+@media (max-width: 760px) { .cmplink { order: 3; } .cmplink .long { display: none; } }
