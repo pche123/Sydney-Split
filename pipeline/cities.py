@@ -125,20 +125,23 @@ JP_CENSUS = "People: 2020 Census (October 2020, during COVID)."
 UK_CENSUS = ("People: Census 2021, counted on 21 March 2021 while England was still under COVID rules, so the "
              "census office warns that travel-to-work figures are unusual.")
 JP_SHARED = ["Restaurants: only those listed on HotPepper, which leans towards places that use the site; many small old shops are missing.",
-             "Foreign residents, degrees and how people commute come from separate census tables, not the small-area release."]
+             "No Degree, Train vs Car or Bicycle lines yet, and no foreign-residents map: those census tables are not in the small-area release and need a separate download.",
+             "Shops, cafés, bars and chains: OpenStreetMap, mapped by volunteers."]
 UK_SHARED = ["Pubs, restaurants and takeaways: Food Standards Agency hygiene-rating records (every food business councils inspect).",
              "Betting shops, arcades and bingo: the Gambling Commission register, listed by postcode and placed at the postcode's centre.",
              "Scotland is not included anywhere: it held its own census in 2022 with different tables."]
 DATA_NOTES = {
     "melbourne": [AU_CENSUS + " Melbourne was in lockdown, so work-from-home and travel-to-work figures are unusual.",
-                  "Pokies: machines and player losses by venue from the Victorian regulator; venues have no coordinates and are placed by matching their names to the liquor licence list, so a few may be missing."],
+                  "Pubs, bars, restaurants and bottle shops (Drink Out vs Drink In): the Victorian liquor licence list.",
+                  "No Pokies line yet: the Victorian pokies list has venue names but no map locations; matching them to licences is still to do."],
     "brisbane": [AU_CENSUS,
                  "Pubs, bars and bottle shops: OpenStreetMap only. Queensland publishes no bulk licence list, so venue lines are thinner than in Sydney or Melbourne."],
     "perth": [AU_CENSUS,
               "No Pokies line: Western Australia allows poker machines only at the casino. That is a real difference, not missing data.",
               "Pubs, bars and bottle shops: OpenStreetMap only. WA sells its licence list rather than publishing it."],
     "adelaide": [AU_CENSUS,
-                 "Licences and pokies: the newest open South Australian list is from August 2019, placed on the map from its addresses. Venues that opened or closed since are wrong; current OpenStreetMap pubs and bottle shops are used alongside."],
+                 "Pubs, bars and bottle shops: OpenStreetMap. The newest open South Australian licence list is from August 2019 and has no map locations, so it isn't used yet.",
+                 "Adelaide has only 86 suburbs dense enough to map, so the tests have less to go on here and results are weaker evidence."],
     "osaka": [JP_CENSUS, "Area: Osaka City, Sakai and the inner ring of cities around them."] + JP_SHARED,
     "kyoto": [JP_CENSUS, "Area: Kyoto City without its mountain districts (few residents)."] + JP_SHARED,
     "nagoya": [JP_CENSUS, "Area: Nagoya City's 16 wards."] + JP_SHARED,

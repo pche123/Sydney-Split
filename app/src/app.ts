@@ -1,5 +1,6 @@
 // The Split app: one codebase for every city. City-specific words live in config.ts.
 import type { CityConfig } from "./config";
+import { CITY_LIST } from "./config";
 import type { CityData, Line, HeritageGroup, TimelineLine, TimelineGroup, Brand } from "./types";
 import { verdict, rankNormal, splitOf, Graph, quickCheck, chainField, chainTest, minCutSides, lamOf } from "./stats";
 import { Viewport } from "./viewport";
@@ -23,7 +24,22 @@ export function start(DATA: CityData, C: CityConfig) {
   // ---------- static text for this city
   document.title = `${City} / Split`;
   document.querySelectorAll(".cityname").forEach((e) => (e.textContent = City));
-  $("#cityswitch").innerHTML = C.links.map((l) => `<a href="${l.href}"${l.id === C.id ? ' aria-current="page"' : ""}>${l.name}</a>`).join("");
+  // city picker: one dropdown, grouped by country
+  {
+    const sel = document.createElement("select"); sel.setAttribute("aria-label", "City");
+    let grp: HTMLOptGroupElement | null = null;
+    for (const c of CITY_LIST) {
+      if (!grp || grp.label !== c.country) { grp = document.createElement("optgroup"); grp.label = c.country; sel.appendChild(grp); }
+      const o = document.createElement("option"); o.value = C.links.find((l) => l.id === c.id)!.href; o.textContent = c.name;
+      if (c.id === C.id) o.selected = true; grp.appendChild(o);
+    }
+    sel.addEventListener("change", () => { location.href = sel.value; });
+    $("#cityswitch").innerHTML = ""; $("#cityswitch").appendChild(sel);
+  }
+  const hasHer = DATA.heritage.length > 0, hasTL = DATA.timeline.years.length > 0;
+  document.querySelectorAll<HTMLElement>("header > .tabs button").forEach((b) => {
+    const m = b.dataset.mode; if ((m === "heritage" || m === "overlay") && !hasHer || m === "timeline" && !hasTL) b.hidden = true;
+  });
   $("#herTab").textContent = C.herTab;
   $("#suburbLabel").textContent = `Your ${place}`;
   $("#suburb").placeholder = C.placeholder;
@@ -32,8 +48,9 @@ export function start(DATA: CityData, C: CityConfig) {
   $("#introList").innerHTML = C.intro.items.map((t) => `<li>${t}</li>`).join("");
   $("#introLatte").textContent = C.intro.refButton;
   $("#introSuburb").textContent = C.intro.placeButton;
-  if (C.dataNotes?.length) {
-    const li = C.dataNotes.map((n) => `<li>${n}</li>`).join("");
+  const notes = C.dataNotes?.length ? C.dataNotes : ((DATA.meta.notes as string[] | undefined) || []);
+  if (notes.length) {
+    const li = notes.map((n) => `<li>${n}</li>`).join("");
     for (const id of ["#introNotes", "#mapNotes"]) { $(`${id} ul`).innerHTML = li; $(id).hidden = false; }
     $("#introNotes summary").textContent = `About the data in ${C.name}`;
   }
@@ -47,7 +64,7 @@ export function start(DATA: CityData, C: CityConfig) {
   const her = DATA.heritage;
   let mode = "lines", herKind = C.herKinds[0][0], curHer = her.find((h) => h.kind === herKind) || her[0], ovLine = ref;
   const TL = DATA.timeline;
-  let tKind = "lines", tLine: TimelineLine = TL.lines[0], tGroup: TimelineGroup = TL.groups[0], tYear = TL.years.length - 1;
+  let tKind = "lines", tLine: TimelineLine = TL.lines[0], tGroup: TimelineGroup = TL.groups[0], tYear = Math.max(0, TL.years.length - 1);
   let playing: ReturnType<typeof setInterval> | null = null;
   const Y0 = TL.years[0], Y1 = TL.years[TL.years.length - 1], LAST = TL.years.length - 1;
   const list = $("#list") as HTMLElement;
@@ -414,7 +431,10 @@ export function start(DATA: CityData, C: CityConfig) {
   function buildMakeControls() {
     kindsSwitch([["line", "Your line"], ["chain", "Chain vs chain"]], MK.kind, (k) => {
       MK.kind = k; resetSmooth();
-      if (k === "chain") { [MK.A, MK.B] = C.chainDefault; } else { MK.A = has("share_cafe") ? "share_cafe" : MKD.signals[0].id; MK.B = has("share_fast_food") ? "share_fast_food" : null; }
+      if (k === "chain") {
+        const names = MKD.brands.map((b) => b.name);
+        [MK.A, MK.B] = names.includes(C.chainDefault[0]) && names.includes(C.chainDefault[1]) ? C.chainDefault : [names[0], names[1] ?? names[0]];
+      } else { MK.A = has("share_cafe") ? "share_cafe" : MKD.signals[0].id; MK.B = has("share_fast_food") ? "share_fast_food" : null; }
       render();
     });
     if (MK.kind === "line") {
@@ -587,7 +607,7 @@ export function start(DATA: CityData, C: CityConfig) {
   // ---------- routing
   function route() {
     const h = location.hash.slice(1);
-    if (["heritage", "overlay", "timeline", "make"].includes(h)) { setMode(h); return; }
+    if (["make"].includes(h) || (["heritage", "overlay"].includes(h) && hasHer) || (h === "timeline" && hasTL)) { setMode(h); return; }
     current = byId[h] || current || lines[0];
     if (mode !== "lines") setMode("lines"); else render();
   }

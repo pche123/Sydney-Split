@@ -45,10 +45,18 @@ export interface CityConfig {
   links: { id: string; name: string; href: string }[];
 }
 
-const LINKS = [
-  { id: "sydney", name: "Sydney", href: "./index.html" },
-  { id: "tokyo", name: "Tokyo", href: "./tokyo.html" },
+// Every city on the site, grouped by country for the city picker.
+export const CITY_LIST: { id: string; name: string; country: string }[] = [
+  { id: "sydney", name: "Sydney", country: "Australia" }, { id: "melbourne", name: "Melbourne", country: "Australia" },
+  { id: "brisbane", name: "Brisbane", country: "Australia" }, { id: "perth", name: "Perth", country: "Australia" },
+  { id: "adelaide", name: "Adelaide", country: "Australia" },
+  { id: "tokyo", name: "Tokyo", country: "Japan" }, { id: "osaka", name: "Osaka", country: "Japan" }, { id: "kyoto", name: "Kyoto", country: "Japan" },
+  { id: "nagoya", name: "Nagoya", country: "Japan" }, { id: "yokohama", name: "Yokohama-Kawasaki", country: "Japan" },
+  { id: "kobe", name: "Kobe-Hanshin", country: "Japan" }, { id: "fukuoka", name: "Fukuoka", country: "Japan" }, { id: "sapporo", name: "Sapporo", country: "Japan" },
+  { id: "london", name: "London", country: "UK" }, { id: "manchester", name: "Manchester", country: "UK" },
+  { id: "birmingham", name: "Birmingham", country: "UK" }, { id: "liverpool", name: "Liverpool", country: "UK" },
 ];
+const LINKS = CITY_LIST.map((c) => ({ id: c.id, name: c.name, href: c.id === "sydney" ? "./index.html" : `./${c.id}.html` }));
 
 const HP = '<a href="https://webservice.recruit.co.jp/" target="_blank" rel="noopener">Powered by ホットペッパー Webサービス</a>';
 
@@ -175,4 +183,54 @@ export const TOKYO: CityConfig = {
   links: LINKS,
 };
 
-export const CITIES: Record<string, CityConfig> = { sydney: SYDNEY, tokyo: TOKYO };
+// ---------- the newer cities share one template per country; their caveats come with the data (meta.notes)
+const GROUPS: [string, string][] = [["Work", "Work (Census)"], ["Homes", "People & homes (Census)"], ["Around", "Getting around (Census)"],
+  ["Food", "Food & cafés"], ["Night", "After dark"], ["Chains", "Chain wars"]];
+function generic(id: string, name: string, country: "au" | "jp" | "uk"): CityConfig {
+  const place = country === "au" ? "suburb" : country === "jp" ? "neighbourhood" : "area";
+  const places = place + "s";
+  const sources = country === "au" ? "the 2021 Census, OpenStreetMap and liquor licences" : country === "jp"
+    ? "the 2020 Census, OpenStreetMap and HotPepper restaurant listings" : "the 2021 Census, OpenStreetMap, food hygiene ratings and the gambling register";
+  return {
+    id, name, place, places, placeholder: "Search by name",
+    refLine: "the-latte-line", refName: "Latte Line", storageKey: `split_intro_${id}`,
+    groups: GROUPS, herTab: "Heritage", herKinds: [["birth", "Birthplace"]], tKinds: [["lines", "Lines", "Lines through time"]],
+    notes: {},
+    tag: {
+      lines: `The invisible lines that cut ${name} in two. Pick a line, or look up your ${place}.`,
+      heritage: "", overlay: "", timeline: "",
+      make: `Pick any two things and see if they split ${name}. The maths runs live in your browser.`,
+    },
+    intro: {
+      title: `${name} has invisible lines too.`,
+      items: [
+        `<b>Sydney has its Latte Line.</b> We went looking for ${name}'s, using ${sources}, and tested the same lines in every city.`,
+        `<b>Each line splits ${name} in two.</b> Orange is one side, blue is the other. Tap or hover over any ${place} to see which side it's on.`,
+        `<b>We check every line against random versions of ${name} that are just as smooth,</b> so you can tell a real line from a gentle pattern or a coincidence.`,
+      ],
+      refButton: "Show me the Latte Line", placeButton: `Find my ${place}`,
+    },
+    creditHtml: country === "jp" ? `Restaurant listings ${HP}` : undefined,
+    asks: "", warnBullet: "", peakWord: "highest", movedTitle: "", movedNote: "",
+    chainDefault: country === "au" ? ["Woolworths", "Coles"] : country === "jp" ? ["7-Eleven", "FamilyMart"] : ["Greggs", "Pret"],
+    chainOffset: country === "jp" ? 50 : 200, chainDraws: 99,
+    footer: {
+      lines: (d) => `${d.meta.sources}. Covers ${d.meta.areas} ${name} ${places}. Shop and café locations come from OpenStreetMap, which volunteers map, so some are missing. A ${place}'s side describes the area, not the people in it. This city's lines were checked with one round of random landscapes; the extra double-check used for Sydney and Tokyo is still to come.`,
+      timelineLines: "", timelineGroups: "", heritage: "",
+      make: `Calculated live in your browser from ${sources}.`,
+    },
+    herLabel: (h) => h.name, timelineGroupTitle: (g) => g.name, timelineGroupNote: () => "",
+    links: LINKS,
+  };
+}
+
+export const CITIES: Record<string, CityConfig> = {
+  sydney: SYDNEY, tokyo: TOKYO,
+  melbourne: generic("melbourne", "Melbourne", "au"), brisbane: generic("brisbane", "Brisbane", "au"), perth: generic("perth", "Perth", "au"),
+  adelaide: generic("adelaide", "Adelaide", "au"),
+  osaka: generic("osaka", "Osaka", "jp"), kyoto: generic("kyoto", "Kyoto", "jp"), nagoya: generic("nagoya", "Nagoya", "jp"),
+  yokohama: generic("yokohama", "Yokohama-Kawasaki", "jp"), kobe: generic("kobe", "Kobe-Hanshin", "jp"), fukuoka: generic("fukuoka", "Fukuoka", "jp"),
+  sapporo: generic("sapporo", "Sapporo", "jp"),
+  london: generic("london", "London", "uk"), manchester: generic("manchester", "Manchester", "uk"), birmingham: generic("birmingham", "Birmingham", "uk"),
+  liverpool: generic("liverpool", "Liverpool", "uk"),
+};

@@ -2,9 +2,10 @@
 import { defineConfig } from "vite";
 import { viteSingleFile } from "vite-plugin-singlefile";
 import { resolve } from "node:path";
+import { existsSync } from "node:fs";
 
 export default defineConfig(({ mode }) => {
-  const city = ["sydney", "tokyo"].includes(mode) ? mode : "sydney";
+  const city = existsSync(resolve(__dirname, `data/${mode}.json`)) ? mode : "sydney";
   return {
     base: "./",
     define: { __CITY__: JSON.stringify(city) },
