@@ -69,23 +69,43 @@ ACS_TABLES = ["B01001",   # age by sex
               "B05002",   # place of birth (foreign born)
               "B05006",   # country of birth for the foreign-born (heritage maps)
               "B25064"]   # median gross rent
+US_FAILS = []
+def is_table(content):
+    try:
+        j = json.loads(content); return isinstance(j, list) and len(j) > 1
+    except Exception:
+        return False
+def acs_get(st, co, t):
+    base = f"https://api.census.gov/data/{ACS_YEAR}/acs/acs5"
+    for p in ({"get": f"group({t})", "for": "tract:*", "in": [f"state:{st}", f"county:{co}"]},
+              {"get": f"group({t})", "for": "tract:*", "in": f"state:{st} county:{co}"}):
+        if KEY: p["key"] = KEY
+        r = get(base, p, tries=2)
+        if r is None: continue
+        if is_table(r.content): return r.content
+        log(f"  census answered, but not with data ({t} {st}{co}). It said:", r.text[:300].replace("\n", " "))
+    return None
 def us_city(city, counties):
+    if len(US_FAILS) >= 3: log(f"  skipping {city} census tables: the census site keeps refusing (see messages above)"); return
     d = os.path.join(ROOT, city, "census")
     for st, cos in counties.items():
         for co in cos:
             for t in ACS_TABLES:
                 path = os.path.join(d, f"{t}_{st}{co}.json")
-                if have(path): continue
-                p = {"get": f"group({t})", "for": "tract:*", "in": [f"state:{st}", f"county:{co}"]}
-                if KEY: p["key"] = KEY
-                r = get(f"https://api.census.gov/data/{ACS_YEAR}/acs/acs5", p)
-                if r is not None: save(path, r.content); log(f"  {city} {t} {st}{co}: {len(r.json()) - 1} tracts")
+                if have(path) and is_table(open(path, "rb").read()): continue
+                c = acs_get(st, co, t)
+                if c is None:
+                    US_FAILS.append((city, t))
+                    if len(US_FAILS) >= 3: log("  census site refusing repeatedly; moving on to the other cities"); return
+                    continue
+                save(path, c); log(f"  {city} {t} {st}{co}: {len(json.loads(c)) - 1} tracts")
                 time.sleep(0.4)
     for st in counties:
         path = os.path.join(ROOT, "_us_shapes", f"cb_{ACS_YEAR}_{st}_tract_500k.zip")
         if have(path, 10000): continue
         r = get(f"https://www2.census.gov/geo/tiger/GENZ{ACS_YEAR}/shp/cb_{ACS_YEAR}_{st}_tract_500k.zip")
-        if r is not None: save(path, r.content); log(f"  tract shapes {st}: {len(r.content) >> 10} KB")
+        if r is not None and r.content[:2] == b"PK": save(path, r.content); log(f"  tract shapes {st}: {len(r.content) >> 10} KB")
+        elif r is not None: log(f"  tract shapes {st}: not a zip, got:", r.text[:200])
 
 # ---------------------------------------------------------------- New Zealand: Stats NZ ArcGIS feature services (2013, 2018, 2023)
 NZ_SERVICES = {"individuals": "2023_Census_totals_by_topic_for_individuals_by_SA2",
@@ -110,7 +130,9 @@ def nz_city(city, box):
                                                      "inSR": 4326, "spatialRel": "esriSpatialRelIntersects", "outFields": "*", "outSR": 4326,
                                                      "f": "geojson", "resultOffset": off, "resultRecordCount": 1000})
                 if r is None: break
-                fs = r.json().get("features", []); feats += fs; off += len(fs)
+                try: fs = r.json().get("features", [])
+                except Exception: log("  NZ answered, but not with data:", r.text[:200]); break
+                feats += fs; off += len(fs)
                 if len(fs) < 1000: break
             save(path, json.dumps({"type": "FeatureCollection", "features": feats}).encode())
             log(f"  {city} {kind} layer {lay['id']} ({lay['name'][:60]}): {len(feats)} SA2s")
@@ -179,7 +201,9 @@ def osm_city(city, box):
                 if r is not None and r.status_code == 200: break
                 log(f"  overpass busy ({r.status_code if r is not None else 'no answer'}), waiting"); time.sleep(60 * (k + 1)); r = None
             if r is None: log(f"  {city}: OSM tile {i},{j} FAILED"); continue
-            for el in r.json().get("elements", []):
+            try: els = r.json().get("elements", [])
+            except Exception: log(f"  {city}: OSM tile {i},{j} gave no data:", r.text[:200]); continue
+            for el in els:
                 key = (el["type"], el["id"])
                 if key in seen: continue
                 seen.add(key); c = el.get("center", el)
@@ -191,12 +215,21 @@ def osm_city(city, box):
     log(f"  {city}: {len(rows)} OSM places")
 
 # ---------------------------------------------------------------- run
+def safely(fn, *a):
+    try: fn(*a)
+    except Exception as e:
+        import traceback; log(f"  FAILED {fn.__name__}{a[:1]}: {type(e).__name__}: {e}"); LOG.write(traceback.format_exc())
 for city, (box, counties) in US.items():
-    log(f"=== {city}"); us_city(city, counties); osm_city(city, box)
+    log(f"=== {city}"); safely(us_city, city, counties); safely(osm_city, city, box)
 for city, box in NZ.items():
-    log(f"=== {city}"); nz_city(city, box); osm_city(city, box)
+    log(f"=== {city}"); safely(nz_city, city, box); safely(osm_city, city, box)
 for city, box in SG.items():
-    log(f"=== {city}"); sg_city(city, box); osm_city(city, box)
+    log(f"=== {city}"); safely(sg_city, city, box); safely(osm_city, city, box)
+if US_FAILS:
+    log("\nThe US census site refused the requests. Usually that means it wants a free key:")
+    log("  1. get one (takes a minute, arrives by email): https://api.census.gov/data/key_signup.html")
+    log("  2. then run:   CENSUS_KEY=paste-your-key-here python ~/Downloads/download_phase1.py")
+    log("  Everything already downloaded is kept; only the missing parts are fetched.")
 
 os.makedirs(os.path.join(kit, "upload"), exist_ok=True)
 out = os.path.join(kit, "upload", "phase1.zip")
