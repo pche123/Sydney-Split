@@ -123,3 +123,16 @@ Each phase ends with written predictions; the next phase's cities test them. The
 |---|---|---|---|---|
 | 57 | Nothing is retuned | no setting changed for Phase 1 | – | |
 | 58 | Most hypotheses won't survive untouched | at least a third fail or partly hold | – | |
+
+## Added during Phase 1 (not pre-registered)
+
+Written on 16 Nov 2026 after some Phase 1 verdicts had been seen (counts of passing lines in Washington, Seattle and San Francisco), but before any Phase 1 line's own p-value was computed, which is what pooling uses. Treat as a weaker test than the table above.
+
+| # | Hypothesis | Holds if | Phase 0 | Phase 1 |
+|---|---|---|---|---|
+| 59 | Work and cycling lines are real in general | Factory, Laptop vs Hard Hat, Degree and Bicycle each pooled across Phase 1 cities (Stouffer) at p ≤ 0.05 after Holm across lines | all four, Z = 3.2–5.4 over 15–16 cities | |
+| 60 | Housing lines are not lines anywhere | Flats vs Houses, Renters, Grey pooled Z ≤ 0 | Z = −2.3, −1.8, −1.8 | |
+
+## Deviations
+
+- **US train commuting includes light rail** (recorded 16 Nov 2026, before any Phase 1 hypothesis was scored). The first US build counted subway and commuter rail only. Before any calibrated test was run, light rail and streetcar were added, to match the English definition ("underground, metro, light rail, tram"). Washington's first-pass p-values had been seen; Washington has almost no light rail. Most affected: Seattle and Los Angeles, whose main rail lines are light rail.
