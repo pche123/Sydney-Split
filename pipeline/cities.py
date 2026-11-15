@@ -87,6 +87,31 @@ CITIES = {
     "brighton": dict(country="uk", name="Brighton", crs=27700, level="lsoa", bbox=(-0.30, 50.78, -0.02, 50.90), osm=ENGLAND,
                      lads=["Brighton and Hove"],
                      study="Brighton and Hove, LSOAs (about 165 areas of ~1,700 people; the city has only ~37 MSOAs)"),
+
+    # ---------------------------------------------------------------- Phase 1, held out (USA: ACS 2019-2023 tracts; NZ: Census 2023 SA2)
+    # Tracts (~4,000 people) are merged inside each county, and in New York inside each borough, to about 400 areas per
+    # city: target_pop = max(8000, city population / 400). Settings chosen before any Phase 1 result was looked at.
+    "newyork": dict(country="us", name="New York", crs=32618, bbox=(-74.26, 40.49, -73.70, 40.92),
+                    counties={"36005": "Bronx", "36047": "Brooklyn", "36061": "Manhattan", "36081": "Queens", "36085": "Staten Island"},
+                    study="New York City's five boroughs, census tracts merged inside each borough"),
+    "losangeles": dict(country="us", name="Los Angeles", crs=32611, bbox=(-118.70, 33.70, -117.85, 34.35), counties={"06037": "Los Angeles County"},
+                       study="Los Angeles County inside the basin box (mountains and the Antelope Valley left out)"),
+    "chicago": dict(country="us", name="Chicago", crs=32616, bbox=(-88.00, 41.64, -87.52, 42.10), counties={"17031": "Cook County"},
+                    study="Cook County (Chicago and inner suburbs)"),
+    "sanfrancisco": dict(country="us", name="San Francisco–Oakland", crs=32610, bbox=(-122.52, 37.70, -122.15, 37.90),
+                         counties={"06075": "San Francisco", "06001": "Alameda"}, study="San Francisco plus the Oakland–Berkeley side of Alameda County"),
+    "washington": dict(country="us", name="Washington", crs=32618, bbox=(-77.17, 38.79, -76.90, 39.00),
+                       counties={"11001": "District of Columbia", "51013": "Arlington", "51510": "Alexandria"}, study="DC, Arlington and Alexandria"),
+    "austin": dict(country="us", name="Austin", crs=32614, bbox=(-97.95, 30.13, -97.55, 30.52), counties={"48453": "Travis County"},
+                   study="Travis County inside the city box"),
+    "seattle": dict(country="us", name="Seattle", crs=32610, bbox=(-122.45, 47.48, -122.22, 47.74), counties={"53033": "King County"},
+                    study="Seattle and its inner ring of King County"),
+    "miami": dict(country="us", name="Miami", crs=32617, bbox=(-80.45, 25.55, -80.11, 25.98), counties={"12086": "Miami-Dade"},
+                  study="Miami-Dade County's built-up area"),
+    "auckland": dict(country="nz", name="Auckland", crs=2193, bbox=(174.55, -37.10, 175.00, -36.70), study="Auckland's urban SA2s"),
+    "singapore": dict(country="sg", name="Singapore", crs=3414, bbox=(103.60, 1.20, 104.05, 1.48),
+                      study="Singapore's planning subzones with residents (Census 2020 dwelling counts)"),
+    "christchurch": dict(country="nz", name="Christchurch", crs=2193, bbox=(172.50, -43.62, 172.78, -43.42), study="Christchurch's urban SA2s"),
 }
 
 # What each city adds to the cross-country comparison (for the paper's discussion)

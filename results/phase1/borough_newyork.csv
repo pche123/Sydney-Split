@@ -1,0 +1,56 @@
+unit,line,areas,p
+New York City,the-hi-vis-line,403,0.02
+New York City,the-factory-line,403,0.165
+New York City,the-laptop-vs-hard-hat-line,403,0.17
+New York City,the-degree-line,403,0.065
+New York City,the-grey-line,403,0.24
+New York City,the-living-alone-line,403,0.29
+New York City,flats-vs-houses,403,0.145
+New York City,the-renters-line,403,0.2
+New York City,train-vs-car,403,0.12
+New York City,the-no-car-line,403,0.1
+New York City,the-bicycle-line,403,0.125
+Bronx,the-hi-vis-line,68,0.02
+Bronx,the-factory-line,68,0.18
+Bronx,the-laptop-vs-hard-hat-line,68,0.61
+Bronx,the-degree-line,68,0.11
+Bronx,the-grey-line,68,0.185
+Bronx,the-living-alone-line,68,0.65
+Bronx,flats-vs-houses,68,0.03
+Bronx,the-renters-line,68,0.03
+Bronx,train-vs-car,68,0.31
+Bronx,the-no-car-line,68,0.01
+Bronx,the-bicycle-line,68,0.275
+Brooklyn,the-hi-vis-line,125,0.56
+Brooklyn,the-factory-line,125,0.26
+Brooklyn,the-laptop-vs-hard-hat-line,125,0.095
+Brooklyn,the-degree-line,125,0.465
+Brooklyn,the-grey-line,125,0.09
+Brooklyn,the-living-alone-line,125,0.205
+Brooklyn,flats-vs-houses,125,0.215
+Brooklyn,the-renters-line,125,0.515
+Brooklyn,train-vs-car,125,0.305
+Brooklyn,the-no-car-line,125,0.005
+Brooklyn,the-bicycle-line,125,0.335
+Manhattan,the-hi-vis-line,76,0.075
+Manhattan,the-factory-line,76,0.23
+Manhattan,the-laptop-vs-hard-hat-line,76,0.26
+Manhattan,the-degree-line,76,0.155
+Manhattan,the-grey-line,76,0.155
+Manhattan,the-living-alone-line,76,0.465
+Manhattan,flats-vs-houses,76,0.35
+Manhattan,the-renters-line,76,0.06
+Manhattan,train-vs-car,76,0.24
+Manhattan,the-no-car-line,76,0.695
+Manhattan,the-bicycle-line,76,0.68
+Queens,the-hi-vis-line,111,0.38
+Queens,the-factory-line,111,0.425
+Queens,the-laptop-vs-hard-hat-line,111,0.585
+Queens,the-degree-line,111,0.335
+Queens,the-grey-line,111,0.19
+Queens,the-living-alone-line,111,0.44
+Queens,flats-vs-houses,111,0.3
+Queens,the-renters-line,111,0.65
+Queens,train-vs-car,111,0.445
+Queens,the-no-car-line,111,0.205
+Queens,the-bicycle-line,111,0.345

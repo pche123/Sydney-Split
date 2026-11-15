@@ -55,7 +55,7 @@ def chain_tests(city, W_, d):
 if __name__ == "__main__":
     base = sys.argv[1]
     for city in sys.argv[2:]:
-        app = os.path.join(ROOT, "app", "data", f"{city}.json"); d = json.load(open(app))
+        app = os.path.join(os.environ.get("SPLIT_APPDIR", os.path.join(ROOT, "app", "data")), f"{city}.json"); d = json.load(open(app))
         calf = os.path.join(ROOT, "results", f"calibrated_{city}.csv")
         if d["meta"].get("calibrated"):
             cal = dict(pd.read_csv(calf)[["line", "p_cal"]].values)

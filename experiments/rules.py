@@ -21,7 +21,7 @@ from linetests.landscape import MultiScaleNull
 from cities import CITIES
 
 CI = sys.argv[1]; OUTD = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, "..", "results", "rules"); os.makedirs(OUTD, exist_ok=True)
-DL = os.path.join(HERE, "..", "app", "public", "downloads")
+DL = os.environ.get("SPLIT_DL", os.path.join(HERE, "..", "app", "public", "downloads"))   # per-area tables
 V = ["age_65_plus", "kids_under_15", "living_alone", "detached_houses", "uni_degree", "professionals", "managers",
      "train_commute", "car_commute", "bike_commute", "walk_commute"]
 LAB = {"age_65_plus": "over-65s", "kids_under_15": "children", "living_alone": "living alone", "detached_houses": "detached houses",
@@ -29,6 +29,8 @@ LAB = {"age_65_plus": "over-65s", "kids_under_15": "children", "living_alone": "
        "car_commute": "car commuting", "bike_commute": "cycling to work", "walk_commute": "walking to work"}
 COUNTRY = {"au": ["melbourne", "brisbane", "perth", "adelaide"], "jp": ["osaka", "kyoto", "nagoya", "yokohama", "kobe", "fukuoka", "sapporo"],
            "uk": ["london", "manchester", "birmingham", "liverpool", "brighton"]}
+if os.environ.get("SPLIT_COUNTRY"):   # e.g. '{"us": ["newyork", "chicago"]}' to score held-out cities with the same settings
+    import json; COUNTRY = json.loads(os.environ["SPLIT_COUNTRY"])
 NULL = 99; MIN_MATCH = 12; rng = np.random.default_rng(5)
 rn = lambda x: norm.ppf((rankdata(x) - 0.5) / len(x))
 

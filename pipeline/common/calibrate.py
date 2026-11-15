@@ -21,12 +21,13 @@ G = gpd.read_file(f"{W_}/areas.gpkg").to_crs(C["crs"]).reset_index(drop=True)
 z = np.load(f"{W_}/fields.npz"); I, J, W = z["I"], z["J"], z["W"]
 GN = MultiScaleNull(G.geometry, I, J, W, m=25 if len(G) < 600 else 9)
 rz = lambda v: norm.ppf((rankdata(v) - 0.5) / len(v))
-out = f"{ROOT}/results/calibrated_{city}.csv"; rows = []
+out = os.environ.get("CAL_OUT", f"{ROOT}/results/calibrated_{city}.csv"); rows = []   # CAL_OUT, CAL_ONLY: split one city across processes, then merge
 done = set(pd.read_csv(out).line) if os.path.exists(out) else set()
 if done: rows = pd.read_csv(out).to_dict("records")
 R_FINE = 60 if city == "london" else 200   # London is 5x bigger, so it gets fewer refits. With R refits the smallest calibrated p is 1/(R+1); close calls get R_FINE so Holm can still pass them
+ONLY = set(os.environ["CAL_ONLY"].split(",")) if os.environ.get("CAL_ONLY") else None
 for lid, kind, f in zip(z["ids"], z["kinds"], z["F"].T):
-    if kind == "chain": continue
+    if kind == "chain" or (ONLY and lid not in ONLY): continue
     prev = next((r for r in rows if r["line"] == lid), None)
     if prev is not None and (prev["p_cal"] >= 0.1 or prev.get("R", R) >= R_FINE): continue
     for R_ in ([R] if prev is None else []) + [R_FINE]:

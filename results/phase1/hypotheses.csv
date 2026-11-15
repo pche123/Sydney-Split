@@ -1,0 +1,61 @@
+id,verdict,figure,p,n,rule
+1,failed,seattle 6% (13/200); chicago 10% (10/100),0.02818829416341614,,"landscape test, smooth maps with no line; p tests excess over 5% in the worst city (chicago)"
+2,held,seattle 26%–28%; chicago 65%–66%,7.349395146959925e-24,,all three MSR forms > 25%; p tests excess over 5% (largest of the six)
+3,partly,"seattle: MSR 49%–60%, ours 2%; chicago: MSR 99%–99%, ours 0%",,,gradient maps: every MSR form > 70% and ours < 5%
+4,held,seattle 10%; chicago 8%,0.127960478620379,,5–15% held; above 15% failed; below 5% partly (no weak spot seen)
+5,failed,"100 areas 6%, 164 areas 4%, 307 areas 4%, 401 areas 10%",0.8,4.0,Spearman over the four benchmarked cities; held needs a negative correlation with p < 0.05
+6,held,98%–100%,,,"shuffling areas, every no-line scenario"
+7,held,Geary and Moran at a 3 SD step: 0%–2%,,,Seattle; < 10% on both backgrounds
+8,held,"rough background: border 9%, 21% vs edge 1%, 8% (2 and 3 SD)",,,Seattle; border count ≥ edge test at 2 and 3 SD
+9,not testable,needs a large low-density city; the power study was run on Seattle (100 areas),,,
+10,not testable,the ranked versions of the jump tests were not rerun,,,
+11,held,11 of 167 (7%),0.08442952422438262,167.0,p tests whether the pass rate is below 10%
+12,failed,1 cities: newyork,,,
+13,failed,"passes in no city; candidates tested: seattle, sanfrancisco, christchurch",,,
+14,held,1 cities: sanfrancisco,,,
+15,failed,"venue lines pass in 3 cities: losangeles, newyork, sanfrancisco",,,
+16,held,1.25 passes per US city vs 0.63 per Japanese city,,,
+17,held,inside one borough 5 of 44 (11%); whole city 1 of 11 (9%),0.655583065349991,,"same single-fit test, uncorrected; Fisher's exact test, one-sided"
+18,failed,1 passes: Cold Storage vs FairPrice,,,
+19,held,132 of 140 lines have none (94%),,140.0,
+20,held,5%–12% of the line,,,
+21,not testable,barrier check against OpenStreetMap roads and rail not run yet,,,
+22,held,"US 8 of 112 (7.1%) vs Australia 1.8%, Japan 1.7%",,,
+23,held,11 of 13 lines (85%) land in their Phase 0 family,,,"average of |r| between line scores over US cities, average linkage, 4 clusters; each cluster counted for its majority family"
+24,held,"mean |r| with Work and class 0.30, Night out 0.24",,,held if its two closest families are within 0.10 of each other
+25,held,1 of 30 family tests pass (3%),0.7853612360570624,30.0,p tests excess over 5%
+26,failed,"Night out 0.17, Work and class 0.19, Age 0.19, Inner city 0.23",,,mean |r| between a family's lines and other families' lines; lowest should be Age
+27,held,"Inner city 0.50, Work and class 0.49, Night out 0.31",,,mean |r| within each family; highest should be Inner city
+28,not testable,earlier US survey periods and NZ 2013/2018 were not downloaded for this phase,,,
+29,not testable,earlier US survey periods and NZ 2013/2018 were not downloaded for this phase,,,
+30,not testable,earlier US survey periods and NZ 2013/2018 were not downloaded for this phase,,,
+31,not testable,earlier US survey periods and NZ 2013/2018 were not downloaded for this phase,,,
+32,not testable,earlier US survey periods and NZ 2013/2018 were not downloaded for this phase,,,
+33,failed,"mixed in 2 of 5 US cities with a burger pair (chicago, losangeles)",,,a city counts if any burger pair is mixed (p ≤ 0.05); no same-type supermarket pair is common to the US cities
+34,partly,Whole Foods vs Walmart passes in 1 of 1 cities tested,,,
+35,partly,7 of 10 tests neutral,,,neutral = neither split (own p ≤ 0.05) nor mixed; held if at least 80% are neutral
+36,held,own shops spaced out (p ≤ 0.05) in 3 of 5 mixed pairs: chicago McDonald's vs Burger King p=0.001; chicago McDonald's vs Wendy's p=0.001; chicago CVS vs Walgreens p=1.000; losangeles McDonald's vs Burger King p=0.001; losangeles Starbucks vs Dunkin' p=0.078,,,"mean distance to the nearest shop of the same chain, against random relabelling"
+37,held,losangeles: matches degree on 74%,,,premium side against the more-graduates or more-IT side
+38,partly,"7%–21% by city, 14% overall",,8.0,
+39,held,Spearman ρ = 0.72 over 24 cities,7.802427921932883e-05,24.0,
+40,held,"Australian rules 34%, English rules 19% of US tests",,,
+41,failed,"6 US rules: 0% into Australia, 14% into Japan",,,
+42,failed,Australian rules pass in 22 of 45 New Zealand tests (49%),,,
+43,failed,"into AU 15%, into JP 20%, into US 27%, into UK 27%",,,mean transfer rate of other countries' consistent rules into each country
+44,failed,holds in 2 of 8 US cities where at least 12 areas match,,,
+45,failed,Spearman ρ = -0.05 over 325 pairs,0.40789631457289566,325.0,"size difference (log population) against fingerprint distance; pairs share cities, so the p-value is optimistic"
+46,held,closest: chicago–brighton at 0.23,,,
+47,held,"nearest: adelaide (0.18), then perth (0.19)",,,nearest city in another country; held if it is Australian
+48,held,"8 of 8 US cities: newyork→chicago, losangeles→austin, chicago→washington, sanfrancisco→chicago, washington→chicago, austin→miami, seattle→washington, miami→austin",,,
+49,not testable,tract-level rebuild not run yet,,,
+50,not testable,tract-level rebuild not run yet,,,
+51,not testable,tract-level rebuild not run yet,,,
+52,not testable,income table (B19013) was not downloaded,,,
+53,failed,"newyork: gentle, sanfrancisco: gentle, washington: gentle",,,
+54,not testable,commute-time table was not downloaded,,,
+55,held,"work-from-home side matches Degree on 80%, Train on 56% of areas (mean over 8 cities)",,,
+56,not testable,estate boundaries not available as a map layer,,,
+57,partly,one recorded deviation: US train commuting widened to include light rail (see HYPOTHESES.md),,,
+58,held,21 of 45 scored hypotheses failed or partly held,,,
+59,failed,The Factory Line Z = 1.2 over 10 cities; The Laptop vs Hard Hat Line Z = 1.3 over 10 cities; The Degree Line Z = 2.0 over 10 cities; The Bicycle Line Z = 1.7 over 10 cities,0.8269152592938286,,"each line pooled over Phase 1 cities (Stouffer), Holm across lines; p shown is the largest of the four"
+60,partly,Flats vs Houses Z = -0.3; The Renters Line Z = -0.2; The Grey Line Z = 0.9,,,

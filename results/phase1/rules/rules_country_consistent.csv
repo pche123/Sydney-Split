@@ -1,0 +1,7 @@
+country,rule,cities,excess,p_max,text
+us,16,6,0.3314131963017351,0.03,high over-65s + high children => high degrees
+us,1179,4,0.25334510556667245,0.01,high children + low car commuting => low degrees
+us,2678,5,0.252918934979876,0.04,low degrees + low car commuting => high children
+us,291,5,0.2233844394099851,0.04,high over-65s + low professionals => low children
+us,1351,4,0.19930433510716972,0.04,low children + low walking to work => low train commuting
+us,1187,4,0.1853377958628879,0.05,high children + low car commuting => low professionals

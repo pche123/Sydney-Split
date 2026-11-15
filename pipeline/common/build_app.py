@@ -114,6 +114,70 @@ elif CO == "jp":
         put("bike_commute", cm["自転車"], known); put("walk_commute", cm["徒歩のみ"], known)
     JPF = T("X_foreign") if os.path.exists(f"{W_}/census/X_foreign.csv") else None
 
+elif CO == "us":   # ACS 2019-2023 tables summed to areas by us_areas.py; each definition mirrors the AU/UK one
+    def T(t):
+        f = f"{W_}/census/{t}.csv"
+        return pd.read_csv(f, index_col=0).reindex(range(n)) if os.path.exists(f) else None
+    def v(d, t, *ks): return sum(d[f"{t}_{k:03d}E"] for k in ks)
+    b01, b11, b115, b153, b243, b2424, b2544, c2410, c2430, b083 = (T(t) for t in
+        ["B01001", "B11001", "B11005", "B15003", "B25003", "B25024", "B25044", "C24010", "C24030", "B08301"])
+    POP = b01.B01001_001E.fillna(0).values; at = b01.B01001_001E
+    put("age_65_plus", v(b01, "B01001", *range(20, 26), *range(44, 50)), at)
+    put("kids_under_15", v(b01, "B01001", 3, 4, 5, 27, 28, 29), at)
+    put("age_20_39", v(b01, "B01001", *range(8, 14), *range(32, 38)), at)
+    put("living_alone", b11.B11001_008E, b11.B11001_001E)
+    put("families_with_kids", b115.B11005_002E, b115.B11005_001E)
+    put("owners", b243.B25003_002E, b243.B25003_001E); put("renters", b243.B25003_003E, b243.B25003_001E)
+    put("detached_houses", b2424.B25024_002E, b2424.B25024_001E)
+    put("apartments", v(b2424, "B25024", 6, 7, 8, 9), b2424.B25024_001E)                  # buildings of 5+ units
+    put("no_car", v(b2544, "B25044", 3, 10), b2544.B25044_001E)
+    put("uni_degree", v(b153, "B15003", 22, 23, 24, 25), b153.B15003_001E)                # bachelor's or higher, age 25+
+    o = c2410.C24010_001E                                                                   # occupation: male block 2-37, female = male + 36
+    put("laptop_jobs", v(c2410, "C24010", 3, 39), o)                                        # management, business, science and arts
+    put("managers", v(c2410, "C24010", 5, 41), o)
+    put("professionals", v(c2410, "C24010", 3, 39) - v(c2410, "C24010", 5, 41), o)
+    put("hivis_jobs", v(c2410, "C24010", 34, 70, 25, 61), o)                                # production, transport, moving + cleaning
+    put("tradies", v(c2410, "C24010", 32, 68, 33, 69), o)                                   # construction, installation and repair
+    it = c2430.C24030_001E                                                                  # industry: male block 3-28, female = male + 27
+    put("ind_manufacturing", v(c2430, "C24030", 7, 34), it); put("ind_construction", v(c2430, "C24030", 6, 33), it)
+    put("ind_it", v(c2430, "C24030", 13, 40), it); put("ind_finance", v(c2430, "C24030", 15, 42), it)
+    put("ind_hospitality", v(c2430, "C24030", 26, 53), it); put("ind_health", v(c2430, "C24030", 23, 50), it)
+    wk = b083.B08301_001E - b083.B08301_021E                                                # workers who travel (as in the UK)
+    put("train_commute", v(b083, "B08301", 12, 13, 14), wk); put("car_commute", b083.B08301_003E, wk)   # subway, commuter and light rail (as UK "underground, metro, light rail, tram"); drove alone
+    put("bike_commute", b083.B08301_018E, wk); put("walk_commute", b083.B08301_019E, wk)
+    put("work_from_home", b083.B08301_021E, b083.B08301_001E)
+
+elif CO == "nz":   # Census 2023 SA2 (Stats NZ); ANZSCO occupations and ANZSIC industries as in Australia
+    nzd = pd.read_csv(f"{W_}/census/nz.csv", index_col=0).reindex(range(n))
+    def v(*ks): return sum(nzd[k] for k in ks)
+    POP = nzd.VAR_1_3.fillna(0).values; at = nzd.VAR_1_68
+    put("age_65_plus", v(*[f"VAR_1_{k}" for k in range(62, 68)]), at)
+    put("kids_under_15", v("VAR_1_49", "VAR_1_50", "VAR_1_51"), at)
+    put("age_20_39", v("VAR_1_53", "VAR_1_54", "VAR_1_55", "VAR_1_56"), at)
+    put("living_alone", nzd.VAR_4_78, nzd.VAR_4_81)
+    put("owners", v("VAR_4_184", "VAR_4_186"), nzd.VAR_4_189); put("renters", nzd.VAR_4_185, nzd.VAR_4_189)
+    put("no_car", nzd.VAR_4_136, nzd.VAR_4_144)
+    if "VAR_3_80" in nzd:   # dwelling type: separate house vs joined (flats, townhouses, units)
+        put("detached_houses", nzd.VAR_3_82, nzd.VAR_3_80); put("apartments", nzd.VAR_3_83, nzd.VAR_3_80)
+    put("uni_degree", v("VAR_2_245", "VAR_2_246", "VAR_2_247", "VAR_2_248"), nzd.VAR_2_252)
+    o = nzd.VAR_2_711
+    put("managers", nzd.VAR_2_701, o); put("professionals", nzd.VAR_2_702, o); put("laptop_jobs", v("VAR_2_701", "VAR_2_702"), o)
+    put("hivis_jobs", v("VAR_2_707", "VAR_2_708"), o); put("tradies", nzd.VAR_2_703, o)
+    it = nzd.VAR_2_612
+    put("ind_manufacturing", nzd.VAR_2_593, it); put("ind_construction", nzd.VAR_2_595, it)
+    put("ind_it", nzd.VAR_2_600, it); put("ind_finance", nzd.VAR_2_601, it)
+    put("ind_hospitality", nzd.VAR_2_598, it); put("ind_health", nzd.VAR_2_607, it)
+    wk = nzd.VAR_2_786 - nzd.VAR_2_773 - nzd.VAR_2_774                                    # travelled to work on census day
+    put("train_commute", nzd.VAR_2_779, wk); put("car_commute", v("VAR_2_775", "VAR_2_776"), wk)
+    put("bike_commute", nzd.VAR_2_780, wk); put("walk_commute", nzd.VAR_2_781, wk)
+    put("work_from_home", nzd.VAR_2_773, nzd.VAR_2_786)
+
+elif CO == "sg":   # Census 2020 residents by dwelling type (data.gov.sg); the only small-area census table available
+    dw = pd.read_csv(f"{W_}/census/dwelling.csv", index_col=0).reindex(range(n))
+    POP = dw.Total.fillna(0).values
+    put("apartments", dw.HDBDwellings_Total + dw.CondominiumsandOtherApartments, dw.Total)
+    put("detached_houses", dw.LandedProperties, dw.Total)
+
 else:   # uk
     key = G.code.astype(str)
     def T(t):
@@ -347,7 +411,18 @@ CHAINS = {"au": [("woolies-vs-coles", "Woolies vs Coles", "Woolworths", "Coles")
                  ("starbucks-vs-doutor", "Starbucks vs Doutor", "Starbucks", "Doutor"), ("saizeriya-vs-gusto", "Saizeriya vs Gusto", "Saizeriya", "Gusto")],
           "uk": [("greggs-vs-pret", "Greggs vs Pret", "Greggs", "Pret"), ("costa-vs-starbucks", "Costa vs Starbucks", "Costa", "Starbucks"),
                  ("waitrose-vs-lidl-aldi", "Waitrose vs Lidl & Aldi", "Waitrose", "Lidl & Aldi"), ("tesco-vs-sainsburys", "Tesco vs Sainsbury's", "Tesco", "Sainsbury's"),
-                 ("maccas-vs-kfc", "McDonald's vs KFC", "McDonald's", "KFC")]}[CO]
+                 ("maccas-vs-kfc", "McDonald's vs KFC", "McDonald's", "KFC")],
+          "us": [("mcdonalds-vs-burger-king", "McDonald's vs Burger King", "McDonald's", "Burger King"),
+                 ("mcdonalds-vs-wendys", "McDonald's vs Wendy's", "McDonald's", "Wendy's"),
+                 ("starbucks-vs-dunkin", "Starbucks vs Dunkin'", "Starbucks", "Dunkin'"),
+                 ("cvs-vs-walgreens", "CVS vs Walgreens", "CVS", "Walgreens"),
+                 ("whole-foods-vs-walmart", "Whole Foods vs Walmart", "Whole Foods", "Walmart")],
+          "nz": [("maccas-vs-burger-king", "Maccas vs Burger King", "McDonald's", "Burger King"),
+                 ("new-world-vs-paknsave", "New World vs Pak'nSave", "New World", "Pak'nSave"),
+                 ("woolworths-vs-paknsave", "Woolworths vs Pak'nSave", "Woolworths", "Pak'nSave")],
+          "sg": [("mcdonalds-vs-kfc", "McDonald's vs KFC", "McDonald's", "KFC"),
+                 ("cold-storage-vs-fairprice", "Cold Storage vs FairPrice", "Cold Storage", "FairPrice"),
+                 ("seven-eleven-vs-cheers", "7-Eleven vs Cheers", "7-Eleven", "Cheers")]}[CO]
 inmap = G.geometry.union_all().buffer(300)
 PTS = {}
 for b in BRANDS:
@@ -429,7 +504,7 @@ else:
                       for a, b, x in zip(nm_, G.short, G.name)]   # LSOAs: "Kemptown (A)"
 dup = G.short.duplicated(keep=False)
 if CO == "jp": G.loc[dup, "short"] = G.short[dup] + " (" + G.ward[dup] + ")"
-elif CO == "uk": G.loc[dup, "short"] = G.short[dup] + " (" + G.borough[dup] + ")"
+elif CO in ("uk", "us", "nz", "sg"): G.loc[dup, "short"] = G.short[dup] + " (" + G.borough[dup] + ")"
 dup = G.short.duplicated(keep=False)
 G.loc[dup, "short"] = G.short[dup] + " " + G[dup].groupby("short").cumcount().add(1).astype(str)
 if CO == "au": G["label_name"] = G.name
@@ -714,7 +789,10 @@ np.savez_compressed(f"{W_}/fields.npz", I=I, J=J, W=W, ids=np.array(list(FIELDS)
 
 SRC = {"au": "ABS 2021 Census (GCP DataPack, SA2) · ABS ASGS 2021 boundaries · © OpenStreetMap contributors (Nov 2026)",
        "jp": "Japan 2020 Census small-area data (e-Stat) · © OpenStreetMap contributors (Nov 2026) · Restaurant listings Powered by ホットペッパー Webサービス (Nov 2026)",
-       "uk": "ONS Census 2021 (Nomis bulk tables) · ONS 2021 boundaries · Food Standards Agency ratings · Gambling Commission register · © OpenStreetMap contributors (Nov 2026)"}[CO]
+       "uk": "ONS Census 2021 (Nomis bulk tables) · ONS 2021 boundaries · Food Standards Agency ratings · Gambling Commission register · © OpenStreetMap contributors (Nov 2026)",
+       "us": "US Census Bureau American Community Survey 2019–2023 (5-year, by tract) · Census Bureau 2023 tract boundaries · © OpenStreetMap contributors (Nov 2026)",
+       "nz": "Stats NZ Census 2023 (SA2, CC BY 4.0) · © OpenStreetMap contributors (Nov 2026)",
+       "sg": "Singapore Census of Population 2020 and URA Master Plan 2019 subzones (data.gov.sg, Singapore Open Data Licence) · © OpenStreetMap contributors (Nov 2026)"}[CO]
 if C.get("licences") == "vic": SRC += " · Victorian liquor licences (data.vic.gov.au)"
 HIVIS = ('<div class="box"><h3>What does "hi-vis" mean?</h3><p style="margin:0">Hi-vis is Australian slang for the bright, high-visibility vests '
          'worn on building sites, roads, warehouses and delivery routes.</p><p class="small">Here it means driving, machine and labouring jobs, compared with '
@@ -723,7 +801,11 @@ GREY = {"au": "Grey areas: suburbs with fewer than 1,000 residents or fewer than
               "The Census covers them, but they are left out so empty land doesn't count as much as busy suburbs.",
         "jp": "Grey areas: neighbourhoods with fewer than 100 residents" + (", or fewer than 1,000 people per km² (mountains, farmland, ports, factory land)" if C.get("drop_low_density") else "")
               + ". The Census covers them, but they are left out so empty land doesn't count as much as busy neighbourhoods.",
-        "uk": ""}[CO]
+        "uk": "",
+        "us": "Grey areas: census tracts with fewer than 100 residents or fewer than 1,000 people per km² (parks, airports, industrial land, hills). "
+              "They are left out so empty land doesn't count as much as busy neighbourhoods.",
+        "nz": "Grey areas: SA2s with fewer than 100 residents or fewer than 1,000 people per km². They are left out so empty land doesn't count as much as busy suburbs.",
+        "sg": "Grey areas: subzones with fewer than 100 residents (industrial estates, the airport, nature reserves, military land)."}[CO]
 if CO == "jp" and len(empty):
     U_ = gpd.read_file(f"{W_}/units.gpkg"); d_ = U_[~U_.study.astype(bool)]
     GREY += f" Here they cover {d_.km2.sum():.0f} km² but only {int(d_.population.sum()):,} people ({100 * d_.population.sum() / U_.population.sum():.1f}% of residents)."

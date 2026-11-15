@@ -21,10 +21,10 @@ FAMILIES = {"Work and class": ["the-hi-vis-line", "the-degree-line", "the-laptop
             "Night out": ["coffee-vs-alcohol", "drink-out-vs-drink-in"]}
 CI = sys.argv[1]; only = sys.argv[2:]
 rows = []
-out_csv = os.path.join(ROOT, "results", "families.csv")
+out_csv = os.environ.get("SPLIT_FAMILIES_CSV", os.path.join(ROOT, "results", "families.csv"))
 if os.path.exists(out_csv): rows = pd.read_csv(out_csv).to_dict("records")
 for city in (only or [c for c in CITIES if os.path.exists(f"{CI}/{c}/fields.npz")]):
-    app = os.path.join(ROOT, "app", "data", f"{city}.json")
+    app = os.path.join(os.environ.get("SPLIT_APPDIR", os.path.join(ROOT, "app", "data")), f"{city}.json")
     if not os.path.exists(app) or not os.path.exists(f"{CI}/{city}/fields.npz"): continue
     z = np.load(f"{CI}/{city}/fields.npz"); I, J, W = z["I"], z["J"], z["W"]
     G = gpd.read_file(f"{CI}/{city}/areas.gpkg").to_crs(CITIES[city]["crs"]).reset_index(drop=True)
