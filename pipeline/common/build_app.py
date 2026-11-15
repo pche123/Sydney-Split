@@ -386,14 +386,25 @@ elif CO == "jp":
         m = re.match(r".*?市(.+区)$", cn); w = m.group(1) if m else cn
         return place(re.sub(r"[区市]$", "", w))
     G["short"] = [place(top.NAME.get(a, "")) for a in G["area"]]
+    if city == "kyoto":   # Kyoto's small areas are old school districts with very long names: use a station inside instead
+        import unicodedata
+        rail = P.t.map(lambda q: q.get("railway") == "station").values
+        st = pg[rail].copy()
+        st["nm"] = st.t.map(lambda q: q.get("name:en") or (place(q.get("name", "")) if q.get("name") else ""))
+        st["nm"] = st.nm.map(lambda x: unicodedata.normalize("NFKD", re.split(r"[・(（]", x)[0]).encode("ascii", "ignore").decode().strip())
+        st = st[st.nm.str.len() > 0]; jst = gpd.sjoin(st[["nm", "geometry"]], G[["geometry"]], predicate="within").groupby("index_right").nm.first()
+        G["short"] = [re.sub(r" Station$", "", jst[i]) if i in jst.index else place(str(top.NAME.get(a, ""))[:2]) for i, a in enumerate(G["area"])]
     G["ward"] = [ward(top.CITY_NAME.get(a, "")) for a in G["area"]]
     G["jp"] = [str(top.CITY_NAME.get(a, "")) + str(top.NAME.get(a, "")) for a in G["area"]]
 else:
-    st = pg[np.asarray(FLAG["station"], bool)].copy(); st["nm"] = st.t.map(lambda q: q.get("name", ""))
+    st = pg[P.t.map(lambda q: q.get("railway") in ("station", "halt") or q.get("station") == "subway").values].copy(); st["nm"] = st.t.map(lambda q: q.get("name", ""))
     st = st[st.nm.str.len() > 0]
     j = gpd.sjoin(st[["nm", "geometry"]], G[["geometry"]], predicate="within")
     first = j.groupby("index_right").nm.first()
-    G["short"] = [re.sub(r" (Underground|Rail|Railway|Overground|DLR|Tram|Metrolink)? ?[Ss]tation$", "", first.get(i, G.name[i])) for i in range(n)]
+    d_, ix = cKDTree(np.column_stack([st.geometry.x, st.geometry.y])).query(rep)
+    near = st.nm.values[ix]
+    def clean(x): return re.sub(r" (Underground|Rail|Railway|Overground|DLR|Tram|Tramstop|Metrolink|Bus)? ?([Ss]tation|[Ss]top)$", "", x)
+    G["short"] = [clean(first[i]) if i in first.index else ("Near " + clean(near[i]) if d_[i] < 3000 else G.name[i]) for i in range(n)]
 dup = G.short.duplicated(keep=False)
 if CO == "jp": G.loc[dup, "short"] = G.short[dup] + " (" + G.ward[dup] + ")"
 elif CO == "uk": G.loc[dup, "short"] = G.short[dup] + " (" + G.borough[dup] + ")"
