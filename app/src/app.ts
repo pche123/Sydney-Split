@@ -178,7 +178,7 @@ export function start(DATA: CityData, C: CityConfig) {
   }
   cmp.addEventListener("change", () => {
     if (mode === "overlay") { ovLine = byId[cmp.value]; render(); }
-    else { compare = cmp.value ? byId[cmp.value] : null; drawCompare(); }
+    else { compare = cmp.value ? byId[cmp.value] : null; render(); }
   });
 
   // ---------- map
@@ -186,6 +186,9 @@ export function start(DATA: CityData, C: CityConfig) {
   const gAreas = document.createElementNS(svgNS, "g"), gCut = document.createElementNS(svgNS, "g"), gLbl = document.createElementNS(svgNS, "g");
   const gEmpty = document.createElementNS(svgNS, "g"), gDots = document.createElementNS(svgNS, "g");
   map.append(gEmpty, gAreas, gCut, gDots, gLbl);
+  // stripes for "the two compared lines disagree here"
+  map.insertAdjacentHTML("afterbegin", `<defs><pattern id="disagree" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)">
+    <rect width="3.5" height="7" style="fill:var(--side-a)"/><rect x="3.5" width="3.5" height="7" style="fill:var(--side-b)"/></pattern></defs>`);
   for (const e of DATA.empty) {
     const p = document.createElementNS(svgNS, "path"); p.setAttribute("d", e.d); p.setAttribute("class", "empty"); p.dataset.empty = e.name; gEmpty.appendChild(p);
   }
@@ -261,9 +264,10 @@ export function start(DATA: CityData, C: CityConfig) {
   // ---------- render a line
   function agreement(x: Line, y: Line) { let s = 0; x.side.forEach((v, i) => (s += Number(v === y.side[i]))); s /= x.side.length; return Math.max(s, 1 - s); }
   function drawCompare() {
-    cut2El.setAttribute("d", compare && compare !== current ? (SM ? borderPath(smoothSide(compare.side, compare.f)) : compare.cut) : "");
+    cut2El.setAttribute("d", "");
     $("#agree").innerHTML = compare && compare !== current
-      ? `<span class="legend-dash"></span>${compare.name} puts ${Math.round(agreement(current, compare) * 100)}% of ${places} on matching sides` : "";
+      ? (compare.side.filter((v, i) => v === current.side[i]).length < N / 2 ? `<b>${compare.name}</b>'s blue side lines up with this line's orange side. ` : "")
+        + `<span class="sw-x"></span> Striped: the two lines disagree. They agree on ${Math.round(agreement(current, compare) * 100)}% of ${places} (two unrelated maps of the city would still agree on roughly 55–60%, because neighbours are alike).` : "";
   }
   const WARN = `<div class="warn"><b>Overlap isn't cause.</b> Don't stereotype.
     <details><summary>Why?</summary><ul><li>Maps show places, not people.</li><li>${C.warnBullet}</li>
@@ -288,7 +292,9 @@ export function start(DATA: CityData, C: CityConfig) {
     } else if (mode === "timeline" && tKind === "lines") {
       sidesLegend(tLine.a, tLine.b, `<div><i style="border:2.6px solid var(--ink);background:none"></i><span>${C.movedTitle}, ${Y0}–${Y1}</span></div>`);
     } else if (mode === "lines") {
-      sidesLegend(current.a, current.b);
+      const cmpOn = compare && compare !== current;
+      sidesLegend(cmpOn ? `${current.a} (both lines agree)` : current.a, cmpOn ? `${current.b} (both lines agree)` : current.b,
+        cmpOn ? `<div><i class="sw-x"></i><span>The lines disagree here</span></div>` : "");
     } else {
       el.innerHTML = `<div><i style="background:${RAMP[4]}"></i><span>Darker = more than ${City}'s average</span></div>
         <div><i style="background:${RAMP[0]}"></i><span>Lighter = fewer</span></div>
@@ -304,7 +310,9 @@ export function start(DATA: CityData, C: CityConfig) {
     if (mode !== "lines") return renderHeritage();
     cutEl.style.display = ""; cutEl.setAttribute("class", "cut"); haloEl.setAttribute("d", "");
     const l = current, sd = smoothSide(l.side, l.f);
-    areaEls.forEach((p, i) => { p.style.fill = ""; p.setAttribute("class", "area " + (sd[i] ? "a" : "b") + (picked === i ? " picked" : "")); });
+    const flip = !!compare && compare !== current && compare.side.filter((v, i) => v === l.side[i]).length < N / 2;   // line up matching sides first
+    const cs = compare && compare !== current ? smoothSide(compare.side, compare.f).map((v) => v !== flip) : null;   // agreement map when comparing
+    areaEls.forEach((p, i) => { p.style.fill = ""; p.setAttribute("class", "area " + (cs && cs[i] !== sd[i] ? "x" : sd[i] ? "a" : "b") + (picked === i ? " picked" : "")); });
     cutEl.setAttribute("d", SM ? borderPath(sd) : l.cut); smoothNote(l.side, sd);
     drawCompare();
     const [cls, txt] = verdict(l.tier);
