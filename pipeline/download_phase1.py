@@ -252,6 +252,7 @@ os.makedirs(os.path.join(kit, "upload"), exist_ok=True)
 out = os.path.join(kit, "upload", "phase1.zip")
 with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
     for dp, _, fs in os.walk(ROOT):
+        if "_osm" in dp: continue          # raw map files are huge and already cut down to places.csv
         for f in fs: z.write(os.path.join(dp, f), os.path.relpath(os.path.join(dp, f), os.path.dirname(ROOT)))
 log(f"\nDone. Send upload/phase1.zip ({os.path.getsize(out) >> 20} MB) to Claude.")
 if sys.platform == "darwin": os.system(f'open "{os.path.dirname(out)}"')
