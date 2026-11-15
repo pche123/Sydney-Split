@@ -109,7 +109,9 @@ def us_city(city, counties):
 
 # ---------------------------------------------------------------- New Zealand: Stats NZ ArcGIS feature services (2013, 2018, 2023)
 NZ_SERVICES = {"individuals": "2023_Census_totals_by_topic_for_individuals_by_SA2",
-               "households": "2023_Census_totals_by_topic_for_households_by_SA2"}
+               "households": "2023_Census_totals_by_topic_for_households_by_SA2",
+               "dwellings": "2023_Census_totals_by_topic_for_dwellings_by_SA2",
+               "families": "2023_Census_totals_by_topic_for_families_by_SA2"}
 NZ_BASE = "https://services2.arcgis.com/vKb0s8tBIA3bdocZ/arcgis/rest/services/{}/FeatureServer"
 def nz_city(city, box):
     for kind, svc in NZ_SERVICES.items():
@@ -118,10 +120,9 @@ def nz_city(city, box):
         if meta is None: log(f"  {city} {kind}: service not reachable"); continue
         save(os.path.join(ROOT, city, "census", f"{kind}_service.json"), meta.content)
         layers = meta.json().get("layers", [])
-        clipped = [l for l in layers if "clipped" in l["name"].lower()] or layers
-        for lay in clipped:
+        for lay in layers:   # every layer: Stats NZ's clipped "part 2" layer has come back with no values, the unclipped one has them
             path = os.path.join(ROOT, city, "census", f"{kind}_layer{lay['id']}.geojson")
-            if have(path, 1000): continue
+            if have(path, 1000) and '"SA22023_V1_00": null' not in open(path).read(20000): continue
             fields = get(f"{base}/{lay['id']}", {"f": "json"})
             if fields is not None: save(os.path.join(ROOT, city, "census", f"{kind}_layer{lay['id']}_fields.json"), fields.content)
             feats, off = [], 0
@@ -135,7 +136,9 @@ def nz_city(city, box):
                 feats += fs; off += len(fs)
                 if len(fs) < 1000: break
             save(path, json.dumps({"type": "FeatureCollection", "features": feats}).encode())
-            log(f"  {city} {kind} layer {lay['id']} ({lay['name'][:60]}): {len(feats)} SA2s")
+            filled = sum(1 for f in feats if f["properties"].get("SA22023_V1_00"))
+            log(f"  {city} {kind} layer {lay['id']} ({lay['name'][:60]}): {len(feats)} SA2s, {filled} with values"
+                + ("" if filled else "  <- EMPTY, the other version of this layer is used instead"))
 
 # ---------------------------------------------------------------- Singapore: SingStat Census 2020 subzone tables + URA subzones
 def sg_city(city, box):
