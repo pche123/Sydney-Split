@@ -199,7 +199,8 @@ export function start(DATA: CityData, C: CityConfig) {
   const haloEl = document.createElementNS(svgNS, "path"); haloEl.setAttribute("class", "halo");
   const cutEl = document.createElementNS(svgNS, "path"); cutEl.setAttribute("class", "cut");
   const cut2El = document.createElementNS(svgNS, "path"); cut2El.setAttribute("class", "cut2");
-  gCut.append(haloEl, cutEl, cut2El);
+  const sharpEl = document.createElementNS(svgNS, "path"); sharpEl.setAttribute("class", "sharp");
+  gCut.append(haloEl, cutEl, cut2El, sharpEl);
   for (const L of DATA.labels) {
     const a = DATA.areas[L.i], t = document.createElementNS(svgNS, "text");
     t.setAttribute("x", String(a.cx)); t.setAttribute("y", String(a.cy)); t.setAttribute("text-anchor", "middle");
@@ -294,7 +295,8 @@ export function start(DATA: CityData, C: CityConfig) {
     } else if (mode === "lines") {
       const cmpOn = compare && compare !== current;
       sidesLegend(cmpOn ? `${current.a} (both lines agree)` : current.a, cmpOn ? `${current.b} (both lines agree)` : current.b,
-        cmpOn ? `<div><i class="sw-x"></i><span>The lines disagree here</span></div>` : "");
+        (cmpOn ? `<div><i class="sw-x"></i><span>The lines disagree here</span></div>` : "")
+        + (current.sharp && current.sharp.length && !SM ? `<div><i style="background:var(--cut);height:6px"></i><span>Sharpest stretch of the line</span></div>` : ""));
     } else {
       el.innerHTML = `<div><i style="background:${RAMP[4]}"></i><span>Darker = more than ${City}'s average</span></div>
         <div><i style="background:${RAMP[0]}"></i><span>Lighter = fewer</span></div>
@@ -304,7 +306,7 @@ export function start(DATA: CityData, C: CityConfig) {
   $("#maplegend").addEventListener("click", () => { if (isPhone()) $("#maplegend").classList.toggle("folded"); });
 
   function render() {
-    buildList(); setTimeout(mapLegend, 0);
+    buildList(); setTimeout(mapLegend, 0); sharpEl.setAttribute("d", "");
     if (mode === "make") return renderMake();
     if (mode === "timeline") return renderTimeline();
     if (mode !== "lines") return renderHeritage();
@@ -314,6 +316,7 @@ export function start(DATA: CityData, C: CityConfig) {
     const cs = compare && compare !== current ? smoothSide(compare.side, compare.f).map((v) => v !== flip) : null;   // agreement map when comparing
     areaEls.forEach((p, i) => { p.style.fill = ""; p.setAttribute("class", "area " + (cs && cs[i] !== sd[i] ? "x" : sd[i] ? "a" : "b") + (picked === i ? " picked" : "")); });
     cutEl.setAttribute("d", SM ? borderPath(sd) : l.cut); smoothNote(l.side, sd);
+    sharpEl.setAttribute("d", !SM && l.sharp ? l.sharp.map((e) => MKD.ep[e]).join("") : "");
     drawCompare();
     const [cls, txt] = verdict(l.tier);
     const sureText = l.tier === "line"
@@ -321,7 +324,8 @@ export function start(DATA: CityData, C: CityConfig) {
       : l.tier === "gentle"
         ? `The pattern is real: ${City} clearly isn't random here. But a random ${City} that's just as smooth often draws a border this clean, so read it as a gentle slope across the city rather than a sharp line.`
         : `Versions of ${City} with no real pattern often produce a split like this. The map may still tell a story, but the data can't show it yet.`;
-    const tech = `Technical: line test p = ${l.p}${l.p_geo != null ? `, any-geography p = ${l.p_geo}` : ""}${l.p_edge != null ? `, edge test p = ${l.p_edge}` : ""}. Random landscapes in real space, simulated from the data, then corrected for the number of lines tried.`;
+    const tech = `p = ${l.p}`;
+    const sharpNote = l.sharp && l.sharp.length ? `<p class="small">The change is sharpest along the thick part of the line (${Math.round((l.sharp_share || 0) * 100)}% of it); elsewhere it is a gradual slope.</p>` : "";
     const adj = l.adjusted ? `<p class="small">We took out the effect of income and distance from the city first, so this isn't just the usual rich-vs-poor or inner-vs-outer split.</p>` : "";
     const d = $("#detail") as HTMLElement;
     d.innerHTML = `
@@ -330,7 +334,7 @@ export function start(DATA: CityData, C: CityConfig) {
         <div class="side"><span class="sw a"></span><div><b class="ta"></b><div class="ex ea"></div></div></div>
         <div class="side"><span class="sw b"></span><div><b class="tb"></b><div class="ex eb"></div></div></div>
       </div>
-      <div class="box"><h3>How sure are we?</h3><div class="sure ${cls}"><strong>${txt}</strong></div><p class="small">${sureText}</p><p class="small" style="font-size:11.5px">${tech}</p>${adj}</div>
+      <div class="box"><h3>How sure are we?</h3><div class="sure ${cls}"><strong>${txt}</strong></div><p class="small">${sureText}</p><p class="small" style="font-size:11.5px">${tech}</p>${sharpNote}${adj}</div>
       <div class="box"><h3>What else changes across it</h3>
         <p class="small" style="margin:0 0 6px">The orange side also has:</p><div class="chips ca"></div>
         <p class="small" style="margin:10px 0 6px">The blue side also has:</p><div class="chips cb"></div></div>
@@ -567,7 +571,7 @@ export function start(DATA: CityData, C: CityConfig) {
           : `Not even the quick check. Shuffled ${City}s often give a line this clean, so the map may still tell a story, but it can't be shown yet.`);
       const head = good ? (MK.kind === "chain" ? `Different ${City}s` : "Passes the quick check") : (MK.kind === "chain" ? `Same ${City}` : "Could be chance");
       box.innerHTML = `<h3>${MK.kind === "chain" ? chainQ : "Is this a real line?"}</h3><div class="sure ${good ? "good" : "meh"}"><strong>${head}</strong></div>
-        <p class="small">${msg}</p><p class="small" style="font-size:11.5px">Technical: line-ness ${r.obs.toFixed(3)}, p = ${r.p.toFixed(3)} (${MK.kind === "chain" ? `label-swap test, ${C.chainDraws} draws` : "quick Moran-rotation check, 199 draws; known to be lenient with smooth maps"})</p>`;
+        <p class="small">${msg}</p><p class="small" style="font-size:11.5px">p = ${r.p.toFixed(3)}${MK.kind === "chain" ? "" : " (quick check)"}</p>`;
     }, 30);
   }
   $("#smooth").addEventListener("input", (e: Event) => { SM = +(e.target as HTMLInputElement).value; render(); });

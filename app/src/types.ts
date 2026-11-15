@@ -7,7 +7,7 @@ export interface Line {
   a: string; b: string;                  // words for the orange (a) and blue (b) sides
   p: number; tier: "line" | "gentle" | "chance";
   p_geo?: number | null; p_edge?: number | null; p_old?: number;
-  side: number[]; cut: string; f?: number[];   // f: continuous score, for smoothing
+  side: number[]; cut: string; f?: number[]; sharp?: number[]; sharp_share?: number;   // f: continuous score, for smoothing
   more: string[]; less: string[]; ex_a: string[]; ex_b: string[];
   latte_agree: number; adjusted?: boolean;
 }
