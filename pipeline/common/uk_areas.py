@@ -26,8 +26,10 @@ def main(city, raw, out):
     for z in sorted(zips):
         t = os.path.basename(z)[11:-4]
         with zipfile.ZipFile(z) as zf:
-            name = next(n for n in zf.namelist() if n.endswith(f"-{c['level']}.csv"))
-            d = pd.read_csv(zf.open(name))
+            names = [n for n in zf.namelist() if f"-{c['level']}" in n.lower() and n.lower().endswith(".csv")]
+            if not names:   # some tables are not published for small areas (LSOA): skip, and say so
+                print(f"  {t}: no {c['level'].upper()} file in this table (has: {', '.join(zf.namelist())})"); continue
+            d = pd.read_csv(zf.open(names[0]))
         d = d[d["geography code"].isin(codes)].drop(columns=["date"])
         d.to_csv(f"{out}/census/{t}.csv", index=False)
         if t == "ts001":
