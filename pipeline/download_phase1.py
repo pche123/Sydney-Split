@@ -28,7 +28,7 @@ def get(url, params=None, tries=4, timeout=300, **kw):
     for k in range(tries):
         try:
             r = requests.get(url, params=params, headers=UA, timeout=timeout, **kw)
-            if r.status_code == 200: return r
+            if 200 <= r.status_code < 300: return r
             log("  HTTP", r.status_code, url[:120], r.text[:200].replace("\n", " "))
         except Exception as e:
             log("  error", type(e).__name__, str(e)[:150])
