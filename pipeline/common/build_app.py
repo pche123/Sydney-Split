@@ -103,6 +103,15 @@ elif CO == "jp":
     for k, c in [("ind_it", "Ｇ情報通信業"), ("ind_manufacturing", "Ｅ製造業"), ("ind_finance", "Ｊ金融業、保険業"),
                  ("ind_hospitality", "Ｍ宿泊業、飲食サービス業"), ("ind_health", "Ｐ医療、福祉"), ("ind_construction", "Ｄ建設業")]:
         put(k, ind[c], w)
+    # extra small-area tables (e-Stat tables 2, 13, 17-2), made by jp_extra.py when present
+    if os.path.exists(f"{W_}/census/X_edu.csv"):
+        ed = T("X_edu"); known = ed["卒業者"] - ed["（卒業者）不詳"]
+        put("uni_degree", ed["（卒業者）大学"] + ed["（卒業者）大学院"], known)
+    if os.path.exists(f"{W_}/census/X_commute.csv"):
+        cm = T("X_commute"); known = cm["総数"] - cm["利用交通手段「不詳」"]
+        put("train_commute", cm["鉄道・電車"], known); put("car_commute", cm["自家用車"], known)
+        put("bike_commute", cm["自転車"], known); put("walk_commute", cm["徒歩のみ"], known)
+    JPF = T("X_foreign") if os.path.exists(f"{W_}/census/X_foreign.csv") else None
 
 else:   # uk
     key = G.code.astype(str)
@@ -195,6 +204,25 @@ def counts(gdf, flags):
         out[k] = np.bincount(jj.index_right.values, minlength=n).astype(float) if len(jj) else np.zeros(n)
     return out
 CNT = counts(pg, FLAG); CNT.update(counts(vg, FLAG_V))
+
+# Victorian pokies: venue names + machine counts, placed by matching the name to a licence with coordinates
+POKIES_MATCH = None
+if C.get("pokies") == "vic" and glob.glob(f"{W_}/raw/venues/vic_gaming_by_venue.xlsx"):
+    xg = pd.read_excel(glob.glob(f"{W_}/raw/venues/vic_gaming_by_venue.xlsx")[0], sheet_name=None, header=None)
+    sheet = next(v for k, v in xg.items() if k.lower().startswith("detail"))
+    h0 = next(i for i in range(20) if str(sheet.iloc[i, 0]).strip() == "Name")
+    gv = sheet.iloc[h0 + 1:].copy(); gv.columns = [str(c).strip() for c in sheet.iloc[h0]]
+    egm_col = [c for c in gv.columns if "EGM" in c][0]
+    gv = gv[gv.Name.notna()]; gv["egm"] = pd.to_numeric(gv[egm_col], errors="coerce").fillna(0)
+    norm_ = lambda x: re.sub(r"[^a-z0-9]", "", re.sub(r"\b(the|hotel|club|inc|ltd|pty|limited|incorporated)\b", "", str(x).lower()))
+    lic = vg[vg.source.eq("vic_licence")].copy(); lic["k"] = lic.name.map(norm_)
+    lk = lic.drop_duplicates("k").set_index("k")
+    gv["k"] = gv.Name.map(norm_); m = gv[gv.k.isin(lk.index) & (gv.k.str.len() > 3)]
+    pts = gpd.GeoDataFrame(m[["egm"]].reset_index(drop=True), geometry=lk.loc[m.k].geometry.values, crs=CRS)
+    jj = gpd.sjoin(pts, GB, predicate="within")
+    CNT["egms"] = np.bincount(jj.index_right.values, weights=jj.egm.values, minlength=n).astype(float)
+    POKIES_MATCH = (len(m), len(gv[gv.Region.astype(str).str.contains("Metro")]), int(m.egm.sum()))
+    print("  pokies: matched", POKIES_MATCH[0], "venues to licences (metro venues listed:", POKIES_MATCH[1], ")", flush=True)
 
 HPd = None
 if CO == "jp" and glob.glob(f"{W_}/raw/venues/hotpepper.csv"):
@@ -314,6 +342,8 @@ if "lic_on" in CNT:
     L.append(("drink-out-vs-drink-in", "Drink Out vs Drink In", "Night", "records", logit_ratio("lic_on", "lic_off"), "More pubs, bars & restaurants with a licence", "More bottle shops for the licences there are", []))
 else:
     L.append(("drink-out-vs-drink-in", "Drink Out vs Drink In", "Night", "records", logit_ratio("pub_bar", "bottle_shop"), "More pubs & bars than bottle shops", "More bottle shops than pubs & bars", []))
+if "egms" in CNT:
+    L.append(("the-pokies-line", "The Pokies Line", "Night", "records", np.log((CNT["egms"] + 0.5) / np.maximum(POP, 1)), "More poker machines per person", "Fewer poker machines per person", []))
 if CO == "uk":
     L.append(("the-chicken-shop-line", "The Takeaway Line", "Food", "records", logit_ratio("fsa_takeaway", "fsa_restaurant"), "More takeaways than sit-down places", "More restaurants & cafés than takeaways", []))
     L.append(("the-betting-shop-line", "The Betting Shop Line", "Night", "records", lograte("betting"), "More betting shops per person", "Fewer betting shops per person", []))
@@ -405,6 +435,12 @@ else:
     near = st.nm.values[ix]
     def clean(x): return re.sub(r" (Underground|Rail|Railway|Overground|DLR|Tram|Tramstop|Metrolink|Bus)? ?([Ss]tation|[Ss]top)$", "", x)
     G["short"] = [clean(first[i]) if i in first.index else ("Near " + clean(near[i]) if d_[i] < 3000 else G.name[i]) for i in range(n)]
+    hcl = next(iter(glob.glob(f"{W_}/../MSOA-Names*.csv") + glob.glob(f"{W_}/MSOA-Names*.csv")), None)
+    if hcl:   # House of Commons Library neighbourhood names beat station names
+        hn = pd.read_csv(hcl, encoding="utf-8-sig"); m_ = dict(zip(hn.msoa21nm, hn.msoa21hclnm))
+        nm_ = [m_.get(x) or m_.get(re.sub(r"[A-Z]$", "", str(x))) for x in G.name]
+        G["short"] = [(a + (" (" + str(x)[-1] + ")" if re.search(r"\d[A-Z]$", str(x)) else "")) if isinstance(a, str) and a else b
+                      for a, b, x in zip(nm_, G.short, G.name)]   # LSOAs: "Kemptown (A)"
 dup = G.short.duplicated(keep=False)
 if CO == "jp": G.loc[dup, "short"] = G.short[dup] + " (" + G.ward[dup] + ")"
 elif CO == "uk": G.loc[dup, "short"] = G.short[dup] + " (" + G.borough[dup] + ")"
@@ -417,12 +453,14 @@ else: G["label_name"] = G.short + ", " + G.borough + " · " + G.name
 busy = CNT["food"] + CNT["pub_bar"]
 order = np.argsort(-busy)
 span = max(np.ptp(rep[:, 0]), np.ptp(rep[:, 1]))
-tier = np.full(n, 3); placed = []
+tier = np.full(n, 3); placed = []; used_txt = set()
 for want, gap, t_ in [(10, 0.09, 1), (35, 0.045, 2)]:      # busiest places first, spread out so names don't pile up in the centre
     k_ = 0
     for i in order:
         if tier[i] < 3: continue
-        if all(np.hypot(*(rep[i] - rep[j])) > gap * span for j in placed): tier[i] = t_; placed.append(i); k_ += 1
+        base = re.split(r" - | \(", G.short[i])[0]
+        if base in used_txt: continue          # one label per neighbourhood name (LSOAs share their MSOA's name)
+        if all(np.hypot(*(rep[i] - rep[j])) > gap * span for j in placed): tier[i] = t_; placed.append(i); used_txt.add(base); k_ += 1
         if k_ >= want: break
 labels = [dict(i=int(i), t=re.split(r" - | \(", G.short[i])[0] if CO != "au" else G.short[i].replace(" - ", " "), tier=int(tier[i])) for i in order]
 for l in lines:
@@ -517,6 +555,147 @@ brands = [dict(name=k_, n=int(len(v)), xy=[[round(float(x)), round(float(y))] fo
 make = dict(signals=signals, I=I.tolist(), J=J.tolist(), L=[round(float(x) / 1000, 3) for x in W], eig=eig, n=n,
             pop=[int(p) for p in POP], ep=ep, rep=[[round(float(x)), round(float(y))] for x, y in rep], brands=brands)
 
+# ------------------------------------------------------------------ heritage: where people born overseas live (Australia, England)
+HER = []
+def her_group(gid, name, cnt, tot, recent=None):
+    cnt = np.nan_to_num(np.asarray(cnt, float)); tot = np.nan_to_num(np.asarray(tot, float))
+    cityv = cnt.sum() / max(tot.sum(), 1); sh_ = np.where(tot > 0, cnt / np.maximum(tot, 1), 0); lq = sh_ / max(cityv, 1e-9)
+    rest = tot - cnt; Dv = 0.5 * np.abs(cnt / max(cnt.sum(), 1) - rest / max(rest.sum(), 1)).sum()
+    ok = tot >= 500; top_ = [i for i in np.argsort(-sh_) if ok[i]][:6]
+    return dict(id=gid, kind="birth", name=name, pct=round(100 * cityv, 2), people=int(cnt.sum()), lq=[round(float(v), 2) for v in lq],
+                peaks=[[G.short[i], round(100 * float(sh_[i]), 1), round(float(lq[i]), 1)] for i in top_], D=round(float(Dv), 3), recent=recent, shares_with=[])
+if CO == "au":
+    g09 = T("G09"); tot = g09.P_Tot_Tot - g09.get("P_COB_NS_Tot", 0)
+    skip = {"P_Australia_Tot", "P_Elsewhere_Tot", "P_COB_NS_Tot", "P_Tot_Tot"}
+    nice = {"Hong_Kong_SAR_Ch": "Hong Kong", "Korea_South": "South Korea", "PNG": "Papua New Guinea", "Bosnia_Herzegov": "Bosnia and Herzegovina",
+            "USA": "the USA", "UK_CI_IM": "the UK", "North_Macedonia": "North Macedonia", "South_Africa": "South Africa", "Sri_Lanka": "Sri Lanka", "New_Zealand": "New Zealand"}
+    cols = [c for c in g09.columns if c.startswith("P_") and c.endswith("_Tot") and c not in skip and "_dup" not in c]
+    cols = sorted(cols, key=lambda c: -g09[c].sum())[:18]
+    for c in cols:
+        k_ = c[2:-4]; HER.append(her_group("birth-" + k_.lower(), nice.get(k_, k_.replace("_", " ")), g09[c], tot))
+elif CO == "uk":
+    t4 = T("ts004")
+    if t4 is not None:
+        tot = col(t4, "Total")
+        for k_, nm in [("Middle East and Asia;", "Middle East & Asia"), ("Africa;", "Africa"), ("EU countries: European Union EU14", "Western Europe (EU14)"),
+                       ("EU countries: European Union EU8", "Eastern Europe (EU8)"), ("EU countries: European Union EU2", "Romania & Bulgaria"),
+                       ("The Americas and the Caribbean", "the Americas & Caribbean"), ("Antarctica and Oceania", "Australia, NZ & Oceania")]:
+            try: HER.append(her_group("birth-" + re.sub(r"\W+", "-", nm.lower()), nm, col(t4, k_), tot))
+            except KeyError: pass
+        HER.insert(0, her_group("birth-overseas", "Anywhere outside the UK", tot - col(t4, "Europe: United Kingdom"), tot))
+elif CO == "jp" and JPF is not None:   # small-area tables give foreign residents in total only, no nationality
+    HER.append(her_group("foreign-residents", "Foreign residents", JPF["外国人人口"], JPF["総数"])); HER[-1]["kind"] = "foreign"
+if HER:
+    LQ = np.array([h["lq"] for h in HER]); order_D = np.argsort([-h["D"] for h in HER])
+    for r, k_ in enumerate(order_D): HER[k_]["D_rank"] = int(r + 1); HER[k_]["D_of"] = len(HER)
+    cc = np.atleast_2d(np.corrcoef(np.log(LQ + 0.05)))
+    for k_, h in enumerate(HER):
+        o = [j for j in np.argsort(-cc[k_]) if j != k_ and cc[k_, j] > 0.6][:2]; h["shares_with"] = [HER[j]["name"] for j in o]
+
+# ------------------------------------------------------------------ timeline: the same lines, census by census, on today's areas
+TLD = None
+def tl_build(years, Dy, defs):
+    out = []
+    for lid, nm, aw, bw, fn, sl, sfn in defs:
+        F = {y: fn(Dy[y]) for y in years}; sides = {y: F[y] > np.median(F[y]) for y in years}; y0, y1 = years[0], years[-1]
+        dl = F[y1] - F[y0]; thr = np.quantile(np.abs(dl), 0.90)
+        toA = [int(i) for i in np.where(~sides[y0] & sides[y1] & (np.abs(dl) > thr))[0]]
+        toB = [int(i) for i in np.where(sides[y0] & ~sides[y1] & (np.abs(dl) > thr))[0]]
+        f = (F[y1] - F[y1].mean()) / F[y1].std(); c = vecs.T @ f; obs = (sides[y0] == sides[y1]).mean(); null = []
+        for _ in range(299):
+            cr = c.copy()
+            for x in range(0, n, 12):
+                yy = min(x + 12, n); q, _ = np.linalg.qr(rng.normal(size=(yy - x, yy - x))); cr[x:yy] = q @ c[x:yy]
+            r_ = vecs @ cr; r_ = r_ > np.median(r_); a_ = (r_ == sides[y0]).mean(); null.append(max(a_, 1 - a_))
+        p = (1 + (np.array(null) >= obs).sum()) / 300
+        out.append(dict(id=lid, name=nm, a=aw, b=bw, stat_label=sl, stat=[round(float(sfn(Dy[y])) * 100, 1) for y in years],
+                        same_as_2001=[round(float((sides[y] == sides[y0]).mean()) * 100) for y in years], sides=[sides[y].astype(int).tolist() for y in years],
+                        cuts=[cut_path(sides[y]) for y in years], toA=toA, toB=toB, persist_p=round(float(p), 3), null_agree=round(float(np.median(null)) * 100)))
+        print(f"  timeline {nm}: same side {y0}->{y1} {out[-1]['same_as_2001'][-1]}% (random ~{out[-1]['null_agree']}%), p={p:.3f}", flush=True)
+    return out
+def shr(d, a, b): return (d[a] / d[b].replace(0, np.nan)).fillna(0).values
+if CO == "au":
+    tsp = {}
+    for f in sorted(glob.glob(f"{W_}/census/TSP_T*.csv")):
+        d = pd.read_csv(f, dtype={"SA2_CODE_2021": str}).set_index("SA2_CODE_2021"); tsp.update({c: d[c] for c in d.columns})
+    TS = pd.DataFrame(tsp).reindex(G.code.astype(str)).fillna(0)
+    Dy = {}
+    for y, cy in [("2011", "C11"), ("2016", "C16"), ("2021", "C21")]:
+        g_ = lambda *ks: TS[[f"{k}_{cy}_P" for k in ks if f"{k}_{cy}_P" in TS]].sum(1)
+        occ_tot = TS[[c for c in TS.columns if c.endswith(f"_{cy}_P") and any(c.startswith(o) for o in ("Managers", "Professionals", "Tech_trad", "Comm_pers", "Cler_admin", "Sales", "Mach_op", "Labourers"))]].sum(1)
+        Dy[y] = pd.DataFrame({"laptop": g_("Managers", "Professionals"), "hivis": TS[[c for c in TS.columns if c.endswith(f"_{cy}_P") and (c.startswith("Mach_op") or c.startswith("Labourers"))]].sum(1),
+                              "workers": occ_tot, "age65": g_("Age_65_74", "Age_75_84", "Age_grp_85over"), "age_all": g_("Tot_persons"),
+                              "manuf": g_("Manuf")})
+    yrs = ["2011", "2016", "2021"]
+    TLD = dict(years=yrs, lines=tl_build(yrs, Dy, [
+        ("hivis", "The Hi-Vis Line", "More driving, machine & labouring jobs", "More managers & professionals", lambda d: rz(shr(d, "hivis", "workers")) - rz(shr(d, "laptop", "workers")),
+         "managers & professionals among workers", lambda d: d.laptop.sum() / max(d.workers.sum(), 1)),
+        ("grey", "The Grey Line", "More over-65s", "Fewer over-65s", lambda d: rz(shr(d, "age65", "age_all")), "aged 65+", lambda d: d.age65.sum() / max(d.age_all.sum(), 1))]), groups=[])
+elif CO == "jp" and glob.glob(f"{W_}/raw/census/2000/*.zip"):
+    import tempfile, zipfile as zf_
+    clean = lambda s_: re.sub(r"[\s　]", "", str(s_))
+    def load_tables(folder):
+        Tt = {}
+        for f in glob.glob(f"{folder}/**/tbl*.txt", recursive=True):
+            t = pd.read_csv(f, encoding="cp932", dtype=str); lab = [clean(x) for x in t.iloc[0]]; t = t.iloc[1:]
+            cols_ = [c for c in t.columns if re.match(r"T\d+", c)]; Lb = [lab[list(t.columns).index(c)] for c in cols_]
+            v = t[cols_].apply(pd.to_numeric, errors="coerce").fillna(0); v.columns = Lb; v.index = t.KEY_CODE.values; key_ = "|".join(Lb)
+            if "職業" in Lb[0] or "専門的・技術的" in key_: Tt["occ"] = v
+            elif "６５歳以上" in key_ and "０～４歳" in key_: Tt["age"] = v
+            elif "世帯人員１人" in key_: Tt["hsize"] = v
+            elif "１１階建以上" in key_: Tt["build"] = v
+        return Tt
+    def year_counts(folder):
+        shp = glob.glob(f"{folder}/**/*.shp", recursive=True)[0]
+        g = gpd.read_file(shp); g = g[g.KEY_CODE.astype(str).str.len() >= 9].to_crs(CRS)
+        g = g[g.geometry.intersects(G.geometry.union_all().buffer(200))].dissolve("KEY_CODE").reset_index()[["KEY_CODE", "geometry"]]
+        Tt = load_tables(folder); Cc = pd.DataFrame(index=g.KEY_CODE.astype(str))
+        def colx(tab, pat, first=False):
+            v = Tt[tab]
+            if first: return v.iloc[:, 0].groupby(level=0).first().reindex(Cc.index).fillna(0)
+            cs = [c for c in v.columns if re.search(pat, c)]
+            return v[cs].sum(1).groupby(level=0).first().reindex(Cc.index).fillna(0)
+        Cc["workers"] = colx("occ", "", True); Cc["laptop"] = colx("occ", "専門的・技術的|管理的")
+        Cc["hivis"] = colx("occ", "運輸・通信|生産工程|輸送・機械|建設・採掘|運搬・清掃")
+        Cc["age_all"] = colx("age", "", True); Cc["age65"] = colx("age", "^総数６５歳以上$")
+        Cc["hh"] = colx("hsize", "", True); Cc["alone"] = colx("hsize", "世帯人員１人")
+        Cc["homes"] = colx("build", "", True); Cc["towers"] = colx("build", "１１階建以上")
+        g = g.merge(Cc, left_on=g.KEY_CODE.astype(str), right_index=True); g["a0"] = g.area
+        Gi = G[["geometry"]].copy(); Gi["i"] = range(n)
+        x = gpd.overlay(g, Gi, how="intersection", keep_geom_type=True); w_ = x.area / x.a0
+        return x[list(Cc.columns)].mul(w_, axis=0).groupby(x.i).sum().reindex(range(n)).fillna(0)
+    Dy = {}
+    try:
+        for y in ["2000", "2005", "2010", "2015"]:
+            tmp = tempfile.mkdtemp()
+            for z in glob.glob(f"{W_}/raw/census/{y}/*.zip"): zf_.ZipFile(z).extractall(tmp)
+            Dy[y] = year_counts(tmp)
+        Dy["2020"] = pd.DataFrame({"workers": occ["総数"].values, "laptop": (occ[oc[1]] + occ[oc[2]]).values, "hivis": occ[[oc[8], oc[9], oc[10], oc[11]]].sum(1).values,
+                                   "age_all": at.values, "age65": age["総数６５歳以上"].values, "hh": hsz["一般世帯数（世帯人員６人以上含む）"].values,
+                                   "alone": hsz["世帯人員１人"].values, "homes": bld["主世帯数"].values, "towers": bld["共同住宅１１階建以上"].values})
+        yrs = ["2000", "2005", "2010", "2015", "2020"]
+        TLD = dict(years=yrs, lines=tl_build(yrs, Dy, [
+            ("hivis", "The Hi-Vis Line", "More driving, factory, building & cleaning jobs", "More managers & professionals", lambda d: rz(shr(d, "hivis", "workers")) - rz(shr(d, "laptop", "workers")),
+             "managers & professionals among workers", lambda d: d.laptop.sum() / max(d.workers.sum(), 1)),
+            ("grey", "The Grey Line", "More over-65s", "Fewer over-65s", lambda d: rz(shr(d, "age65", "age_all")), "aged 65+", lambda d: d.age65.sum() / max(d.age_all.sum(), 1)),
+            ("alone", "The Living Alone Line", "More people living alone", "Fewer people living alone", lambda d: rz(shr(d, "alone", "hh")), "households of one person", lambda d: d.alone.sum() / max(d.hh.sum(), 1)),
+            ("tower", "The Tower Line", "More homes in 11+ floor blocks", "Fewer homes in tall blocks", lambda d: rz(shr(d, "towers", "homes")), "homes in 11+ floor blocks", lambda d: d.towers.sum() / max(d.homes.sum(), 1))]), groups=[])
+    except Exception as e:
+        print("  timeline skipped:", e, flush=True); TLD = None
+
+# ------------------------------------------------------------------ open data: one table + one map per city (HotPepper left out: its terms don't allow passing the data on)
+dl_dir = os.path.join(os.path.dirname(os.path.abspath(OUT)), "..", "public", "downloads"); os.makedirs(dl_dir, exist_ok=True)
+tab = pd.DataFrame({"area": G.short, "full_name": G.label_name, "code": G.code if "code" in G else G["area"], "population": POP.astype(int), "km2": km2.round(3).values})
+for c_ in census: tab[c_] = S[c_].round(5).values
+for k_, v_ in CNT.items():
+    if not k_.startswith("hp_"): tab["count_" + k_.replace("brand:", "").replace(" ", "_").replace("'", "").replace("&", "and")] = v_.astype(int)
+for l in lines: tab["side_" + l["id"]] = l["side"]
+tab.to_csv(os.path.join(dl_dir, f"{city}_areas.csv"), index=False)
+gj = gpd.GeoDataFrame(tab[["area", "code", "population"]], geometry=G.geometry.simplify(TOL / 2), crs=CRS).to_crs(4326)
+gj.to_file(os.path.join(dl_dir, f"{city}_areas.geojson"), driver="GeoJSON", COORDINATE_PRECISION=5)
+np.savez_compressed(f"{W_}/fields.npz", I=I, J=J, W=W, ids=np.array(list(FIELDS)), F=np.column_stack(list(FIELDS.values())),
+                    kinds=np.array([("records" if l.get("p_geo") is not None else "chain" if l["group"] == "Chains" else "census") for l in lines]))
+
 SRC = {"au": "ABS 2021 Census (GCP DataPack, SA2) · ABS ASGS 2021 boundaries · © OpenStreetMap contributors (Nov 2026)",
        "jp": "Japan 2020 Census small-area data (e-Stat) · © OpenStreetMap contributors (Nov 2026) · Restaurant listings Powered by ホットペッパー Webサービス (Nov 2026)",
        "uk": "ONS Census 2021 (Nomis bulk tables) · ONS 2021 boundaries · Food Standards Agency ratings · Gambling Commission register · © OpenStreetMap contributors (Nov 2026)"}[CO]
@@ -524,10 +703,22 @@ if C.get("licences") == "vic": SRC += " · Victorian liquor licences (data.vic.g
 HIVIS = ('<div class="box"><h3>What does "hi-vis" mean?</h3><p style="margin:0">Hi-vis is Australian slang for the bright, high-visibility vests '
          'worn on building sites, roads, warehouses and delivery routes.</p><p class="small">Here it means driving, machine and labouring jobs, compared with '
          'managers and professionals. It describes jobs, not people.</p></div>')
+GREY = {"au": "Grey areas: suburbs with fewer than 1,000 residents or fewer than 300 people per km² (parks, farmland, bush, airports, industrial land). "
+              "The Census covers them, but they are left out so empty land doesn't count as much as busy suburbs.",
+        "jp": "Grey areas: neighbourhoods with fewer than 100 residents" + (", or fewer than 1,000 people per km² (mountains, farmland, ports, factory land)" if C.get("drop_low_density") else "")
+              + ". The Census covers them, but they are left out so empty land doesn't count as much as busy neighbourhoods.",
+        "uk": ""}[CO]
+if CO == "jp" and len(empty):
+    U_ = gpd.read_file(f"{W_}/units.gpkg"); d_ = U_[~U_.study.astype(bool)]
+    GREY += f" Here they cover {d_.km2.sum():.0f} km² but only {int(d_.population.sum()):,} people ({100 * d_.population.sum() / U_.population.sum():.1f}% of residents)."
+elif CO == "au" and os.path.exists(f"{W_}/dropped.gpkg"):
+    d_ = gpd.read_file(f"{W_}/dropped.gpkg").to_crs(CRS); d_ = d_[d_.representative_point().within(hull)]
+    GREY += f" The grey areas on this map hold {int(d_.population.sum()):,} people, {100 * d_.population.sum() / (d_.population.sum() + POP.sum()):.1f}% of the total."
 DATA = dict(w=1000, h=round(Hh, 1), areas=areas, empty=empty, lines=lines, labels=labels,
-            meta=dict(sources=SRC, areas=n, notes=DATA_NOTES.get(city, []), explain={"the-hi-vis-line": HIVIS},
+            meta=dict(sources=SRC, areas=n, notes=DATA_NOTES.get(city, []) + ([GREY] if GREY else []), explain={"the-hi-vis-line": HIVIS},
+                      download=dict(csv=f"downloads/{city}_areas.csv", geojson=f"downloads/{city}_areas.geojson", hotpepper=CO == "jp"),
                       **({"hp_credit": "Powered by ホットペッパー Webサービス", "hp_url": "https://webservice.recruit.co.jp/"} if CO == "jp" else {})),
-            split={}, heritage=[], timeline=dict(years=[], lines=[], groups=[]), make=make)
+            split={}, heritage=HER, timeline=TLD or dict(years=[], lines=[], groups=[]), make=make)
 os.makedirs(os.path.dirname(os.path.abspath(OUT)), exist_ok=True)
 json.dump(DATA, open(OUT, "w"), separators=(",", ":"), ensure_ascii=False)
 print("written", OUT, round(os.path.getsize(OUT) / 1e6, 2), "MB", flush=True)

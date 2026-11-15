@@ -1,6 +1,6 @@
 // The Split app: one codebase for every city. City-specific words live in config.ts.
 import type { CityConfig } from "./config";
-import { CITY_LIST } from "./config";
+import { CITY_LIST, CITATION, SUPPORT_URL } from "./config";
 import type { CityData, Line, HeritageGroup, TimelineLine, TimelineGroup, Brand } from "./types";
 import { verdict, rankNormal, splitOf, Graph, quickCheck, chainField, chainTest, minCutSides, lamOf } from "./stats";
 import { Viewport } from "./viewport";
@@ -48,7 +48,12 @@ export function start(DATA: CityData, C: CityConfig) {
   $("#introList").innerHTML = C.intro.items.map((t) => `<li>${t}</li>`).join("");
   $("#introLatte").textContent = C.intro.refButton;
   $("#introSuburb").textContent = C.intro.placeButton;
-  const notes = C.dataNotes?.length ? C.dataNotes : ((DATA.meta.notes as string[] | undefined) || []);
+  const notes = [...(C.dataNotes?.length ? C.dataNotes : ((DATA.meta.notes as string[] | undefined) || []))];
+  const dlInfo = DATA.meta.download as { csv: string; geojson?: string; hotpepper?: boolean } | undefined;
+  if (dlInfo) notes.push(`<b>Download this city's data</b>: <a href="${dlInfo.csv}" download>table (CSV)</a>${dlInfo.geojson ? ` · <a href="${dlInfo.geojson}" download>map (GeoJSON)</a>` : ""}. Every area's census figures, venue counts and side of each line, free to reuse with credit to the original sources above.`
+    + (dlInfo.hotpepper ? " HotPepper restaurant data is left out: HotPepper's terms don't allow passing it on, so get your own free key from Recruit if you need it." : ""));
+  notes.push(`<b>Using this?</b> Please cite: ${CITATION}`);
+  if (SUPPORT_URL) notes.push(`<b>Like it?</b> <a href="${SUPPORT_URL}" target="_blank" rel="noopener">Support the project</a> to help keep it free.`);
   if (notes.length) {
     const li = notes.map((n) => `<li>${n}</li>`).join("");
     for (const id of ["#introNotes", "#mapNotes"]) { $(`${id} ul`).innerHTML = li; $(id).hidden = false; }

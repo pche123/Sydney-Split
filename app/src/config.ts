@@ -45,6 +45,10 @@ export interface CityConfig {
   links: { id: string; name: string; href: string }[];
 }
 
+// How to cite the work behind the site, and an optional support link (leave SUPPORT_URL empty to hide it).
+export const CITATION = "Cheema, P. (2026). Is that line real? Calibrated tests for informal urban divides. Manuscript in preparation. https://pche123.github.io/Sydney-Split/";
+export const SUPPORT_URL = "";
+
 // Every city on the site, grouped by country for the city picker.
 export const CITY_LIST: { id: string; name: string; country: string }[] = [
   { id: "sydney", name: "Sydney", country: "Australia" }, { id: "melbourne", name: "Melbourne", country: "Australia" },
@@ -54,7 +58,7 @@ export const CITY_LIST: { id: string; name: string; country: string }[] = [
   { id: "nagoya", name: "Nagoya", country: "Japan" }, { id: "yokohama", name: "Yokohama-Kawasaki", country: "Japan" },
   { id: "kobe", name: "Kobe-Hanshin", country: "Japan" }, { id: "fukuoka", name: "Fukuoka", country: "Japan" }, { id: "sapporo", name: "Sapporo", country: "Japan" },
   { id: "london", name: "London", country: "UK" }, { id: "manchester", name: "Manchester", country: "UK" },
-  { id: "birmingham", name: "Birmingham", country: "UK" }, { id: "liverpool", name: "Liverpool", country: "UK" },
+  { id: "birmingham", name: "Birmingham", country: "UK" }, { id: "liverpool", name: "Liverpool", country: "UK" }, { id: "brighton", name: "Brighton", country: "UK" },
 ];
 const LINKS = CITY_LIST.map((c) => ({ id: c.id, name: c.name, href: c.id === "sydney" ? "./index.html" : `./${c.id}.html` }));
 
@@ -132,6 +136,7 @@ export const TOKYO: CityConfig = {
     "Restaurants: only those listed on HotPepper, which leans towards places that use the site; many small old shops are missing.",
     "Foreign residents, degrees and how people commute come from separate census tables (e-Stat), not the small-area release.",
     "Konbini, chains, shrines and temples: OpenStreetMap, mapped by volunteers.",
+    "Grey areas: neighbourhoods with very few residents (parks, rivers, ports, airports, Tama's forests). The Census covers them, but they are left out so empty land doesn't count as much as busy neighbourhoods.",
     "Timeline: 2000 to 2020, each census matched onto today's areas.",
   ],
   id: "tokyo", name: "Tokyo", place: "neighbourhood", places: "neighbourhoods", placeholder: "e.g. Koenji",
@@ -194,11 +199,14 @@ function generic(id: string, name: string, country: "au" | "jp" | "uk"): CityCon
   return {
     id, name, place, places, placeholder: "Search by name",
     refLine: "the-latte-line", refName: "Latte Line", storageKey: `split_intro_${id}`,
-    groups: GROUPS, herTab: "Heritage", herKinds: [["birth", "Birthplace"]], tKinds: [["lines", "Lines", "Lines through time"]],
-    notes: {},
+    groups: GROUPS, herTab: "Heritage", herKinds: country === "jp" ? [["foreign", "Foreign residents"]] : [["birth", "Birthplace"]], tKinds: [["lines", "Lines", "Lines through time"]],
+    notes: { foreign: "Residents without Japanese nationality, all countries together: the small-area table gives one total. Naturalised citizens aren't counted.", birth: country === "au" ? "Migrants only: people born overseas. Their Australian-born kids aren't counted."
+      : "People born outside the UK, by world region. The small-area census table only gives regions, not countries. Their UK-born kids aren't counted." },
     tag: {
       lines: `The invisible lines that cut ${name} in two. Pick a line, or look up your ${place}.`,
-      heritage: "", overlay: "", timeline: "",
+      heritage: country === "jp" ? `Where foreign residents live in ${name}.` : `Where people born overseas live in ${name}.`,
+      overlay: country === "jp" ? "Put the foreign-residents map under a line. Overlap isn't cause." : "Put a birthplace map under a line. Overlap isn't cause.",
+      timeline: country === "au" ? `Ten years of ${name}, Census by Census: 2011 to 2021.` : `Twenty years of ${name}, Census by Census: 2000 to 2020.`,
       make: `Pick any two things and see if they split ${name}. The maths runs live in your browser.`,
     },
     intro: {
@@ -211,15 +219,21 @@ function generic(id: string, name: string, country: "au" | "jp" | "uk"): CityCon
       refButton: "Show me the Latte Line", placeButton: `Find my ${place}`,
     },
     creditHtml: country === "jp" ? `Restaurant listings ${HP}` : undefined,
-    asks: "", warnBullet: "", peakWord: "highest", movedTitle: "", movedNote: "",
+    asks: country === "jp" ? "The Census asks about nationality. We show foreign nationals only." : "The Census asks where you were born. We show birthplace only.",
+    heritageClustering: country === "jp" ? (h) => `<li>How clustered: about <b>${Math.round((h.D ?? 0) * 100)}%</b> of foreign residents would have to move house to be spread evenly across ${name}.</li>` : undefined,
+    warnBullet: country === "au" ? "Only people born overseas are counted. Their Australian-born kids aren't." : country === "jp" ? "Only residents without Japanese nationality are counted. Naturalised citizens and their kids aren't, and the small-area tables don't say which country people are from." : "Only people born outside the UK are counted. Their UK-born kids aren't.",
+    peakWord: "highest", movedTitle: "Biggest moves", movedNote: `${places[0].toUpperCase() + places.slice(1)} that changed side with the biggest moves (top 10% of change).`,
     chainDefault: country === "au" ? ["Woolworths", "Coles"] : country === "jp" ? ["7-Eleven", "FamilyMart"] : ["Greggs", "Pret"],
     chainOffset: country === "jp" ? 50 : 200, chainDraws: 99,
     footer: {
-      lines: (d) => `${d.meta.sources}. Covers ${d.meta.areas} ${name} ${places}. Shop and café locations come from OpenStreetMap, which volunteers map, so some are missing. A ${place}'s side describes the area, not the people in it. This city's lines were checked with one round of random landscapes; the extra double-check used for Sydney and Tokyo is still to come.`,
-      timelineLines: "", timelineGroups: "", heritage: "",
+      lines: (d) => `${d.meta.sources}. Covers ${d.meta.areas} ${name} ${places}. Shop and café locations come from OpenStreetMap, which volunteers map, so some are missing. A ${place}'s side describes the area, not the people in it. ${d.meta.calibrated ? "Every line was double-checked the same way as Sydney and Tokyo's (random landscapes, with the check itself calibrated)." : "This city's lines were checked with one round of random landscapes; the extra double-check used for Sydney and Tokyo is still to come."}`,
+      timelineLines: country === "au" ? "ABS Census 2011–2021 (Time Series Profile), all years on today's suburbs. Each year the line splits the city's suburbs in half, so it shows who is relatively high or low that year."
+        : "Japan Census 2000–2020 (e-Stat small areas), each year shared onto today's neighbourhoods by area. Each year the line splits the city in half, so it shows who is relatively high or low that year. The Census changed its job categories in 2010; comparing within each year keeps the job lines fair.",
+      timelineGroups: "",
+      heritage: country === "au" ? "ABS 2021 Census, country of birth (G09). A place's colour describes the area, not anyone in it." : country === "jp" ? "Japan Census 2020, small-area table 2 (foreign residents, all nationalities together). A place's colour describes the area, not anyone in it." : "ONS Census 2021, country of birth (TS004). A place's colour describes the area, not anyone in it.",
       make: `Calculated live in your browser from ${sources}.`,
     },
-    herLabel: (h) => h.name, timelineGroupTitle: (g) => g.name, timelineGroupNote: () => "",
+    herLabel: (h) => (h.kind === "foreign" ? "Foreign residents" : h.name.startsWith("Anywhere") ? "Born outside the UK" : `Born in ${h.name}`), timelineGroupTitle: (g) => g.name, timelineGroupNote: () => "",
     links: LINKS,
   };
 }
@@ -233,4 +247,5 @@ export const CITIES: Record<string, CityConfig> = {
   sapporo: generic("sapporo", "Sapporo", "jp"),
   london: generic("london", "London", "uk"), manchester: generic("manchester", "Manchester", "uk"), birmingham: generic("birmingham", "Birmingham", "uk"),
   liverpool: generic("liverpool", "Liverpool", "uk"),
+  brighton: generic("brighton", "Brighton", "uk"),
 };
