@@ -31,9 +31,11 @@ for city, C in CITIES.items():
     tab = pd.read_csv(csv)
     if city in ("sydney", "tokyo"):
         if city == "tokyo":
-            geom = gpd.read_file("/home/claude/tokyo/out/tokyo_neigh.gpkg").geometry
+            if not os.environ.get("TOKYO_NEIGH"): continue          # path to the Tokyo neighbourhood GeoPackage
+            geom = gpd.read_file(os.environ["TOKYO_NEIGH"]).geometry
         else:
-            sa2 = gpd.read_file("/home/claude/data/shp/SA2_2021_AUST_GDA2020.shp")
+            if not os.environ.get("SA2_SHP"): continue              # path to the ABS SA2 2021 shapefile
+            sa2 = gpd.read_file(os.environ["SA2_SHP"])
             sa2 = sa2[sa2.STE_NAME21 == "New South Wales"].set_index("SA2_NAME21")
             names = [a["name"] for a in json.load(open(app))["areas"]]
             geom = sa2.geometry.reindex(names)

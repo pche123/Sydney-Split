@@ -1,7 +1,7 @@
 """Phase 1 downloads: 8 US cities, Auckland, Christchurch and Singapore. No keys or logins needed.
 
 Run from your split_kit folder:   python ~/Downloads/download_phase1.py
-Then send Claude the one file it makes: upload/phase1.zip
+Then upload the one file it makes: upload/phase1.zip
 
 What it fetches (all public, open-licence data):
   USA        American Community Survey 2019-2023 5-year estimates by census tract (api.census.gov, keyless; set the
@@ -254,5 +254,5 @@ with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
     for dp, _, fs in os.walk(ROOT):
         if "_osm" in dp: continue          # raw map files are huge and already cut down to places.csv
         for f in fs: z.write(os.path.join(dp, f), os.path.relpath(os.path.join(dp, f), os.path.dirname(ROOT)))
-log(f"\nDone. Send upload/phase1.zip ({os.path.getsize(out) >> 20} MB) to Claude.")
+log(f"\nDone. Upload upload/phase1.zip ({os.path.getsize(out) >> 20} MB).")
 if sys.platform == "darwin": os.system(f'open "{os.path.dirname(out)}"')

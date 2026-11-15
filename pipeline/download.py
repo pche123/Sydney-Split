@@ -158,7 +158,7 @@ def arcgis_geojson(level, lads, path):
             where=where, outFields="CODE,NAME", outSR=4326, f="geojson",
             resultOffset=off, resultRecordCount=1000, orderByFields="OBJECTID")).json()
         if "features" not in r:
-            MANUAL.append(f"{L} boundaries failed ({str(r)[:150]}). Tell Claude."); return
+            MANUAL.append(f"{L} boundaries failed ({str(r)[:150]}). Report it in the repo issues."); return
         got = r["features"]; feats += got; off += len(got)
         print(f"\r   {L} areas: {len(feats)}", end="", flush=True)
         if len(got) < 1000 and not r.get("exceededTransferLimit") and not r.get("properties", {}).get("exceededTransferLimit"):
@@ -167,7 +167,7 @@ def arcgis_geojson(level, lads, path):
     for f in feats:
         p = f["properties"]; f["properties"] = {f"{L}21CD": p.get("CODE"), f"{L}21NM": p.get("NAME")}
     if not feats:
-        MANUAL.append(f"{L} boundaries: the query returned no areas. Tell Claude."); return
+        MANUAL.append(f"{L} boundaries: the query returned no areas. Report it in the repo issues."); return
     os.makedirs(os.path.dirname(path), exist_ok=True)
     json.dump({"type": "FeatureCollection", "features": feats}, open(path, "w"))
     print("  ok", os.path.relpath(path), len(feats), "areas")

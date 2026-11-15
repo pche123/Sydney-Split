@@ -1,4 +1,4 @@
-"""Shrink the downloaded data (a few GB) into one small zip per city, ready to upload to Claude.
+"""Shrink the downloaded data (a few GB) into one small zip per city, ready to upload.
 
     pip install geopandas pyogrio scikit-learn scipy osmium openpyxl
     python pipeline/prepare_upload.py                 # every city that has a data/<city> folder
