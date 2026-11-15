@@ -324,7 +324,13 @@ export function start(DATA: CityData, C: CityConfig) {
       : l.tier === "gentle"
         ? `The pattern is real: ${City} clearly isn't random here. But a random ${City} that's just as smooth often draws a border this clean, so read it as a gentle slope across the city rather than a sharp line.`
         : `Versions of ${City} with no real pattern often produce a split like this. The map may still tell a story, but the data can't show it yet.`;
-    const tech = `p = ${l.p}`;
+    const fmtP = (p: number) => (p >= 0.995 ? "1, the highest it can be" : p < 0.001 ? "below 0.001" : String(p));
+    const own = l.p_own, ng = l.n_group || 1;
+    const tech = own !== undefined && ng > 1 && Math.abs(own - l.p) > 0.0015
+      ? `p = ${fmtP(own)} for this line on its own. We tested ${ng} lines of this kind together, which raises the bar; allowing for that, p = ${fmtP(l.p)}.`
+      : `p = ${fmtP(l.p)}`;
+    const mixedNote = l.p_mixed !== undefined && l.p_mixed <= 0.05
+      ? `<p class="small">In fact the two chains are more mixed together than chance would give (p = ${fmtP(l.p_mixed)}). Each chain seems to spread its own shops out, so the two end up interleaved.</p>` : "";
     const sharpNote = l.sharp && l.sharp.length ? `<p class="small">The change is sharpest along the thick part of the line (${Math.round((l.sharp_share || 0) * 100)}% of it); elsewhere it is a gradual slope.</p>` : "";
     const adj = l.adjusted ? `<p class="small">We took out the effect of income and distance from the city first, so this isn't just the usual rich-vs-poor or inner-vs-outer split.</p>` : "";
     const d = $("#detail") as HTMLElement;
@@ -334,7 +340,7 @@ export function start(DATA: CityData, C: CityConfig) {
         <div class="side"><span class="sw a"></span><div><b class="ta"></b><div class="ex ea"></div></div></div>
         <div class="side"><span class="sw b"></span><div><b class="tb"></b><div class="ex eb"></div></div></div>
       </div>
-      <div class="box"><h3>How sure are we?</h3><div class="sure ${cls}"><strong>${txt}</strong></div><p class="small">${sureText}</p><p class="small" style="font-size:11.5px">${tech}</p>${sharpNote}${adj}</div>
+      <div class="box"><h3>How sure are we?</h3><div class="sure ${cls}"><strong>${txt}</strong></div><p class="small">${sureText}</p><p class="small" style="font-size:11.5px">${tech}</p>${mixedNote}${sharpNote}${adj}</div>
       <div class="box"><h3>What else changes across it</h3>
         <p class="small" style="margin:0 0 6px">The orange side also has:</p><div class="chips ca"></div>
         <p class="small" style="margin:10px 0 6px">The blue side also has:</p><div class="chips cb"></div></div>

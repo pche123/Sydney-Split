@@ -18,6 +18,7 @@ from shapely import contains_xy
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [os.path.join(HERE, ".."), os.path.join(HERE, "..", ".."), os.path.join(HERE, "..", "tokyo")]
 from cities import CITIES, DATA_NOTES
+from brands import BRANDS_BY_COUNTRY
 from linetests.landscape import MultiScaleNull
 
 city, W_, OUT = sys.argv[1:4]
@@ -164,22 +165,7 @@ txt = P.t.map(lambda q: "|".join(str(q.get(k, "")) for k in ("brand", "name", "b
 FLAG = {"food": am.isin(["restaurant", "fast_food", "cafe", "food_court"]), "cafe": am.eq("cafe"), "fast_food": am.eq("fast_food"),
         "pub_bar": am.isin(["pub", "bar", "biergarten"]), "bottle_shop": sh.isin(["alcohol", "wine"]), "gym": P.t.map(lambda q: q.get("leisure") == "fitness_centre"),
         "station": P.t.map(lambda q: q.get("railway") == "station" or q.get("public_transport") == "station")}
-BRANDS = {
-    "au": {"Woolworths": (r"woolworths", ["supermarket"]), "Coles": (r"^coles$|\|coles\||^coles\|", ["supermarket"]), "Aldi": (r"aldi", ["supermarket"]),
-           "McDonald's": (r"mcdonald", ["fast_food"]), "KFC": (r"\bkfc\b", ["fast_food"]), "Hungry Jack's": (r"hungry jack", ["fast_food"]),
-           "Nando's": (r"nando", ["restaurant", "fast_food"]), "Grill'd": (r"grill'd", ["restaurant", "fast_food"])},
-    "jp": {"7-Eleven": (r"7-eleven|セブン-イレブン|セブンイレブン|seven-eleven", ["convenience"]), "FamilyMart": (r"familymart|ファミリーマート", ["convenience"]),
-           "Lawson": (r"lawson|ローソン", ["convenience"]), "Matsuya": (r"^松屋|\|松屋|matsuya", ["fast_food", "restaurant"]),
-           "Yoshinoya": (r"吉野家|yoshinoya", ["fast_food", "restaurant"]), "Sukiya": (r"すき家|sukiya", ["fast_food", "restaurant"]),
-           "Starbucks": (r"starbucks|スターバックス", ["cafe"]), "Doutor": (r"doutor|ドトール", ["cafe"]),
-           "Saizeriya": (r"サイゼリヤ|saizeriya", ["restaurant", "fast_food"]), "Gusto": (r"ガスト|\bgusto\b", ["restaurant", "fast_food"]),
-           "McDonald's": (r"mcdonald|マクドナルド", ["fast_food"]), "Gyoza no Ohsho": (r"餃子の王将|ohsho", ["restaurant", "fast_food"])},
-    "uk": {"Greggs": (r"greggs", ["fast_food", "cafe", "bakery"]), "Pret": (r"pret a manger|\bpret\b", ["cafe", "fast_food"]),
-           "Costa": (r"\bcosta\b", ["cafe"]), "Starbucks": (r"starbucks", ["cafe"]), "Tesco": (r"tesco", ["supermarket", "convenience"]),
-           "Sainsbury's": (r"sainsbury", ["supermarket", "convenience"]), "Waitrose": (r"waitrose", ["supermarket", "convenience"]),
-           "Lidl & Aldi": (r"\blidl\b|\baldi\b", ["supermarket"]), "Wetherspoon": (r"wetherspoon|\bjd wetherspoon", ["pub", "bar"]),
-           "McDonald's": (r"mcdonald", ["fast_food"]), "KFC": (r"\bkfc\b", ["fast_food"])},
-}[CO]
+BRANDS = BRANDS_BY_COUNTRY[CO]
 kind = am.where(am.notna(), sh)
 for b, (pat, kinds) in BRANDS.items():
     FLAG["brand:" + b] = txt.str.contains(pat, regex=True) & kind.isin(kinds)
