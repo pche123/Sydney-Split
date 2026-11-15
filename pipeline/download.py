@@ -142,46 +142,35 @@ MSOA = "Middle_layer_Super_Output_Areas_December_2021_Boundaries_EW_BGC_V3"
 LSOA = "Lower_layer_Super_Output_Areas_December_2021_Boundaries_EW_BGC_V5"
 
 
-SERVICES = {   # ONS renames these now and then; the first that answers is used
-    "msoa": ["Middle_layer_Super_Output_Areas_December_2021_Boundaries_EW_BGC_V3",
-             "Middle_layer_Super_Output_Areas_December_2021_Boundaries_EW_BGC_V2",
-             "MSOA_2021_EW_BGC_V2", "Middle_layer_Super_Output_Areas_2021_EW_BGC_V3"],
-    "lsoa": ["Lower_layer_Super_Output_Areas_December_2021_Boundaries_EW_BGC_V5",
-             "Lower_layer_Super_Output_Areas_December_2021_Boundaries_EW_BGC_V4",
-             "LSOA_2021_EW_BGC_V5", "LSOA_2021_EW_BGC_V4"],
-}
+# ONS moved its maps to a new portal in 2026 (the old services now ask for a login token).
+NEW_ONS = "https://services-eu1.arcgis.com/6BsumkdKnml1ntNV/arcgis/rest/services/2021_{L}_Boundary/FeatureServer/2/query"  # layer 2 = BGC (20 m)
 
 
 def arcgis_geojson(level, lads, path):
-    """Page through the whole England and Wales layer and keep the areas whose name starts with one of the councils."""
+    """Fetch the city's MSOAs/LSOAs (2021, generalised 20 m) as GeoJSON, keeping ONS's usual column names."""
     if os.path.exists(path) and os.path.getsize(path) > 10000:
         print("  have", os.path.relpath(path)); return
-    L = level.upper(); keep = tuple(b + " " for b in lads)
-    for service in SERVICES[level]:
-        url = f"{ONS_FS}/{service}/FeatureServer/0/query"
-        feats, off, ok = [], 0, True
-        while True:
-            try:
-                r = requests.get(url, headers=UA, timeout=300, params=dict(
-                    where="1=1", outFields=f"{L}21CD,{L}21NM", outSR=4326, f="geojson",
-                    resultOffset=off, resultRecordCount=1000)).json()
-            except Exception as e:
-                print("  ", service, "failed:", e); ok = False; break
-            if "error" in r or "features" not in r:
-                print("  ", service, "not available:", str(r.get("error", r))[:120]); ok = False; break
-            got = r["features"]
-            feats += [f for f in got if str(f["properties"].get(f"{L}21NM", "")).startswith(keep)]
-            off += len(got)
-            print(f"\r   {service}: read {off}, kept {len(feats)}", end="", flush=True)
-            if not got or not (r.get("exceededTransferLimit") or r.get("properties", {}).get("exceededTransferLimit") or len(got) == 1000):
-                break
-        print()
-        if ok and feats:
-            os.makedirs(os.path.dirname(path), exist_ok=True)
-            json.dump({"type": "FeatureCollection", "features": feats}, open(path, "w"))
-            print("  ok", os.path.relpath(path), len(feats), "areas"); return
-    MANUAL.append(f"{L} boundaries could not be downloaded. Get '{L} (December 2021) Boundaries EW BGC' as GeoJSON from "
-                  f"https://geoportal.statistics.gov.uk/ and save it as {path}")
+    L = level.upper()
+    where = " OR ".join("NAME LIKE '{} %'".format(b.replace("'", "''")) for b in lads)
+    feats, off = [], 0
+    while True:
+        r = requests.get(NEW_ONS.format(L=L), headers=UA, timeout=300, params=dict(
+            where=where, outFields="CODE,NAME", outSR=4326, f="geojson",
+            resultOffset=off, resultRecordCount=1000, orderByFields="OBJECTID")).json()
+        if "features" not in r:
+            MANUAL.append(f"{L} boundaries failed ({str(r)[:150]}). Tell Claude."); return
+        got = r["features"]; feats += got; off += len(got)
+        print(f"\r   {L} areas: {len(feats)}", end="", flush=True)
+        if len(got) < 1000 and not r.get("exceededTransferLimit") and not r.get("properties", {}).get("exceededTransferLimit"):
+            break
+    print()
+    for f in feats:
+        p = f["properties"]; f["properties"] = {f"{L}21CD": p.get("CODE"), f"{L}21NM": p.get("NAME")}
+    if not feats:
+        MANUAL.append(f"{L} boundaries: the query returned no areas. Tell Claude."); return
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    json.dump({"type": "FeatureCollection", "features": feats}, open(path, "w"))
+    print("  ok", os.path.relpath(path), len(feats), "areas")
 
 
 def norm(name):
