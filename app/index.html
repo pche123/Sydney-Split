@@ -36,6 +36,7 @@
     </div>
     <p id="tagline"></p>
     <button class="helpbtn" id="helpbtn" aria-label="What is this?">What is this?</button>
+    <details class="dlmenu" id="dlmenu" hidden><summary>⬇ <span class="long">Download data</span></summary><div class="dlpanel" id="dlpanel"></div></details>
     <div class="find">
       <label for="suburb" id="suburbLabel"></label>
       <input id="suburb" list="suburbs" autocomplete="off" enterkeyhint="search">
@@ -49,6 +50,7 @@
   </div>
   <main>
     <svg id="map" role="img"></svg>
+    <div class="mapctl">
     <div class="compare">
       <label for="cmp">Compare with another line</label>
       <select id="cmp"><option value="">None</option></select>
@@ -60,8 +62,9 @@
       <div class="yb-ticks" id="yearticks"></div>
     </div>
     <div class="smoothbox" id="smoothbox">
-      <label for="smooth"><b>Smooth the line</b> <span class="small" id="smoothinfo">Drag to simplify the border</span></label>
+      <label for="smooth"><b id="smoothlabel">Smooth the line</b> <span class="small" id="smoothinfo">Drag to see the overall shape. Display only: it doesn't change any test.</span></label>
       <input type="range" id="smooth" min="0" max="20" step="1" value="0">
+    </div>
     </div>
     <div class="maptools">
       <button id="zin" aria-label="Zoom in">+</button>

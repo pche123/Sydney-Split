@@ -468,6 +468,7 @@ for l in lines:
     if len(idx) < 8: idx = np.arange(n)
     l["ex_a"] = [G.short[i] for i in idx[np.argsort(-f[idx])][:4]]; l["ex_b"] = [G.short[i] for i in idx[np.argsort(f[idx])][:4]]
     FIELDS[l["id"]] = f
+    l["f"] = [round(float(x), 2) for x in rz(f)]   # continuous score (rank-normal) for the app's smoothing slider
     l.pop("kind"); l.pop("p_line")
 
 # ------------------------------------------------------------------ geometry to the 1000-wide map
@@ -615,22 +616,50 @@ def tl_build(years, Dy, defs):
     return out
 def shr(d, a, b): return (d[a] / d[b].replace(0, np.nan)).fillna(0).values
 if CO == "au":
-    tsp = {}
+    tsp, TT = {}, {}
     for f in sorted(glob.glob(f"{W_}/census/TSP_T*.csv")):
         d = pd.read_csv(f, dtype={"SA2_CODE_2021": str}).set_index("SA2_CODE_2021"); tsp.update({c: d[c] for c in d.columns})
+        TT[os.path.basename(f)[4:-4]] = d.reindex(G.code.astype(str)).fillna(0)
     TS = pd.DataFrame(tsp).reindex(G.code.astype(str)).fillna(0)
+    def tcol(name, tables):   # a column from the first of these tables that has it (totals repeat across tables)
+        for t_ in tables:
+            if t_ in TT and name in TT[t_]: return TT[t_][name]
+        return pd.Series(0.0, index=TS.index)
     Dy = {}
     for y, cy in [("2011", "C11"), ("2016", "C16"), ("2021", "C21")]:
         g_ = lambda *ks: TS[[f"{k}_{cy}_P" for k in ks if f"{k}_{cy}_P" in TS]].sum(1)
         occ_tot = TS[[c for c in TS.columns if c.endswith(f"_{cy}_P") and any(c.startswith(o) for o in ("Managers", "Professionals", "Tech_trad", "Comm_pers", "Cler_admin", "Sales", "Mach_op", "Labourers"))]].sum(1)
         Dy[y] = pd.DataFrame({"laptop": g_("Managers", "Professionals"), "hivis": TS[[c for c in TS.columns if c.endswith(f"_{cy}_P") and (c.startswith("Mach_op") or c.startswith("Labourers"))]].sum(1),
                               "workers": occ_tot, "age65": g_("Age_65_74", "Age_75_84", "Age_grp_85over"), "age_all": g_("Tot_persons"),
-                              "manuf": g_("Manuf")})
+                              "manuf": g_("Manuf"), "ind_all": tcol(f"Tot_{cy}_P", ["T34"]),
+                              "degree": sum(tcol(f"{cy}_P_{k}_Tot", ["T31D", "T31E"]) for k in ("Post_Deg", "GrDip_GrCe", "BD")),
+                              "lone": tcol(f"{cy}_Tot_LP_H", ["T14A", "T14B", "T14C"]), "hh": tcol(f"{cy}_Tot_Tot", ["T14A", "T14B", "T14C"]),
+                              "flats": tcol(f"{cy}_Tot_DS_F_a", ["T18A", "T18B"]), "houses": tcol(f"{cy}_Tot_DS_Sep_house", ["T18A", "T18B"]),
+                              "dw": sum(tcol(f"{cy}_Tot_DS_{k}", ["T18A", "T18B"]) for k in ("Sep_house", "SemiDRTHT", "F_a", "OD"))})
     yrs = ["2011", "2016", "2021"]
     TLD = dict(years=yrs, lines=tl_build(yrs, Dy, [
         ("hivis", "The Hi-Vis Line", "More driving, machine & labouring jobs", "More managers & professionals", lambda d: rz(shr(d, "hivis", "workers")) - rz(shr(d, "laptop", "workers")),
          "managers & professionals among workers", lambda d: d.laptop.sum() / max(d.workers.sum(), 1)),
-        ("grey", "The Grey Line", "More over-65s", "Fewer over-65s", lambda d: rz(shr(d, "age65", "age_all")), "aged 65+", lambda d: d.age65.sum() / max(d.age_all.sum(), 1))]), groups=[])
+        ("grey", "The Grey Line", "More over-65s", "Fewer over-65s", lambda d: rz(shr(d, "age65", "age_all")), "aged 65+", lambda d: d.age65.sum() / max(d.age_all.sum(), 1)),
+        ("factory", "The Factory Line", "More factory workers", "Fewer factory workers", lambda d: rz(shr(d, "manuf", "ind_all")), "working in manufacturing", lambda d: d.manuf.sum() / max(d.ind_all.sum(), 1)),
+        ("degree", "The Degree Line", "More university graduates", "Fewer university graduates", lambda d: rz(shr(d, "degree", "age_all")), "people with a university degree", lambda d: d.degree.sum() / max(d.age_all.sum(), 1)),
+        ("alone", "The Living Alone Line", "More people living alone", "Fewer people living alone", lambda d: rz(shr(d, "lone", "hh")), "households of one person", lambda d: d.lone.sum() / max(d.hh.sum(), 1)),
+        ("flats", "Flats vs Houses", "More flats & apartments", "More detached houses", lambda d: rz(shr(d, "flats", "dw")) - rz(shr(d, "houses", "dw")), "homes that are flats", lambda d: d.flats.sum() / max(d.dw.sum(), 1))]), groups=[])
+    # birthplace over time (TSP table T08), the biggest overseas-born groups
+    try:
+        t08 = {y: {c[:-len(f"_{cy}_P")]: tcol(c, ["T08A", "T08B"]) for c in set(TT.get("T08A", pd.DataFrame()).columns) | set(TT.get("T08B", pd.DataFrame()).columns) if c.endswith(f"_{cy}_P")}
+               for y, cy in [("2011", "C11"), ("2016", "C16"), ("2021", "C21")]}
+        skip_ = {"Aust", "Tot", "Born_elsewhere", "COB_NS", "Country_birth_NS", "Elsewhere"}
+        ctry = sorted([k for k in t08["2021"] if k not in skip_ and not k.startswith("Tot") and not k.lower().endswith("_ns")], key=lambda k: -t08["2021"][k].sum())[:15]
+        for k in ctry:
+            pct, Ds, LQs = [], [], []
+            for y in yrs:
+                cnt = np.asarray(t08[y].get(k, 0), float); tot = np.asarray(t08[y].get("Tot", 0), float)
+                h_ = her_group("x", k, cnt, tot); pct.append(h_["pct"]); Ds.append(h_["D"]); LQs.append(h_["lq"])
+            nm_ = {"Unitd_Kingdom": "the UK", "Unit_Sts_Amer": "the USA", "Korea": "South Korea", "UK_CI_IM": "the UK", "Korea_South": "South Korea", "Hong_Kong_SAR_China": "Hong Kong", "USA": "the USA", "SAR_China": "Hong Kong"}.get(k, k.replace("_", " "))
+            TLD["groups"].append(dict(id="t-birth-" + k.lower(), kind="birth", name=nm_, pct=pct, D=Ds, lq=LQs))
+    except Exception as e:
+        print("  birthplace timeline skipped:", e, flush=True)
 elif CO == "jp" and glob.glob(f"{W_}/raw/census/2000/*.zip"):
     import tempfile, zipfile as zf_
     clean = lambda s_: re.sub(r"[\s　]", "", str(s_))
@@ -690,8 +719,9 @@ for c_ in census: tab[c_] = S[c_].round(5).values
 for k_, v_ in CNT.items():
     if not k_.startswith("hp_"): tab["count_" + k_.replace("brand:", "").replace(" ", "_").replace("'", "").replace("&", "and")] = v_.astype(int)
 for l in lines: tab["side_" + l["id"]] = l["side"]
+for l in lines: tab["score_" + l["id"]] = l["f"]
 tab.to_csv(os.path.join(dl_dir, f"{city}_areas.csv"), index=False)
-gj = gpd.GeoDataFrame(tab[["area", "code", "population"]], geometry=G.geometry.simplify(TOL / 2), crs=CRS).to_crs(4326)
+gj = gpd.GeoDataFrame(tab.drop(columns=["full_name"]), geometry=G.geometry.simplify(TOL / 2), crs=CRS).to_crs(4326)
 gj.to_file(os.path.join(dl_dir, f"{city}_areas.geojson"), driver="GeoJSON", COORDINATE_PRECISION=5)
 np.savez_compressed(f"{W_}/fields.npz", I=I, J=J, W=W, ids=np.array(list(FIELDS)), F=np.column_stack(list(FIELDS.values())),
                     kinds=np.array([("records" if l.get("p_geo") is not None else "chain" if l["group"] == "Chains" else "census") for l in lines]))

@@ -199,7 +199,7 @@ function generic(id: string, name: string, country: "au" | "jp" | "uk"): CityCon
   return {
     id, name, place, places, placeholder: "Search by name",
     refLine: "the-latte-line", refName: "Latte Line", storageKey: `split_intro_${id}`,
-    groups: GROUPS, herTab: "Heritage", herKinds: country === "jp" ? [["foreign", "Foreign residents"]] : [["birth", "Birthplace"]], tKinds: [["lines", "Lines", "Lines through time"]],
+    groups: GROUPS, herTab: "Heritage", herKinds: country === "jp" ? [["foreign", "Foreign residents"]] : [["birth", "Birthplace"]], tKinds: country === "au" ? [["lines", "Lines", "Lines through time"], ["birth", "Birthplace", "Born in…"]] : [["lines", "Lines", "Lines through time"]],
     notes: { foreign: "Residents without Japanese nationality, all countries together: the small-area table gives one total. Naturalised citizens aren't counted.", birth: country === "au" ? "Migrants only: people born overseas. Their Australian-born kids aren't counted."
       : "People born outside the UK, by world region. The small-area census table only gives regions, not countries. Their UK-born kids aren't counted." },
     tag: {
@@ -229,7 +229,7 @@ function generic(id: string, name: string, country: "au" | "jp" | "uk"): CityCon
       lines: (d) => `${d.meta.sources}. Covers ${d.meta.areas} ${name} ${places}. Shop and café locations come from OpenStreetMap, which volunteers map, so some are missing. A ${place}'s side describes the area, not the people in it. ${d.meta.calibrated ? "Every line was double-checked the same way as Sydney and Tokyo's (random landscapes, with the check itself calibrated)." : "This city's lines were checked with one round of random landscapes; the extra double-check used for Sydney and Tokyo is still to come."}`,
       timelineLines: country === "au" ? "ABS Census 2011–2021 (Time Series Profile), all years on today's suburbs. Each year the line splits the city's suburbs in half, so it shows who is relatively high or low that year."
         : "Japan Census 2000–2020 (e-Stat small areas), each year shared onto today's neighbourhoods by area. Each year the line splits the city in half, so it shows who is relatively high or low that year. The Census changed its job categories in 2010; comparing within each year keeps the job lines fair.",
-      timelineGroups: "",
+      timelineGroups: country === "au" ? "ABS Census 2011–2021 (Time Series Profile, country of birth), all years on today's suburbs. A place's colour describes the area, not anyone in it." : "",
       heritage: country === "au" ? "ABS 2021 Census, country of birth (G09). A place's colour describes the area, not anyone in it." : country === "jp" ? "Japan Census 2020, small-area table 2 (foreign residents, all nationalities together). A place's colour describes the area, not anyone in it." : "ONS Census 2021, country of birth (TS004). A place's colour describes the area, not anyone in it.",
       make: `Calculated live in your browser from ${sources}.`,
     },

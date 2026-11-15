@@ -24,11 +24,16 @@ rz = lambda v: norm.ppf((rankdata(v) - 0.5) / len(v))
 out = f"{ROOT}/results/calibrated_{city}.csv"; rows = []
 done = set(pd.read_csv(out).line) if os.path.exists(out) else set()
 if done: rows = pd.read_csv(out).to_dict("records")
+R_FINE = 60 if city == "london" else 200   # London is 5x bigger, so it gets fewer refits. With R refits the smallest calibrated p is 1/(R+1); close calls get R_FINE so Holm can still pass them
 for lid, kind, f in zip(z["ids"], z["kinds"], z["F"].T):
-    if kind == "chain" or lid in done: continue
-    t = time.time(); r = calibrated_map_test(GN, rz(f), B=199, R=R, Bin=99, seed=3)
-    r.update(line=lid, kind=kind); rows.append(r); pd.DataFrame(rows).to_csv(out, index=False)
-    print(f"{city} {lid:32s} raw {r['p_raw']:.3f} calibrated {r['p_cal']:.3f} ({time.time() - t:.0f}s)", flush=True)
+    if kind == "chain": continue
+    prev = next((r for r in rows if r["line"] == lid), None)
+    if prev is not None and (prev["p_cal"] >= 0.1 or prev.get("R", R) >= R_FINE): continue
+    for R_ in ([R] if prev is None else []) + [R_FINE]:
+        t = time.time(); r = calibrated_map_test(GN, rz(f), B=199, R=R_, Bin=99, seed=3)
+        r.update(line=lid, kind=kind, R=R_); rows = [q for q in rows if q["line"] != lid] + [r]; pd.DataFrame(rows).to_csv(out, index=False)
+        print(f"{city} {lid:32s} raw {r['p_raw']:.3f} calibrated {r['p_cal']:.3f} R={R_} ({time.time() - t:.0f}s)", flush=True)
+        if r["p_cal"] >= 0.1: break
 
 # update the app: calibrated p, Holm within group, verdicts
 d = json.load(open(APP)); cal = {r["line"]: r["p_cal"] for r in rows}
@@ -39,7 +44,8 @@ def holm(p):
 for grp in {l["group"] for l in d["lines"]} - {"Chains"}:     # chain wars keep their exact label-swap p (already corrected)
     ls = [l for l in d["lines"] if l["group"] == grp and l["id"] in cal]
     for l, q in zip(ls, holm([cal[l["id"]] for l in ls])):
-        l["p_old"] = l["p"]; l["p"] = round(float(q), 3)
+        if not d["meta"].get("calibrated"): l["p_old"] = l["p"]
+        l["p"] = round(float(q), 3)
         geo = l.get("p_geo") is None or l["p_geo"] <= 0.05
         l["tier"] = "line" if l["p"] <= 0.05 else ("gentle" if geo else "chance")
 d["meta"]["calibrated"] = True

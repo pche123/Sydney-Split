@@ -53,6 +53,15 @@ export function start(DATA: CityData, C: CityConfig) {
   if (dlInfo) notes.push(`<b>Download this city's data</b>: <a href="${dlInfo.csv}" download>table (CSV)</a>${dlInfo.geojson ? ` · <a href="${dlInfo.geojson}" download>map (GeoJSON)</a>` : ""}. Every area's census figures, venue counts and side of each line, free to reuse with credit to the original sources above.`
     + (dlInfo.hotpepper ? " HotPepper restaurant data is left out: HotPepper's terms don't allow passing it on, so get your own free key from Recruit if you need it." : ""));
   notes.push(`<b>Using this?</b> Please cite: ${CITATION}`);
+  if (dlInfo) {
+    $("#dlpanel").innerHTML = `<b>${C.name}: free to download</b><ul>
+      <li><a href="${dlInfo.csv}" download>Table (CSV)</a>: every ${place}'s census figures, venue counts, and which side of each line it is on${C.id === "sydney" || C.id === "tokyo" ? "" : " (plus a smooth score per line)"}</li>
+      ${dlInfo.geojson ? `<li><a href="${dlInfo.geojson}" download>Map (GeoJSON)</a>: the same columns with the ${place} shapes, opens in QGIS or Python</li>` : ""}
+      <li><a href="downloads/explore_city.py" download>Starter Python script</a>: loads the data, maps it, histograms vs KDE, neighbour smoothing, correlations, Moran's I. Run <code>python explore_city.py ${C.id}</code></li></ul>
+      <p class="small">Reuse freely with credit to the original sources (see "About the data").${dlInfo.hotpepper ? " HotPepper restaurant data is not included: its terms don't allow passing it on." : ""}</p>
+      <p class="small"><b>Please cite:</b> ${CITATION}</p>`;
+    $("#dlmenu").hidden = false;
+  }
   if (SUPPORT_URL) notes.push(`<b>Like it?</b> <a href="${SUPPORT_URL}" target="_blank" rel="noopener">Support the project</a> to help keep it free.`);
   if (notes.length) {
     const li = notes.map((n) => `<li>${n}</li>`).join("");
@@ -67,6 +76,8 @@ export function start(DATA: CityData, C: CityConfig) {
 
   // ---------- modes and lists
   const her = DATA.heritage;
+  let SM = 0;   // smoothing slider position, shared by every view
+  const SMOOTH_HINT = "Drag to see the overall shape. Display only: it doesn't change any test.";
   let mode = "lines", herKind = C.herKinds[0][0], curHer = her.find((h) => h.kind === herKind) || her[0], ovLine = ref;
   const TL = DATA.timeline;
   let tKind = "lines", tLine: TimelineLine = TL.lines[0], tGroup: TimelineGroup = TL.groups[0], tYear = Math.max(0, TL.years.length - 1);
@@ -152,7 +163,7 @@ export function start(DATA: CityData, C: CityConfig) {
     document.querySelectorAll<HTMLElement>("header > .tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.mode === m)));
     $("#tagline").textContent = C.tag[m];
     $(".compare").style.display = m === "heritage" || m === "timeline" || m === "make" ? "none" : "";
-    $("#smoothbox").style.display = m === "make" ? "block" : "none";
+    $("#smoothbox").style.display = "block";
     if (m !== "make") gDots.innerHTML = "";
     $("#yearbox").style.display = m === "timeline" ? "block" : "none";
     if (m !== "timeline" && playing) { clearInterval(playing); playing = null; $("#play").textContent = "▶ Play"; }
@@ -250,7 +261,7 @@ export function start(DATA: CityData, C: CityConfig) {
   // ---------- render a line
   function agreement(x: Line, y: Line) { let s = 0; x.side.forEach((v, i) => (s += Number(v === y.side[i]))); s /= x.side.length; return Math.max(s, 1 - s); }
   function drawCompare() {
-    cut2El.setAttribute("d", compare && compare !== current ? compare.cut : "");
+    cut2El.setAttribute("d", compare && compare !== current ? (SM ? borderPath(smoothSide(compare.side, compare.f)) : compare.cut) : "");
     $("#agree").innerHTML = compare && compare !== current
       ? `<span class="legend-dash"></span>${compare.name} puts ${Math.round(agreement(current, compare) * 100)}% of ${places} on matching sides` : "";
   }
@@ -292,9 +303,9 @@ export function start(DATA: CityData, C: CityConfig) {
     if (mode === "timeline") return renderTimeline();
     if (mode !== "lines") return renderHeritage();
     cutEl.style.display = ""; cutEl.setAttribute("class", "cut"); haloEl.setAttribute("d", "");
-    const l = current;
-    areaEls.forEach((p, i) => { p.style.fill = ""; p.setAttribute("class", "area " + (l.side[i] ? "a" : "b") + (picked === i ? " picked" : "")); });
-    cutEl.setAttribute("d", l.cut);
+    const l = current, sd = smoothSide(l.side, l.f);
+    areaEls.forEach((p, i) => { p.style.fill = ""; p.setAttribute("class", "area " + (sd[i] ? "a" : "b") + (picked === i ? " picked" : "")); });
+    cutEl.setAttribute("d", SM ? borderPath(sd) : l.cut); smoothNote(l.side, sd);
     drawCompare();
     const [cls, txt] = verdict(l.tier);
     const sureText = l.tier === "line"
@@ -345,8 +356,9 @@ export function start(DATA: CityData, C: CityConfig) {
     const d = $("#detail") as HTMLElement; const nm = (i: number) => DATA.areas[i].short;
     if (tKind === "lines") {
       const l = tLine, movedSet = new Set([...l.toA, ...l.toB]);
-      areaEls.forEach((p, i) => { p.style.fill = ""; p.setAttribute("class", "area " + (l.sides[tYear][i] ? "a" : "b") + (movedSet.has(i) ? " moved" : "")); });
-      cutEl.style.display = ""; cutEl.setAttribute("class", "cut"); cutEl.setAttribute("d", l.cuts[tYear]);
+      const sd = smoothSide(l.sides[tYear]);
+      areaEls.forEach((p, i) => { p.style.fill = ""; p.setAttribute("class", "area " + (sd[i] ? "a" : "b") + (movedSet.has(i) ? " moved" : "")); });
+      cutEl.style.display = ""; cutEl.setAttribute("class", "cut"); cutEl.setAttribute("d", SM ? borderPath(sd) : l.cuts[tYear]); smoothNote(l.sides[tYear], sd);
       const stable = l.persist_p <= 0.05 ? "Much more stable than chance" : "Not clearly more stable than chance";
       d.innerHTML = `<div><h2></h2><p class="small" style="margin:4px 0 0">Drag the year slider or press Play.</p></div>
         <div class="sides"><div class="side"><span class="sw a"></span><div><b class="ta"></b></div></div><div class="side"><span class="sw b"></span><div><b class="tb"></b></div></div></div>
@@ -364,7 +376,8 @@ export function start(DATA: CityData, C: CityConfig) {
       d.querySelector(".mb")!.textContent = l.toB.length ? l.toB.map(nm).join(", ") : "none";
     } else {
       const g = tGroup;
-      areaEls.forEach((p, i) => { p.setAttribute("class", "area h"); p.style.fill = RAMP[rampIdx(g.lq[tYear][i])]; });
+      const lq = smoothLq(g.lq[tYear]); smoothNote();
+      areaEls.forEach((p, i) => { p.setAttribute("class", "area h"); p.style.fill = RAMP[rampIdx(lq[i])]; });
       cutEl.style.display = "none";
       const dD = g.D[LAST] - g.D[0];
       const trend = dD < -0.02 ? `spread out across ${City}` : dD > 0.02 ? `became more concentrated in fewer ${places}` : "stayed about as concentrated";
@@ -432,7 +445,7 @@ export function start(DATA: CityData, C: CityConfig) {
     }
     s.value = value; return w;
   }
-  const resetSmooth = () => { MK.lam = 0; $("#smooth").value = 0; };
+  const resetSmooth = () => {};   // smoothing is one setting shared by every view
   function buildMakeControls() {
     kindsSwitch([["line", "Your line"], ["chain", "Chain vs chain"]], MK.kind, (k) => {
       MK.kind = k; resetSmooth();
@@ -486,12 +499,11 @@ export function start(DATA: CityData, C: CityConfig) {
         c.setAttribute("class", "dot"); c.setAttribute("fill", fill); gDots.appendChild(c);
       }
     }
-    const raw = splitOf(f), side = MK.lam > 0 ? minCutSides(G, f, MKD.pop, MK.lam) : raw; MK.side = side;
+    const raw = splitOf(f), side = SM ? splitOf(kernel(f)) : raw; MK.side = side;
     areaEls.forEach((p, i) => { p.style.fill = ""; p.setAttribute("class", "area " + (side[i] ? "a" : "b")); });
     cutEl.style.display = ""; cutEl.setAttribute("class", "cut"); cutEl.setAttribute("d", borderPath(side));
     const switched = side.filter((s, i) => s !== raw[i]).length;
-    $("#smoothinfo").textContent = MK.lam > 0
-      ? `${Math.round((switched / N) * 100)}% of ${places} switched; border ${Math.round(G.border(raw))} km → ${Math.round(G.border(side))} km` : "Drag to simplify the border";
+    smoothNote(raw, side);
     const chainQ = `Do these chains live in different ${City}s?`;
     d.innerHTML = `<div><h2></h2><p class="rule"></p></div>
       <div class="sides"><div class="side"><span class="sw a"></span><div><b class="ta"></b><div class="ex ea"></div></div></div>
@@ -530,14 +542,44 @@ export function start(DATA: CityData, C: CityConfig) {
         <p class="small">${msg}</p><p class="small" style="font-size:11.5px">Technical: line-ness ${r.obs.toFixed(3)}, p = ${r.p.toFixed(3)} (${MK.kind === "chain" ? `label-swap test, ${C.chainDraws} draws` : "quick Moran-rotation check, 199 draws; known to be lenient with smooth maps"})</p>`;
     }, 30);
   }
-  $("#smooth").addEventListener("input", (e: Event) => { MK.lam = lamOf(+(e.target as HTMLInputElement).value); if (mode === "make") renderMake(); });
+  $("#smooth").addEventListener("input", (e: Event) => { SM = +(e.target as HTMLInputElement).value; render(); });
+
+  // ---------- smoothing, shared by every view. Display only: every p-value and verdict is for the unsmoothed map.
+  // Kernel smoothing, like a KDE bandwidth: each area's score becomes a distance-weighted average of nearby areas
+  // (Gaussian kernel, bandwidth in km set by the slider), then the map is split in half again at the median.
+  const bwKm = () => 0.4 * Math.pow(1.2, SM);          // slider 1 -> ~0.5 km ... 20 -> ~15 km
+  const D2 = new Float32Array(N * N);
+  for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) { const dx = (MKD.rep[i][0] - MKD.rep[j][0]) / 1000, dy = (MKD.rep[i][1] - MKD.rep[j][1]) / 1000; D2[i * N + j] = dx * dx + dy * dy; }
+  const PW = MKD.pop.map((p) => Math.sqrt(Math.max(p, 1)));
+  function kernel(x: number[]): number[] {
+    const h2 = 2 * bwKm() ** 2;
+    return x.map((_, i) => { let s = 0, w = 0; for (let j = 0; j < N; j++) { const k = PW[j] * Math.exp(-D2[i * N + j] / h2); s += k * x[j]; w += k; } return s / w; });
+  }
+  function smoothSide(side: (number | boolean)[], f?: number[]): boolean[] {
+    if (!SM) return side.map(Boolean);
+    return splitOf(kernel(f ?? side.map((s) => (s ? 1 : -1))));
+  }
+  function smoothLq(lq: number[]): number[] {
+    if (!SM) return lq;
+    return kernel(lq.map((v) => Math.log(v + 0.05))).map((v) => Math.exp(v) - 0.05);
+  }
+  function smoothNote(raw?: (number | boolean)[], sd?: boolean[]) {
+    const lineView = mode !== "heritage" && !(mode === "timeline" && tKind !== "lines");
+    $("#smoothlabel").textContent = lineView ? "Smooth the line" : "Smooth the colours";
+    if (!SM) { $("#smoothinfo").textContent = SMOOTH_HINT; return; }
+    const sw = raw && sd ? sd.filter((s, i) => s !== Boolean(raw[i])).length : 0;
+    $("#smoothinfo").textContent = `Bandwidth ≈ ${bwKm() < 2 ? bwKm().toFixed(1) : Math.round(bwKm())} km` + (raw && sd ? `; ${Math.round((sw / N) * 100)}% of ${places} switched. ` : ". ")
+      + "Display only: the verdicts are for the unsmoothed map.";
+  }
 
   // ---------- heritage / foreign residents
   function renderHeritage() {
     const h: HeritageGroup = curHer;
-    areaEls.forEach((p, i) => { p.setAttribute("class", "area h"); p.style.fill = RAMP[rampIdx(h.lq[i])]; });
+    const lq = smoothLq(h.lq); smoothNote();
+    areaEls.forEach((p, i) => { p.setAttribute("class", "area h"); p.style.fill = RAMP[rampIdx(lq[i])]; });
     cut2El.setAttribute("d", "");
-    if (mode === "overlay") { cutEl.style.display = ""; cutEl.setAttribute("class", "cut onramp"); cutEl.setAttribute("d", ovLine.cut); haloEl.setAttribute("d", ovLine.cut); }
+    const ovCut = mode === "overlay" ? (SM ? borderPath(smoothSide(ovLine.side, ovLine.f)) : ovLine.cut) : "";
+    if (mode === "overlay") { cutEl.style.display = ""; cutEl.setAttribute("class", "cut onramp"); cutEl.setAttribute("d", ovCut); haloEl.setAttribute("d", ovCut); }
     else { cutEl.style.display = "none"; haloEl.setAttribute("d", ""); }
     $("#agree").innerHTML = "";
     const d = $("#detail") as HTMLElement;
