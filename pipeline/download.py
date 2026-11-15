@@ -142,18 +142,46 @@ MSOA = "Middle_layer_Super_Output_Areas_December_2021_Boundaries_EW_BGC_V3"
 LSOA = "Lower_layer_Super_Output_Areas_December_2021_Boundaries_EW_BGC_V5"
 
 
-def arcgis_geojson(service, where, path):
-    """Page through an ONS ArcGIS FeatureServer layer and save one GeoJSON."""
-    if os.path.exists(path): print("  have", os.path.relpath(path)); return
-    feats, off = [], 0
-    while True:
-        r = requests.get(f"{ONS_FS}/{service}/FeatureServer/0/query", headers=UA, timeout=300, params=dict(
-            where=where, outFields="*", outSR=4326, f="geojson", resultOffset=off, resultRecordCount=2000)).json()
-        feats += r.get("features", []); off += 2000
-        if len(r.get("features", [])) < 2000: break
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    json.dump({"type": "FeatureCollection", "features": feats}, open(path, "w"))
-    print("  ok", os.path.relpath(path), len(feats), "areas")
+SERVICES = {   # ONS renames these now and then; the first that answers is used
+    "msoa": ["Middle_layer_Super_Output_Areas_December_2021_Boundaries_EW_BGC_V3",
+             "Middle_layer_Super_Output_Areas_December_2021_Boundaries_EW_BGC_V2",
+             "MSOA_2021_EW_BGC_V2", "Middle_layer_Super_Output_Areas_2021_EW_BGC_V3"],
+    "lsoa": ["Lower_layer_Super_Output_Areas_December_2021_Boundaries_EW_BGC_V5",
+             "Lower_layer_Super_Output_Areas_December_2021_Boundaries_EW_BGC_V4",
+             "LSOA_2021_EW_BGC_V5", "LSOA_2021_EW_BGC_V4"],
+}
+
+
+def arcgis_geojson(level, lads, path):
+    """Page through the whole England and Wales layer and keep the areas whose name starts with one of the councils."""
+    if os.path.exists(path) and os.path.getsize(path) > 10000:
+        print("  have", os.path.relpath(path)); return
+    L = level.upper(); keep = tuple(b + " " for b in lads)
+    for service in SERVICES[level]:
+        url = f"{ONS_FS}/{service}/FeatureServer/0/query"
+        feats, off, ok = [], 0, True
+        while True:
+            try:
+                r = requests.get(url, headers=UA, timeout=300, params=dict(
+                    where="1=1", outFields=f"{L}21CD,{L}21NM", outSR=4326, f="geojson",
+                    resultOffset=off, resultRecordCount=1000)).json()
+            except Exception as e:
+                print("  ", service, "failed:", e); ok = False; break
+            if "error" in r or "features" not in r:
+                print("  ", service, "not available:", str(r.get("error", r))[:120]); ok = False; break
+            got = r["features"]
+            feats += [f for f in got if str(f["properties"].get(f"{L}21NM", "")).startswith(keep)]
+            off += len(got)
+            print(f"\r   {service}: read {off}, kept {len(feats)}", end="", flush=True)
+            if not got or not (r.get("exceededTransferLimit") or r.get("properties", {}).get("exceededTransferLimit") or len(got) == 1000):
+                break
+        print()
+        if ok and feats:
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            json.dump({"type": "FeatureCollection", "features": feats}, open(path, "w"))
+            print("  ok", os.path.relpath(path), len(feats), "areas"); return
+    MANUAL.append(f"{L} boundaries could not be downloaded. Get '{L} (December 2021) Boundaries EW BGC' as GeoJSON from "
+                  f"https://geoportal.statistics.gov.uk/ and save it as {path}")
 
 
 def norm(name):
@@ -174,10 +202,8 @@ def uk(city, c, out, parts):
                       "(KS101EW population, KS605EW industry, KS608EW occupation) plus the 2011->2021 area lookups on the "
                       "ONS Open Geography Portal. The 2021 tables are enough for the lines.")
     if "boundaries" in parts:
-        lvl = c["level"].upper(); svc = MSOA if lvl == "MSOA" else LSOA
-        print(f"ONS boundaries ({lvl} 2021, {c['name']} only)")
-        where = " OR ".join("{}21NM LIKE '{} %'".format(lvl, b.replace("'", "''")) for b in c["lads"])
-        arcgis_geojson(svc, where, f"{out}/boundaries/{c['level']}2021.geojson")
+        print(f"ONS boundaries ({c['level'].upper()} 2021, {c['name']} only; reads all of England and Wales, keeps the city)")
+        arcgis_geojson(c["level"], c["lads"], f"{out}/boundaries/{c['level']}2021.geojson")
     if "venues" in parts:
         print("Food Standards Agency hygiene ratings (every food business, with type and location)")
         want = {norm(b) for b in c["lads"]}
