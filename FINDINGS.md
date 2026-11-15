@@ -8,11 +8,11 @@ Everything below this section is kept as a record of how the work developed. Whe
 
 - **The test.** Each line is judged against random maps with the same smoothness at every scale (the random-landscape null). Shuffling areas, and the published Moran spectral randomisation in all its forms, call lines on a third to nearly all maps that have none (`results/null_benchmark_*.csv`). The landscape test stays near 5%, with a mild excess (11% in Kyoto) when smoothness changes across the city.
 - **Sydney:** the Hi-Vis Line (p = 0.014) and the Factory Line (p = 0.038) survive correction for the whole search. **Tokyo:** no line passes.
-- **18 cities:** 15 lines pass in 11 cities. The Factory Line recurs in three industrial cities and the Bicycle Line in three cities with flat cores.
+- **18 cities:** 14 lines pass in 10 cities. The Factory Line recurs in three industrial cities and the Bicycle Line in three cities with flat cores.
 - **Slopes, not cliffs.** Only 6 of 259 lines have any sharp stretch, each covering 5–10% of the line.
 - **Families.** About 20 lines per city trace about four divides: work and class, inner city, age, night out. Lines in a family sit together because they are correlated; they do not share one hard border beyond that.
 - **Which statistic.** Counting the two-colour border is the most reliable; global Geary and Moran do not detect lines (`results/stat_power_*.csv`).
-- **Rules.** 10–19% of three-variable rules beat both their correlations and smooth chance; few hold across a whole country, and they transfer weakly between countries (`results/rules/`).
+- **Rules.** 12% of three-variable rules beat both their correlations and smooth chance (4–18% by city, against 5% by chance); few hold across a whole country, and they transfer weakly between countries (`results/rules/`).
 
 ## Sydney
 

@@ -102,3 +102,15 @@ for ctry in COUNTRY:
     t = top[top.country == ctry].head(6)
     print(f" {ctry}: {len(top[top.country == ctry])} rules")
     for _, r in t.iterrows(): print(f"   {r.excess:+.3f}  {r.text}")
+
+# transfer: a country's consistent rules, tested in the other countries' cities (where >= MIN_MATCH areas match);
+# a rule transfers to a city if it passes there (p_space <= 0.05) with a positive excess
+rows = []
+for src in COUNTRY:
+    R = set(top[top.country == src].rule)
+    for dst in COUNTRY:
+        if dst == src: continue
+        s = D[(D.country == dst) & D.rule.isin(R)]
+        rows.append(dict(source=src, target=dst, tests=len(s), transfer_rate=((s.p_space <= 0.05) & (s.excess > 0)).mean() if len(s) else np.nan))
+T = pd.DataFrame(rows); T.to_csv(os.path.join(OUTD, "transfer.csv"), index=False)
+print("\nTransfer between countries:"); print(T.round(2).to_string(index=False))
