@@ -8,7 +8,7 @@ What it fetches (all public, open-licence data):
              CENSUS_KEY environment variable to use your own key) + Census Bureau tract boundaries
   NZ         2023 Census totals by topic for individuals and households by SA2 (Stats NZ ArcGIS services, CC BY 4.0)
   Singapore  Census of Population 2020 subzone tables (SingStat Table Builder) + URA Master Plan 2019 subzones (data.gov.sg)
-  Everywhere OpenStreetMap shops, cafes, bars, gyms and stations (Overpass API, ODbL)
+  Everywhere OpenStreetMap shops, cafes, bars, gyms and stations (BBBike / Geofabrik extracts, ODbL)
 Safe to re-run: anything already downloaded is skipped. Takes about 30-60 minutes, mostly OpenStreetMap.
 """
 import io, json, os, sys, time, zipfile
@@ -180,39 +180,56 @@ def sg_city(city, box):
             except Exception as e:
                 log("  singapore subzones failed:", e, (r.text[:200] if r is not None else ""))
 
-# ---------------------------------------------------------------- OpenStreetMap via Overpass (places only, not the whole map)
-OVERPASS = ["https://overpass-api.de/api/interpreter", "https://overpass.kumi.systems/api/interpreter"]
-SELECT = ['nwr["amenity"]', 'nwr["shop"]', 'nwr["leisure"="fitness_centre"]', 'nwr["railway"~"^(station|halt)$"]',
-          'nwr["public_transport"="station"]', 'nwr["station"="subway"]']
+# ---------------------------------------------------------------- OpenStreetMap: ready-made city extracts (BBBike), cut with osmium
+BBBIKE = {"newyork": "NewYork", "losangeles": "LosAngeles", "chicago": "Chicago", "sanfrancisco": "SanFrancisco", "washington": "WashingtonDC",
+          "austin": "Austin", "seattle": "Seattle", "miami": "Miami", "auckland": "Auckland", "christchurch": "Christchurch", "singapore": "Singapore"}
+GEOFABRIK = {"newyork": "north-america/us/new-york", "losangeles": "north-america/us/california/socal", "chicago": "north-america/us/illinois",
+             "sanfrancisco": "north-america/us/california/norcal", "washington": "north-america/us/district-of-columbia", "austin": "north-america/us/texas",
+             "seattle": "north-america/us/washington", "miami": "north-america/us/florida", "auckland": "australia-oceania/new-zealand",
+             "christchurch": "australia-oceania/new-zealand", "singapore": "asia/malaysia-singapore-brunei"}
+KEEP = ("amenity", "shop", "leisure", "tourism", "craft", "healthcare", "office", "club", "sport")
+def fetch_pbf(url, path):
+    if have(path, 100000): return True
+    log("  downloading", url)
+    try:
+        with requests.get(url, headers=UA, stream=True, timeout=600) as r:
+            if r.status_code != 200: log("  HTTP", r.status_code, url); return False
+            os.makedirs(os.path.dirname(path), exist_ok=True); n = 0
+            with open(path + ".part", "wb") as f:
+                for chunk in r.iter_content(1 << 20):
+                    f.write(chunk); n += len(chunk)
+                    if n % (100 << 20) < (1 << 20): print(f"    {n >> 20} MB", flush=True)
+        os.replace(path + ".part", path); log(f"  saved {n >> 20} MB"); return True
+    except Exception as e:
+        log("  download failed:", e); return False
 def osm_city(city, box):
     import csv
     path = os.path.join(ROOT, city, "raw", "osm", "places.csv")
     if have(path, 10000): return
-    W, S, E, N = box; nx = ny = 2 if (E - W) * (N - S) > 0.08 else 1      # big cities in 4 tiles
-    rows, seen = [], set()
-    for i in range(nx):
-        for j in range(ny):
-            w, e = W + (E - W) * i / nx, W + (E - W) * (i + 1) / nx; s, n = S + (N - S) * j / ny, S + (N - S) * (j + 1) / ny
-            q = f"[out:json][timeout:900];(" + "".join(f"{x}({s},{w},{n},{e});" for x in SELECT) + ");out center tags;"
-            for k in range(6):
-                r = None
-                try: r = requests.post(OVERPASS[k % 2], data={"data": q}, headers=UA, timeout=1000)
-                except Exception as ex: log("  overpass error", str(ex)[:100])
-                if r is not None and r.status_code == 200: break
-                log(f"  overpass busy ({r.status_code if r is not None else 'no answer'}), waiting"); time.sleep(60 * (k + 1)); r = None
-            if r is None: log(f"  {city}: OSM tile {i},{j} FAILED"); continue
-            try: els = r.json().get("elements", [])
-            except Exception: log(f"  {city}: OSM tile {i},{j} gave no data:", r.text[:200]); continue
-            for el in els:
-                key = (el["type"], el["id"])
-                if key in seen: continue
-                seen.add(key); c = el.get("center", el)
-                if "lat" in c: rows.append([el["id"], round(c["lat"], 7), round(c["lon"], 7), repr(el.get("tags", {}))])
-            time.sleep(10)
+    try:
+        import osmium
+    except ImportError:
+        log("  osmium missing: run   pip install osmium   then run this script again"); return
+    pbf = os.path.join(ROOT, "_osm", f"{BBBIKE[city]}.osm.pbf")
+    if not fetch_pbf(f"https://download.bbbike.org/osm/bbbike/{BBBIKE[city]}/{BBBIKE[city]}.osm.pbf", pbf):
+        pbf = os.path.join(ROOT, "_osm", GEOFABRIK[city].replace("/", "_") + ".osm.pbf")
+        if not fetch_pbf(f"https://download.geofabrik.de/{GEOFABRIK[city]}-latest.osm.pbf", pbf): log(f"  {city}: no OSM file"); return
+    W, S, E, N = box
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "w", newline="", encoding="utf-8") as f:
-        wr = csv.writer(f); wr.writerow(["osm_id", "lat", "lon", "tags"]); wr.writerows(rows)
-    log(f"  {city}: {len(rows)} OSM places")
+    f = open(path, "w", newline="", encoding="utf-8"); wr = csv.writer(f); wr.writerow(["osm_id", "lat", "lon", "tags"])
+    def wanted(t): return any(k in t for k in KEEP) or t.get("railway") in ("station", "halt") or t.get("public_transport") == "station"
+    class H(osmium.SimpleHandler):
+        n = 0
+        def emit(self, oid, lat, lon, tags):
+            if W <= lon <= E and S <= lat <= N: wr.writerow([oid, round(lat, 7), round(lon, 7), repr({t.k: t.v for t in tags})]); self.n += 1
+        def node(self, x):
+            if wanted(x.tags): self.emit(x.id, x.location.lat, x.location.lon, x.tags)
+        def way(self, w):
+            if not wanted(w.tags): return
+            pts = [(nd.lat, nd.lon) for nd in w.nodes if nd.location.valid()]
+            if pts: self.emit(w.id, sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts), w.tags)
+    h = H(); h.apply_file(pbf, locations=True); f.close()
+    log(f"  {city}: {h.n} OSM places")
 
 # ---------------------------------------------------------------- run
 def safely(fn, *a):
