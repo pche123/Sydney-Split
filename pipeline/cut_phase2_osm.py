@@ -1,7 +1,8 @@
 """Phase 2: cut the shops, cafes, bars, stations etc. for each city out of the big country OpenStreetMap files.
 
 Run from your split_kit folder, after downloading the country files into data/phase2/_osm/:
-    python ~/Downloads/cut_phase2_osm.py
+    python ~/Downloads/cut_phase2_osm.py              (all countries whose file is there)
+    python ~/Downloads/cut_phase2_osm.py ontario      (just one)
 Then zip the results (small) for upload:
     cd data && zip -rq ../upload/phase2_osm.zip phase2 -x "phase2/_osm/*"
 
@@ -17,6 +18,9 @@ CITIES = {   # country file -> city: (W, S, E, N)
     "germany": {"berlin": (13.08, 52.33, 13.77, 52.68), "munich": (11.36, 48.06, 11.72, 48.25), "hamburg": (9.73, 53.39, 10.33, 53.74)},
     "italy": {"rome": (12.30, 41.75, 12.65, 42.02), "milan": (9.04, 45.38, 9.28, 45.54)},
     "spain": {"madrid": (-3.84, 40.31, -3.52, 40.56), "barcelona": (2.05, 41.32, 2.25, 41.47)},
+    "ontario": {"toronto": (-79.64, 43.58, -79.11, 43.86), "ottawa": (-76.00, 45.20, -75.45, 45.55)},
+    "quebec": {"montreal": (-73.98, 45.40, -73.47, 45.71), "gatineau": (-76.00, 45.20, -75.45, 45.55)},
+    "alberta": {"calgary": (-114.32, 50.84, -113.86, 51.21), "edmonton": (-113.72, 53.39, -113.27, 53.72)},
 }
 KEEP = ("amenity", "shop", "leisure", "tourism", "craft", "healthcare", "office", "club", "sport")
 
@@ -45,6 +49,7 @@ class H(osmium.SimpleHandler):
 
 
 for country, cities in CITIES.items():
+    if len(sys.argv) > 1 and country not in sys.argv[1:]: continue
     pbf = os.path.join(ROOT, "_osm", f"{country}-latest.osm.pbf")
     todo = {c: b for c, b in cities.items() if not os.path.exists(os.path.join(ROOT, c, "raw", "osm", "places.csv"))}
     if not todo: print(f"{country}: done already"); continue
