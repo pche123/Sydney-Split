@@ -12,11 +12,15 @@ KEY = os.environ.get("IPUMS_KEY") or sys.exit("Set IPUMS_KEY first")
 API = "https://api.ipums.org"; Q = "collection=nhgis&version=2"
 WANT = ("tenure", "age", "household", "persons by sex", "total population", "housing units", "occupancy")
 
+import urllib.error
 def call(path, body=None):
     req = urllib.request.Request(f"{API}{path}", data=None if body is None else json.dumps(body).encode(),
                                  headers={"Authorization": KEY, "Content-Type": "application/json"},
                                  method="GET" if body is None else "POST")
-    with urllib.request.urlopen(req, timeout=120) as r: return json.loads(r.read())
+    try:
+        with urllib.request.urlopen(req, timeout=120) as r: return json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        raise RuntimeError(f"{e.code}: {e.read().decode(errors='replace')[:2000]}")
 
 tables, page = [], f"/metadata/time_series_tables?{Q}&pageSize=2500"
 while page:
@@ -24,14 +28,26 @@ while page:
     nxt = (d.get("links") or {}).get("nextPage"); page = nxt.replace(API, "") if nxt else None
 pick = []
 for t in tables:
-    txt = json.dumps(t).lower()
-    if "standardized to 2010" in txt and '"tract"' in txt and any(w in t.get("description", "").lower() for w in WANT):
-        pick.append(t["name"])
+    if not any(w in t.get("description", "").lower() for w in WANT): continue
+    if "2010" not in str(t.get("geographicIntegration", "")).lower() and "standardized to 2010" not in json.dumps(t).lower(): continue
+    levels = [g.get("name", g) if isinstance(g, dict) else g for g in t.get("geogLevels", [])]
+    if levels and "tract" not in levels:
+        try:
+            d = call(f"/metadata/time_series_tables/{t['name']}?{Q}")
+            levels = [g.get("name", g) if isinstance(g, dict) else g for g in d.get("geogLevels", [])]
+        except RuntimeError: continue
+    if "tract" in levels: pick.append(t["name"])
 print(f"{len(tables)} time series tables; picked {len(pick)}:", ", ".join(pick))
 if not pick: sys.exit("No tables matched; send this output to Claude.")
-ext = call(f"/extracts?{Q}", {"timeSeriesTables": {n: {"geogLevels": ["tract"], "years": ["*"]} for n in pick},
-                              "timeSeriesTableLayout": "time_by_column_layout", "dataFormat": "csv_header",
-                              "description": "Split: US tracts 1990-2020 standardized to 2010"})
+body = lambda names: {"timeSeriesTables": {n: {"geogLevels": ["tract"]} for n in names},
+                      "timeSeriesTableLayout": "time_by_column_layout", "dataFormat": "csv_header",
+                      "description": "Split: US tracts 1990-2020 standardized to 2010"}
+try:
+    ext = call(f"/extracts?{Q}", body(pick))
+except RuntimeError as err:      # drop any table NHGIS rejects, then try once more
+    msg = str(err); print("NHGIS said:", msg[:500]); bad = [n for n in pick if n in msg]
+    pick = [n for n in pick if n not in bad] if bad else pick[:20]
+    print("retrying with", len(pick), "tables"); ext = call(f"/extracts?{Q}", body(pick))
 n = ext["number"]; print("extract", n, "submitted; waiting (usually 5-30 minutes) ...", flush=True)
 while True:
     s = call(f"/extracts/{n}?{Q}")
