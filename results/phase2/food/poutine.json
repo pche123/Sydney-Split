@@ -1,0 +1,10 @@
+{
+ "gatineau_poutine": 15,
+ "gatineau_fast_food": 194,
+ "ottawa_poutine": 15,
+ "ottawa_fast_food": 1130,
+ "share_gatineau": 0.07731958762886598,
+ "share_ottawa": 0.01327433628318584,
+ "odds_ratio": 6.229050279329609,
+ "p_one_sided": 3.7884766985240404e-06
+}

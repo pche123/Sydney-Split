@@ -59,3 +59,22 @@ Census only (venues wait for the OpenStreetMap cut). Same 1 km grid as Germany. 
 - **Quick tests:** Rome's Living Alone Line p = 0.04 and Grey Line 0.06; Barcelona's Living Alone 0.07; calibrations running.
 - **Exploratory, not pre-registered: who lives in the middle.** Living alone falls from the centre outwards in all seven European cities (rank correlation with distance from the centre −0.59 to −0.86). Old age goes the other way north and south of the Alps: in Berlin, Munich and Hamburg the share aged 65+ rises towards the edge (+0.31 to +0.42), in Madrid, Barcelona and Rome it falls (−0.39 to −0.60; Milan about 0).
 - **Caveat on border tests.** The Berlin, Madrid and Barcelona border tests use the single-fit null, which Phase 1 found makes simulated cities slightly too rough (P2). A too-rough null can make a smooth slope look like it follows a big border more often than chance. A calibrated border test is the next step before B1 is final.
+
+## Phase 2b: food lines and change over time (17 Nov 2026)
+
+All venue p-values below are from the quick test (199 draws); cities with quick p < 0.2 still need the calibrated double-check, which usually raises p. Canada uses built-up cells as areas (no population data yet), a recorded deviation.
+
+**Food lines**
+- **Poutine Line (C1) holds.** 7.7% of Gatineau's fast-food places are poutine or casse-croûte spots (15 of 194) vs 1.3% across the river in Ottawa (15 of 1,130); one-sided Fisher p = 0.000004. Predicted.
+- **Latte Line in Europe (P7):** pooled over 10 cities, Stouffer p = 0.019 (quick). Strongest in Marseille (0.02), Barcelona (0.03), Rome (0.07). Plain Stouffer is a little generous (no-line p-values lean low), so this is "likely holds", pending calibrated pooling.
+- **Latte Line in Canada (C3) fails:** pooled p = 0.46. Only Ottawa shows one (0.015). Predicted to pass.
+- **Croissant Line (F1):** Paris quick p = 0.005 (Holm over 3 cities 0.015); Lyon 0.155, Marseille 0.96. Predicted to fail; Paris goes against the prediction unless the calibrated check overturns it.
+- **Bread Line (F2):** Hamburg 0.025, Berlin 0.225; Munich has too few chain bake-shops in OpenStreetMap (7). Holm over two cities: Hamburg 0.05, on the edge.
+- **Paella Line (F3):** Barcelona 0.045, Madrid 0.48; Holm over two cities 0.09, so fails as predicted.
+- **Starbucks Line (F4) cannot be tested properly:** only Paris (77) and Madrid (34) have ≥ 30 mapped Starbucks; pooled p = 0.15 over those two. Starbucks sits in the centre (rho −0.47 to −0.51 with distance), a slope not a line.
+- **Timmies Line (C2) fails** in Toronto (0.125) and Calgary (0.915), as predicted.
+
+**Change over time** (exploratory; T1–T3 in HYPOTHESES.md)
+- **Most lines stay put.** Living alone and renting keep the same sides on 86–96% of cells across each decade (Rome, Milan 1991–2021; Berlin, Munich, Hamburg 2011–2022).
+- **Living alone falls outward in every census** (T3 holds): Rome rho −0.69 to −0.71, Milan −0.79 to −0.85 from 1991 to 2021; German cities −0.58 to −0.78 in both 2011 and 2022.
+- **The age line is the one that moves.** In Milan, over-65s were concentrated in the centre in 1991 (rho −0.76) and are now spread evenly (+0.06 in 2021); only 45% of cells keep their 1991 side. In Berlin and Hamburg the old are drifting outward (Berlin +0.21 → +0.39, 2011–2022). Rome's age pattern is stable (−0.65 → −0.60). Ageing suburbs, younger centres.
