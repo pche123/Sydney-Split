@@ -408,7 +408,7 @@ export function start(DATA: CityData, C: CityConfig) {
       ${many && !real.length ? `<p class="small">No line is real across ${id.country} as a whole: its cities each split their own way.</p>` : ""}
       <p class="small" style="margin:8px 0 4px"><b>${esc(City)}'s own</b></p>
       <p class="small">${id.city_real.length ? `Real lines here: ${id.city_real.map(esc).join(", ")}.` : `No line passes here on its own; everything is a slope.`}${id.city_only.length && many ? ` Not a line across ${id.country}: ${id.city_only.map(esc).join(", ")}.` : ""}</p>
-      <footer>${many ? `Pooled over ${id.n_cities} cities in ${id.country} (each city's own p, Stouffer's method, allowing for how many lines we tried). ` : ""}${id.found_in ? `These are the cities we first explored, so treat country lines as found, not yet confirmed.` : `Pooled after the fact, so treat country lines as leads to confirm.`}</footer></details>`;
+      <footer>${many ? `Pooled over ${id.n_cities} cities in ${id.country} (each city's own p, Stouffer's method checked against maps with no line, allowing for how many lines we tried). ` : ""}${id.found_in ? `These are the cities we first explored, so treat country lines as found, not yet confirmed.` : `Pooled after the fact, so treat country lines as leads to confirm.`}</footer></details>`;
   }
   document.addEventListener("toggle", (e) => { const t = e.target as HTMLElement; if (t.classList && t.classList.contains("identity")) idOpen = (t as HTMLDetailsElement).open; }, true);
   // ---------- line families: lines that trace the same divide (from correlating line scores across 16 cities)

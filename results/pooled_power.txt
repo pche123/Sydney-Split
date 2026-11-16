@@ -1,0 +1,4 @@
+k =  1 cities: 0 SD: 6%, 1 SD: 1%, 2 SD: 10%, 3 SD: 23%
+k =  5 cities: 0 SD: 9%, 1 SD: 8%, 2 SD: 28%, 3 SD: 88%
+k = 11 cities: 0 SD: 14%, 1 SD: 15%, 2 SD: 57%, 3 SD: 100%
+k = 29 cities: 0 SD: 30%, 1 SD: 36%, 2 SD: 94%, 3 SD: 100%

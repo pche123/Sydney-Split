@@ -19,9 +19,9 @@ The held-out cities were opened only after 58 predictions from the first 18 were
 ## What we found
 
 - **Few lines are real** (4–7% of those tested), and almost none has a sharp edge: most divides are slopes. The app draws them that way.
-- **Lines rarely travel.** Four lines that looked general in the first 18 cities failed in the held-out ones. The **Latte Line** (cafés vs fast food) is the exception: patterned in all 29 cities, and real when pooled over the held-out ones (p = 0.002). That came from pooling, not a written prediction, so Europe tests it.
+- **Lines rarely travel.** Four lines that looked general in the first 18 cities failed in the held-out ones. The **Latte Line** (cafés vs fast food) is the exception: patterned in all 29 cities, and real when pooled over the held-out ones (p = 0.02, with the pooling checked against maps that have no line). That came from pooling, not a written prediction, so Europe tests it.
 - **The Latte Line on trial.** Of 11 claims from Wikipedia and the press, 3 hold, 7 hold in part and 1 fails. The 2021 lockdown's councils of concern sat on its fast-food side (p = 0.02 after correcting across the claims); that it runs north-east against south-west through Parramatta is likely but not proven once corrected; money follows it as a slope, and it did not harden between 2001 and 2021. See the Latte Line in the Sydney app.
-- **Countries have their own lines**, such as the Factory Line across Australia, which no single Australian city shows on its own.
+- **Countries have their own lines**: the Factory Line across Australia (which no single Australian city shows on its own) and across England.
 
 ## What the tests do
 

@@ -32,7 +32,7 @@ def judge(f, B=399):
     p = (1 + (null <= obs).sum()) / (B + 1)
     if CAL:
         r = calibrated_map_test(GN, f, B=199, R=40, Bin=99, seed=7)
-        if r["p_cal"] < 0.1: r = calibrated_map_test(GN, f, B=199, R=200, Bin=99, seed=7)
+        if r["p_cal"] < 0.1 and os.environ.get("SYD_FINE", "1") == "1": r = calibrated_map_test(GN, f, B=199, R=200, Bin=99, seed=7)
         p = r["p_cal"]
     return obs, (obs - null.mean()) / null.std(), p
 
@@ -59,19 +59,23 @@ ind11, occ11 = to2021(load(f"{P11}/2011Census_T33_NSW_SA2_short.csv", "region_id
 ind21, occ21 = load(f"{P21}/2021Census_T34_NSW_SA2.csv", "SA2_CODE_2021"), load(f"{P21}/2021Census_T35_NSW_SA2.csv", "SA2_CODE_2021")
 ind16, occ16 = to2021(load(f"{P16}/2016Census_T34_NSW_SA2.csv", "SA2_MAINCODE_2016"), cw16), to2021(load(f"{P16}/2016Census_T35_NSW_SA2.csv", "SA2_MAINCODE_2016"), cw16)
 packs = {"2001": (ind11, occ11, "C01"), "2006": (ind16, occ16, "C06"), "2011": (ind21, occ21, "C11"), "2016": (ind21, occ21, "C16"), "2021": (ind21, occ21, "C21")}
-rows = []
+HF = f"{OUT}/hardening{'_calibrated' if CAL else ''}.csv"
+rows = pd.read_csv(HF).to_dict("records") if os.path.exists(HF) and os.environ.get("SYD_RESUME") == "1" else []
+have = {(r["line"], str(r["year"])) for r in rows}
 for y, (ind, occ, c) in packs.items():
     i, o = ind.reindex(codes), occ.reindex(codes)
     hv = rz((i[f"Tpt_post_ware_{c}_P"] / i[f"Tot_{c}_P"]).values) - rz((o[f"Professionals_{c}_P"] / o[f"Tot_{c}_P"]).values)
     fc = rz((i[f"Manuf_{c}_P"] / i[f"Tot_{c}_P"]).values) if f"Manuf_{c}_P" in i else None
     for name, f in [("Hi-Vis", hv), ("Factory", fc)]:
-        if f is None: continue
+        if f is None or (name, y) in have: continue
         obs, z, p = judge(f); rows.append(dict(line=name, year=y, border=round(obs, 3), z=round(z, 2), p=round(p, 4)))
+        pd.DataFrame(rows).to_csv(HF, index=False)   # saved after every map, so a restart loses at most one
         print(f"{name:8s} {y}: border {obs:.3f}  z = {z:+.2f}  p = {p:.4f}", flush=True)
 H = pd.DataFrame(rows); H.to_csv(f"{OUT}/hardening{'_calibrated' if CAL else ''}.csv", index=False)
 for name, g in H.groupby("line"):
     r, p = spearmanr(g.year.astype(int), g.z); print(f"{name}: trend in z over 2001-2021: Spearman {r:+.2f} (p = {p:.3f}; 5 points, descriptive)")
 
+if os.environ.get("SYD_SKIP_MONEY") == "1": sys.exit(0)   # the Money Line is tested, calibrated, in experiments/latte_claims.py
 # ---------------------------------------------------------------- 2. the Money Line
 g02 = load(f"{D}/gcp_sa2/2021 Census GCP Statistical Area 2 for NSW/2021Census_G02_NSW_SA2.csv", "SA2_CODE_2021").reindex(codes)
 app = json.load(open(f"{ROOT}/app/data/sydney.json")); geo = gpd.read_file(f"{W_}/sydney_sa2_300.geojson")

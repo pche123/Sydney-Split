@@ -146,13 +146,15 @@ Written on 16 Nov 2026 after some Phase 1 verdicts had been seen (counts of pass
 
 - **Hypothesis 1** was about the benchmark's single-fit test, and stays failed as written (Chicago 10 of 100). The calibrated test that every verdict uses was benchmarked afterwards on 72 fresh Chicago maps with no line, run exactly as the verdicts are (close calls refit 200 times): 5 false alarms (6.9%, 95% interval 2.3–15.5%, p = 0.29 against 5%). The single-fit test called 3 of the same 72 maps (`experiments/calibrated_benchmark.py`).
 
+**Pooled p-values (16 Nov 2026).** The pooled Phase 1 figures above (hypotheses 59 and 60, and the Latte Line's p = 0.002) use Stouffer's method as written. On maps with no line our p-values lean slightly low, so pooled results are now also compared with pools of no-line p-values (experiments/pooled_calibration.py): the Latte Line's pooled p becomes 0.02 after correction, and no verdict in the table changes.
+
 ## Deviations
 
 - **US train commuting includes light rail** (recorded 16 Nov 2026, before any Phase 1 hypothesis was scored). The first US build counted subway and commuter rail only. Before any calibrated test was run, light rail and streetcar were added, to match the English definition ("underground, metro, light rail, tram"). Washington's first-pass p-values had been seen; Washington has almost no light rail. Most affected: Seattle and Los Angeles, whose main rail lines are light rail.
 
 ## Confirmatory or exploratory?
 
-Every headline result, sorted by how much it can bear. **Confirmatory**: written down before the data were opened and scored by a fixed rule. **Weaker**: written during Phase 1, before the numbers it uses were computed. **Exploratory**: found by looking; it needs new data before it counts. Corrections: Holm within each line group for verdicts; Holm across lines for pooled results; Holm across the six Latte claims with a p-value.
+Every headline result, sorted by how much it can bear. **Confirmatory**: written down before the data were opened and scored by a fixed rule. **Weaker**: written during Phase 1, before the numbers it uses were computed. **Exploratory**: found by looking; it needs new data before it counts. Corrections: Holm within each line group for verdicts; Holm across lines for pooled results, with each pooled Z compared with pools of p-values from maps with no line (Stouffer alone gives 14% false alarms over 11 cities, because no-line p-values lean slightly low); Holm across the six Latte claims with a p-value.
 
 | Result | Status | Evidence | Confirmed by |
 |---|---|---|---|
@@ -163,11 +165,11 @@ Every headline result, sorted by how much it can bear. **Confirmatory**: written
 | Calibrated test holds its size | Exploratory check, method fixed in advance | Chicago 5 of 72 (6.9%) | Phase 2 P1 |
 | Work lines recur in new cities | Confirmatory (H12) | failed: 1 city | Phase 1 ✗ |
 | Factory, Laptop, Degree, Bicycle are general | Weaker (H59) | failed: Z = 1.2–2.0 | Phase 1 ✗; Phase 2 P8 |
-| The Latte Line holds in new cities | Exploratory (pooling every line) | p = 0.002 after Holm across lines | Phase 2 P7 |
+| The Latte Line holds in new cities | Exploratory (pooling every line) | p = 0.02 (pooling checked against no-line maps; Holm across lines) | Phase 2 P7 |
 | US cities split by shopping | Exploratory | 3 of 8 US cities | Phase 2 P10 |
 | Money is a slope that follows class | Exploratory | 0 of 14 after Holm; 12 of 12 AU/US routes | Phase 2 P13, P14 |
 | No grammar beyond shared gradients | Exploratory | 1 of 26 cities | Phase 2 P15, P16 |
-| Country lines (Factory and Bicycle in Australia, Factory and Degree in England, Latte in the US) | Exploratory | Holm within country | new cities in those countries |
+| Country lines: Factory in Australia (0.008) and England (0.006); Bicycle (AU), Degree (UK), Latte (US) lean | Exploratory | calibrated pooling, Holm within country | new cities in those countries |
 | Latte claims: lockdown councils on the fast-food side | Exploratory (one test fixed per claim before running it) | p = 0.004; 0.02 after Holm across six claims | exact council boundaries |
 | Latte claims: north-east vs south-west route; degrees | Exploratory | p = 0.03 and 0.01; 0.08 and 0.07 after Holm | none yet |
 | Latte claims: no hardening 2001–2021 | Exploratory | Hi-Vis line real in every census | 2026 Census |
