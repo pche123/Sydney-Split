@@ -9,7 +9,8 @@ ROOT=~/Downloads/time_data
 UA="Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/537.36 Chrome/130 Safari/537.36"
 get() { # get <folder> <url> [name]
   mkdir -p "$ROOT/$1"; local name="${3:-$(basename "${2%%\?*}")}"
-  [ -s "$ROOT/$1/$name" ] && { echo "have $1/$name"; return; }
+  local p="$ROOT/$1/$name"
+  if [ -s "$p" ]; then case "$name" in *.zip) unzip -tq "$p" >/dev/null 2>&1 && { echo "have $1/$name"; return; } ;; *) echo "have $1/$name"; return ;; esac; fi
   echo "-> $1/$name"; curl -L -A "$UA" --retry 20 --retry-delay 5 -s -S -o "$ROOT/$1/$name" "$2"
 }
 
@@ -84,10 +85,10 @@ get canada $SC/geo/sip-pis/boundary-limites/files-fichiers/lda_000b21a_e.zip
 # KS002 age 1602, KS012a occupation 1616, KS013 qualifications 1619, KS016 dwellings 1624, KS018 tenure 1626, KS020 households 1628
 mkdir -p "$ROOT/uk2001"
 for id in 1602 1616 1619 1624 1626 1628; do
-  out="$ROOT/uk2001/ks_${id}_lsoa2001.csv"; [ -s "$out" ] && { echo "have uk2001/ks_${id}"; continue; }
+  out="$ROOT/uk2001/ks_${id}_lsoa2001.csv"; [ -s "$out" ] && head -1 "$out" | grep -q "_NAME" && [ "$(head -1 "$out" | tr , "\n" | wc -l)" -gt 3 ] && { echo "have uk2001/ks_${id}"; continue; }
   echo "-> uk2001/ks_${id}"; off=0; : > "$out.part"
   while :; do
-    curl -s -S -A "$UA" --retry 10 "https://www.nomisweb.co.uk/api/v01/dataset/NM_${id}_1.data.csv?geography=TYPE304&measures=20100&select=geography_code,cell_name,obs_value&recordoffset=$off" -o page.csv
+    curl -s -S -A "$UA" --retry 10 "https://www.nomisweb.co.uk/api/v01/dataset/NM_${id}_1.data.csv?geography=TYPE304&measures=20100&recordoffset=$off" -o page.csv
     n=$(($(wc -l < page.csv) - 1)); [ $n -le 0 ] && break
     if [ $off -eq 0 ]; then cat page.csv >> "$out.part"; else tail -n +2 page.csv >> "$out.part"; fi
     off=$((off + 25000)); [ $n -lt 25000 ] && break
