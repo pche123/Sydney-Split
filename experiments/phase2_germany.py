@@ -64,6 +64,9 @@ for city, (w, s, e, n) in BOX.items():
          "money": rent.reindex(idx).values}
     F = {k: rz(pd.Series(v).fillna(pd.Series(v).median()).values) for k, v in F.items()}
     G.assign(**F).to_file(os.path.join(OUT, f"{city}_cells.gpkg"), driver="GPKG")
+    wd = os.path.join(OUT, city); os.makedirs(wd, exist_ok=True)   # work folder for the checkpointed calibration
+    G[["x", "y", "pop", "geometry"]].to_file(os.path.join(wd, "areas.gpkg"), driver="GPKG")
+    np.savez_compressed(os.path.join(wd, "fields.npz"), I=I, J=J, W=W, ids=np.array(list(F)), F=np.column_stack(list(F.values())))
     print(f"{city}: {len(G)} cells, {len(I)} shared borders, {int(xy['pop'].sum()):,} residents", flush=True)
     GN = MultiScaleNull(G.geometry, I, J, W, m=9)
     for lid, f in F.items():
@@ -72,7 +75,7 @@ for city, (w, s, e, n) in BOX.items():
             rows.append(dict(city=city, line=lid, stage="quick", p=p, cleanness=obs, null_mean=nm, ell_km=par["ell"], areas=len(G))); save()
             print(f"  {lid:24s} quick p = {p:.3f}", flush=True)
         pq = next(r["p"] for r in rows if r["city"] == city and r["line"] == lid and r["stage"] == "quick")
-        if pq < 0.2 and not have(city, lid, "calibrated"):
+        if pq < 0.2 and not have(city, lid, "calibrated") and os.environ.get("DE_CALIBRATE") == "1":   # else: experiments/calibrate_checkpoint.py on the work folder
             r = calibrated_map_test(GN, f, B=199, R=40, Bin=99, seed=3); Rn = 40
             if r["p_cal"] < 0.1: r = calibrated_map_test(GN, f, B=199, R=200, Bin=99, seed=3); Rn = 200
             rows.append(dict(city=city, line=lid, stage="calibrated", p=r["p_cal"], cleanness=r["cleanness"], null_mean=r["null_mean"], ell_km=r["ell_km"], areas=len(G), R=Rn)); save()

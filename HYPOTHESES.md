@@ -150,6 +150,7 @@ Written on 16 Nov 2026 after some Phase 1 verdicts had been seen (counts of pass
 
 ## Deviations
 
+- **Phase 2, Germany (recorded 16 Nov 2026, before any German result was scored).** Germany publishes the 2022 census on a grid, not on small districts, so German areas are 1 km grid cells with at least 1,000 residents (the US density rule), taken from the jslth/z22data mirror of Destatis's grid tables. The grid has no jobs, education or venues, so only the Grey, Living Alone, Flats vs Houses and Renters Lines and the Money Line (net rent per m²) can be built. To save compute, lines with quick-test p ≥ 0.2 are not given the calibrated double-check: in 388 calibrated tests so far, none with quick p ≥ 0.2 came out at p ≤ 0.05.
 - **US train commuting includes light rail** (recorded 16 Nov 2026, before any Phase 1 hypothesis was scored). The first US build counted subway and commuter rail only. Before any calibrated test was run, light rail and streetcar were added, to match the English definition ("underground, metro, light rail, tram"). Washington's first-pass p-values had been seen; Washington has almost no light rail. Most affected: Seattle and Los Angeles, whose main rail lines are light rail.
 
 ## Confirmatory or exploratory?

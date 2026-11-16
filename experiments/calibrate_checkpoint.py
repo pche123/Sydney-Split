@@ -18,8 +18,9 @@ from cities import CITIES
 city, W_, lines = sys.argv[1], sys.argv[2], sys.argv[3].split(",")
 R = int(sys.argv[4]) if len(sys.argv) > 4 else 40
 ST = sys.argv[5] if len(sys.argv) > 5 else os.path.join(ROOT, "results", f"calibrated_{city}_checkpoint.json")
+R_FINE = int(os.environ.get("R_FINE", 200 if city != "london" else 60))   # London: 60, as in pipeline/common/calibrate.py
 state = json.load(open(ST)) if os.path.exists(ST) else {}
-G = gpd.read_file(f"{W_}/areas.gpkg").to_crs(CITIES[city]["crs"]).reset_index(drop=True)
+G = gpd.read_file(f"{W_}/areas.gpkg"); G = (G.to_crs(CITIES[city]["crs"]) if city in CITIES else G).reset_index(drop=True)
 z = np.load(f"{W_}/fields.npz"); ids = list(z["ids"])
 GN = MultiScaleNull(G.geometry, z["I"], z["J"], z["W"], m=25 if len(G) < 600 else 9)
 rz = lambda v: norm.ppf((rankdata(v) - 0.5) / len(v))
@@ -32,10 +33,14 @@ for lid in lines:
                                           "ell": par["ell"], "tau": par["tau"]}); save()
         print(f"{city} {lid}: raw p {p_raw:.3f}", flush=True)
     par = dict(s["par"]); par["weights"] = np.array(par["weights"])
-    while len(s["ps"]) < R:
+    target = R
+    while True:
+      while len(s["ps"]) < target:
         r = len(s["ps"]); rng = np.random.default_rng([3, r])
         fr = GN.simulate(par, 1, rng)[:, 0]
         s["ps"].append(float(GN.test(fr, 99, seed=1000 + r)[0])); save()
-        ps = np.array(s["ps"]); print(f"{city} {lid}: refit {len(ps)}/{R}, calibrated p so far {(1 + (ps <= s['p_raw']).sum()) / (len(ps) + 1):.3f}", flush=True)
-    ps = np.array(s["ps"]); s["p_cal"] = float((1 + (ps <= s["p_raw"]).sum()) / (R + 1)); save()
-    print(f"{city} {lid}: raw {s['p_raw']:.3f} calibrated {s['p_cal']:.3f} (R = {R})", flush=True)
+        ps = np.array(s["ps"]); print(f"{city} {lid}: refit {len(ps)}/{target}, calibrated p so far {(1 + (ps <= s['p_raw']).sum()) / (len(ps) + 1):.3f}", flush=True)
+      ps = np.array(s["ps"][:target]); s["p_cal"] = float((1 + (ps <= s["p_raw"]).sum()) / (target + 1)); s["R"] = target; save()
+      if s["p_cal"] < 0.1 and target < R_FINE: target = R_FINE; continue   # close calls get more refits, as in pipeline/common/calibrate.py
+      break
+    print(f"{city} {lid}: raw {s['p_raw']:.3f} calibrated {s['p_cal']:.3f} (R = {s['R']})", flush=True)
