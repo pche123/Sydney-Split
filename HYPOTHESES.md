@@ -209,3 +209,20 @@ Committed before any Phase 2 census or OpenStreetMap data was opened. Cities: Pa
 **Correction, 16 Nov 2026, before any Phase 2 data was opened:** P7's rule first named the Coffee vs Alcohol line by mistake; the prediction, and its Phase 1 evidence, are about the Latte Line (cafés vs fast food).
 
 **Exploratory, not scored as predictions:** whether any passing Berlin line follows the 1961–89 sector border, and whether Paris's passing lines follow the Boulevard Périphérique. These are reported either way.
+
+## Phase 2b: named borders and country lines, written 16 Nov 2026
+
+Committed before any test was run on Spanish, Italian or Canadian data (the Spanish and Italian census files were opened only to read their column names). Each named border is tested like the Berlin Wall: for each census line, the share of areas whose side of the line matches their side of the border, compared with 999 simulated cities from the same fitted landscape. Census lines tested on every border: university degrees, unemployment, renting, aged 65+ (Holm across the four). A border "holds" if at least one line matches it at p ≤ 0.05 after Holm. Heritage and language are never scored.
+
+| # | Border or line | Defined as | Prediction | Reason |
+|---|---|---|---|---|
+| B1 | Madrid's north–south divide | the seven southern districts (Latina, Carabanchel, Usera, Puente de Vallecas, Villaverde, Villa de Vallecas, Vicálvaro) vs the rest of the city | holds (degrees or unemployment) | the most quoted divide in Spanish urban writing |
+| B2 | Barcelona's Diagonal | areas uphill (north-west) of Avinguda Diagonal vs downhill, inside the city | fails | Barcelona's contrast is an uphill gradient plus a few poor districts at both ends, not one avenue |
+| B3 | Rome's Grande Raccordo Anulare | inside vs outside the ring road | fails as a border (a slope instead) | poor eastern districts lie inside the ring too |
+| B4 | Milan's outer ring (Circonvallazione esterna, the 90/91 bus route) | inside vs outside | holds (degrees) | strong centre–periphery contrast in Milan |
+| B5 | Paris's Boulevard Périphérique | inside vs outside | holds (degrees) | already listed as exploratory above; promoted here with this rule |
+| C1 | The Poutine Line | share of poutine/casse-croûte venues among fast food, Gatineau vs Ottawa (same box, either side of the Ottawa River) | higher in Gatineau, p ≤ 0.05 | poutine is a Quebec dish |
+| C2 | The Timmies Line | Tim Hortons vs independent cafés, Toronto and Calgary, ordinary line test | fails in both | venue lines rarely pass (P10) |
+| C3 | Canada's Latte Line | cafés vs fast food, Toronto, Ottawa, Montreal, Calgary, Edmonton, pooled with calibrated pooling | passes | P7 evidence from 27 cities |
+
+Borders needing OpenStreetMap geometry (B3–B5) wait for the OSM cut; B1 and B2 use census districts and the avenue's end points.
