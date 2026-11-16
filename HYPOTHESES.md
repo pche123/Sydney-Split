@@ -150,6 +150,30 @@ Written on 16 Nov 2026 after some Phase 1 verdicts had been seen (counts of pass
 
 - **US train commuting includes light rail** (recorded 16 Nov 2026, before any Phase 1 hypothesis was scored). The first US build counted subway and commuter rail only. Before any calibrated test was run, light rail and streetcar were added, to match the English definition ("underground, metro, light rail, tram"). Washington's first-pass p-values had been seen; Washington has almost no light rail. Most affected: Seattle and Los Angeles, whose main rail lines are light rail.
 
+## Confirmatory or exploratory?
+
+Every headline result, sorted by how much it can bear. **Confirmatory**: written down before the data were opened and scored by a fixed rule. **Weaker**: written during Phase 1, before the numbers it uses were computed. **Exploratory**: found by looking; it needs new data before it counts. Corrections: Holm within each line group for verdicts; Holm across lines for pooled results; Holm across the six Latte claims with a p-value.
+
+| Result | Status | Evidence | Confirmed by |
+|---|---|---|---|
+| Moran spectral randomisation fails on new city shapes | Confirmatory (H2) | 26–66% false alarms | Phase 1 ✓ |
+| Few lines pass (< 10%) | Confirmatory (H11) | 11 of 167 (7%) | Phase 1 ✓; Phase 2 P6 |
+| Slopes, not cliffs | Confirmatory (H19) | 94% no sharp stretch | Phase 1 ✓; Phase 2 P11 |
+| Quick test < 8% false alarms | Confirmatory (H1) | failed: Chicago 10% | Phase 1 ✗ |
+| Calibrated test holds its size | Exploratory check, method fixed in advance | Chicago 5 of 72 (6.9%) | Phase 2 P1 |
+| Work lines recur in new cities | Confirmatory (H12) | failed: 1 city | Phase 1 ✗ |
+| Factory, Laptop, Degree, Bicycle are general | Weaker (H59) | failed: Z = 1.2–2.0 | Phase 1 ✗; Phase 2 P8 |
+| The Latte Line holds in new cities | Exploratory (pooling every line) | p = 0.002 after Holm across lines | Phase 2 P7 |
+| US cities split by shopping | Exploratory | 3 of 8 US cities | Phase 2 P10 |
+| Money is a slope that follows class | Exploratory | 0 of 14 after Holm; 12 of 12 AU/US routes | Phase 2 P13, P14 |
+| No grammar beyond shared gradients | Exploratory | 1 of 26 cities | Phase 2 P15, P16 |
+| Country lines (Factory and Bicycle in Australia, Factory and Degree in England, Latte in the US) | Exploratory | Holm within country | new cities in those countries |
+| Latte claims: lockdown councils on the fast-food side | Exploratory (one test fixed per claim before running it) | p = 0.004; 0.02 after Holm across six claims | exact council boundaries |
+| Latte claims: north-east vs south-west route; degrees | Exploratory | p = 0.03 and 0.01; 0.08 and 0.07 after Holm | none yet |
+| Latte claims: no hardening 2001–2021 | Exploratory | Hi-Vis line real in every census | 2026 Census |
+| Verdicts barely change with smaller areas | Confirmatory (H49) | 3 of 56 change | Phase 1 ✓ (four cities) |
+| Ranking hides jumps | Confirmatory (H10) | 12% → 1% (Seattle) | Phase 1 ✓; Phase 2 P4 |
+
 ## Phase 2 predictions (Europe), written 16 Nov 2026
 
 Committed before any Phase 2 census or OpenStreetMap data was opened. Cities: Paris, Lyon, Marseille, Berlin, Munich, Hamburg, Rome, Milan, Madrid, Barcelona. They are built from Phase 0 and Phase 1 together (29 cities), and each states the evidence it rests on.
@@ -164,7 +188,7 @@ Committed before any Phase 2 census or OpenStreetMap data was opened. Cities: Pa
 | P4 | Ranking hides jumps | ranking cuts edge-test power at a 3 SD step by more than half | LA 54% → 8%; Seattle 12% → 1% | |
 | P5 | Only big steps are detectable | border-count power < 20% at a 2 SD step and < 60% at 3 SD, in every city tested | LA 10–12% and 36–46%; Seattle 8–9% and 17–21% | |
 | **P6** | Few lines pass | < 10% of tested lines pass after correction | 4% (Phase 0), 7% (Phase 1) | |
-| **P7** | The Latte Line is real in general | coffee vs alcohol pooled across Phase 2 cities at p ≤ 0.05 | pooled p = 0.002 in Phase 1 after correction | |
+| **P7** | The Latte Line is real in general | the Latte Line (cafés vs fast food) pooled across Phase 2 cities at p ≤ 0.05 | pooled p = 0.002 in Phase 1 after correction | |
 | P8 | Phase 0's "general" lines stay local | Factory, Laptop vs Hard Hat, Degree, Bicycle: at most one pooled at p ≤ 0.05 after Holm | none of the four replicated in Phase 1 (Z = 1.2–2.0) | |
 | P9 | Housing lines are not lines | Flats vs Houses, Renters, Grey: pooled Z ≤ 1 each | Phase 0 Z = −2.3 to −1.8; Phase 1 Z = −0.3 to 0.9 | |
 | P10 | European cities split by shopping less than US cities | venue lines pass in ≤ 2 of the 10 cities | US: venue lines pass in 3 of 8 cities (New York, LA, San Francisco) | |
@@ -178,5 +202,7 @@ Committed before any Phase 2 census or OpenStreetMap data was opened. Cities: Pa
 | P18 | Rules rarely beat chance | 4–20% of testable rules beat the copula-plus-spatial baseline | 12% overall (4–18% by city) | |
 | P19 | Nothing is retuned | no setting changed for Phase 2 | one deviation in Phase 1 (US light rail) | |
 | P20 | Many predictions fail | at least a third fail or partly hold | 21 of 49 in Phase 1 | |
+
+**Correction, 16 Nov 2026, before any Phase 2 data was opened:** P7's rule first named the Coffee vs Alcohol line by mistake; the prediction, and its Phase 1 evidence, are about the Latte Line (cafés vs fast food).
 
 **Exploratory, not scored as predictions:** whether any passing Berlin line follows the 1961–89 sector border, and whether Paris's passing lines follow the Boulevard Périphérique. These are reported either way.

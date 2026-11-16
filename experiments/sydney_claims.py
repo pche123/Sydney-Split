@@ -12,7 +12,8 @@ import json, os, sys
 import numpy as np, pandas as pd, geopandas as gpd
 from scipy.stats import norm, rankdata, spearmanr
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.join(HERE, ".."); sys.path[:0] = [ROOT]
-from linetests.landscape import MultiScaleNull
+from linetests.landscape import MultiScaleNull, calibrated_map_test
+CAL = os.environ.get("SYD_CAL") == "1"   # 1: p-values from the calibrated (double-bootstrap) test, as every verdict uses
 
 D, W_ = sys.argv[1], sys.argv[2]; OUT = sys.argv[3] if len(sys.argv) > 3 else os.path.join(ROOT, "results", "sydney_claims")
 os.makedirs(OUT, exist_ok=True)
@@ -28,7 +29,12 @@ rng = np.random.default_rng(11)
 def judge(f, B=399):
     par = GN.fit(f); S = GN.simulate(par, B, rng)
     null = np.array([border(S[:, b]) for b in range(B)]); obs = border(f)
-    return obs, (obs - null.mean()) / null.std(), (1 + (null <= obs).sum()) / (B + 1)
+    p = (1 + (null <= obs).sum()) / (B + 1)
+    if CAL:
+        r = calibrated_map_test(GN, f, B=199, R=40, Bin=99, seed=7)
+        if r["p_cal"] < 0.1: r = calibrated_map_test(GN, f, B=199, R=200, Bin=99, seed=7)
+        p = r["p_cal"]
+    return obs, (obs - null.mean()) / null.std(), p
 
 # ---------------------------------------------------------------- 1. hardening
 sys.path.insert(0, os.path.join(ROOT, "pipeline", "sydney"))
@@ -62,7 +68,7 @@ for y, (ind, occ, c) in packs.items():
         if f is None: continue
         obs, z, p = judge(f); rows.append(dict(line=name, year=y, border=round(obs, 3), z=round(z, 2), p=round(p, 4)))
         print(f"{name:8s} {y}: border {obs:.3f}  z = {z:+.2f}  p = {p:.4f}", flush=True)
-H = pd.DataFrame(rows); H.to_csv(f"{OUT}/hardening.csv", index=False)
+H = pd.DataFrame(rows); H.to_csv(f"{OUT}/hardening{'_calibrated' if CAL else ''}.csv", index=False)
 for name, g in H.groupby("line"):
     r, p = spearmanr(g.year.astype(int), g.z); print(f"{name}: trend in z over 2001-2021: Spearman {r:+.2f} (p = {p:.3f}; 5 points, descriptive)")
 
@@ -83,4 +89,4 @@ for col, nm in [("Median_rent_weekly", "rent"), ("Median_mortgage_repay_monthly"
             ok = ~np.isnan(sides[ln]); m = (s[ok] == sides[ln][ok].astype(bool)).mean(); agree[ln] = round(max(m, 1 - m), 3)
     mrows.append(dict(money=nm, border=round(obs, 3), z=round(z, 2), p=round(p, 4), **{f"match {k}": v for k, v in agree.items()}))
     print(f"Money Line ({nm}): z = {z:+.2f}, p = {p:.4f}; route match: " + ", ".join(f"{k} {v:.0%}" for k, v in agree.items()), flush=True)
-pd.DataFrame(mrows).to_csv(f"{OUT}/money_line.csv", index=False)
+pd.DataFrame(mrows).to_csv(f"{OUT}/money_line{'_calibrated' if CAL else ''}.csv", index=False)

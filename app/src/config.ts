@@ -102,7 +102,7 @@ export const SYDNEY: CityConfig = {
       "<b>You've heard of the Latte Line.</b> We used the Census, café and chicken-shop maps, and liquor licences to find it, plus a dozen more.",
       "<b>Each line splits Sydney in two.</b> Orange is one side, blue is the other. Tap or hover over any suburb to see which side it's on.",
       "<b>We check every line against random versions of Sydney that are just as smooth,</b> so you can tell a real line from a gentle pattern or a coincidence.",
-      "<b>Then we put the Latte Line's reputation to the test:</b> ten things Wikipedia and the papers say about it, checked one by one. Open the Latte Line to see which hold up.",
+      "<b>Then we put the Latte Line's reputation to the test:</b> eleven things Wikipedia and the papers say about it, checked one by one. Open the Latte Line to see which hold up.",
     ],
     refButton: "Show me the Latte Line", placeButton: "Find my suburb",
   },

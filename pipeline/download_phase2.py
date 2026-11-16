@@ -1,9 +1,12 @@
-"""Phase 2 census downloads (France first; Germany, Italy and Spain to follow).
+"""Phase 2 census downloads: France, Italy, Spain (and Germany, which is optional; see below).
 
 Run from your split_kit folder:   python ~/Downloads/download_phase2.py
 Then zip the census part (small) for upload:
     cd data && zip -rq ../upload/phase2_census.zip phase2 -x "phase2/_osm/*" -x "phase2/*/raw/*"
 
+Italy   ISTAT 2021 census sections (Rome: Lazio, Milan: Lombardia) and the 2021 census variables.
+Spain   INE 2021 census indicators by census section (Madrid, Barcelona) and the section boundaries.
+Germany optional (--germany): Zensus 2022 grid cells. Not needed: I can fetch the same tables from a GitHub mirror.
 France  INSEE census 2021 by IRIS (areas of about 2,000 people): population, activity (jobs, socio-professional
         groups, commuting), diplomas, housing, households. Boundaries: IGN CONTOURS-IRIS 2023 (the geography the 2021
         tables use), found on IGN's download listing. Licence: Licence Ouverte / Etalab.
@@ -58,5 +61,31 @@ def france():
     print("  (the boundaries come as .7z; I unpack them on my side, no need to unpack)")
 
 
-france()
-print("\nDone. Now:  cd data && zip -rq ../upload/phase2_census.zip phase2/_census")
+IT = {   # ISTAT: 2021 census sections (Basi Territoriali 2021, shapefile, WGS84 UTM 32N) per region, and the 2021 census variables
+    "R03_21.zip": "https://www.istat.it/storage/cartografia/basi_territoriali/2021/R03_21.zip",          # Lombardia (Milan)
+    "R12_21.zip": "https://www.istat.it/storage/cartografia/basi_territoriali/2021/R12_21.zip",          # Lazio (Rome)
+    "Dati_regionali_2021.zip": "https://esploradati.istat.it/databrowser/DWL/PERMPOP/SUBCOM/Dati_regionali_2021.zip",
+}
+ES = {   # INE Censo 2021: indicators by census section (CSV) and section boundaries at 1 Jan 2021
+    "C2021_Indicadores.csv": "https://www.ine.es/censos2021/C2021_Indicadores.csv",
+    "indicadores_seccen_c2021.xlsx": "https://www.ine.es/censos2021/indicadores_seccen_c2021.xlsx",
+    "Cartografia_secc.zip": "https://www.ine.es/censos2021/Cartografia_secc.zip",
+}
+DE_BASE = "https://www.destatis.de/static/DE/zensus/gitterdaten/"   # Zensus 2022 grid cells (each zip holds 10 km, 1 km and 100 m)
+DE = ["Zensus2022_Bevoelkerungszahl.zip", "Anteil_ab_65-jaehrige_in_Gitterzellen.zip", "Zensus2022_Groesse_des_privaten_Haushalts_in_Gitterzellen.zip",
+      "Eigentuemerquote_in_Gitterzellen.zip", "Zensus2022_Durchschn_Nettokaltmiete.zip", "Wohnungen_nach_Gebaeudetyp_Groesse.zip",
+      "Leerstandsquote_in_Gitterzellen.zip", "Durchschnittliche_Wohnflaeche_je_Bewohner_in_Gitterzellen.zip", "Typ_der_Kernfamilie_nach_Kindern.zip"]
+
+
+def bundle(name, files):
+    d = os.path.join(ROOT, name); print(f"=== {name}")
+    for fn, u in files.items(): fetch(u, os.path.join(d, fn))
+
+
+if __name__ == "__main__":
+    france()
+    bundle("italy", IT)
+    bundle("spain", ES)
+    if "--germany" in sys.argv:   # optional: the same Zensus 2022 tables are mirrored on GitHub (jslth/z22data), which I can fetch myself
+        bundle("germany", {f: DE_BASE + f for f in DE})
+    print("\nDone. Now:  cd data && zip -rq ../upload/phase2_census.zip phase2/_census")
