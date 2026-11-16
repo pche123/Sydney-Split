@@ -149,3 +149,34 @@ Written on 16 Nov 2026 after some Phase 1 verdicts had been seen (counts of pass
 ## Deviations
 
 - **US train commuting includes light rail** (recorded 16 Nov 2026, before any Phase 1 hypothesis was scored). The first US build counted subway and commuter rail only. Before any calibrated test was run, light rail and streetcar were added, to match the English definition ("underground, metro, light rail, tram"). Washington's first-pass p-values had been seen; Washington has almost no light rail. Most affected: Seattle and Los Angeles, whose main rail lines are light rail.
+
+## Phase 2 predictions (Europe), written 16 Nov 2026
+
+Committed before any Phase 2 census or OpenStreetMap data was opened. Cities: Paris, Lyon, Marseille, Berlin, Munich, Hamburg, Rome, Milan, Madrid, Barcelona. They are built from Phase 0 and Phase 1 together (29 cities), and each states the evidence it rests on.
+
+**Rules for scoring.** Settings stay as in Phases 0–1. Each European census variable is matched to a line before the first test is run; the mapping is committed as a deviation. A prediction whose variable a country lacks is scored – for that country, not dropped. Pooling uses Stouffer's method on each line's own one-sided p, with Holm across lines.
+
+| # | Prediction | Holds if | Evidence from Phases 0–1 | Phase 2 |
+|---|---|---|---|---|
+| **P1** | The calibrated test keeps false alarms near 5% | ≤ 10% false alarms on ≥ 50 smooth no-line maps in Paris and Berlin, run as the verdicts are | Chicago 5 of 72 (6.9%) | |
+| P2 | The single fit makes simulated cities too rough | fitted broad-scale share below the true one, and null border bias between +0.1 and +0.6 SD, in Paris and Berlin | Chicago 23% true vs 13% fitted, Seattle 24% vs 1%; bias about +0.3–0.4 SD in both | |
+| P3 | Moran spectral randomisation keeps failing | > 25% false alarms on smooth no-line maps | 26–66% in Phase 1 | |
+| P4 | Ranking hides jumps | ranking cuts edge-test power at a 3 SD step by more than half | LA 54% → 8%; Seattle 12% → 1% | |
+| P5 | Only big steps are detectable | border-count power < 20% at a 2 SD step and < 60% at 3 SD, in every city tested | LA 10–12% and 36–46%; Seattle 8–9% and 17–21% | |
+| **P6** | Few lines pass | < 10% of tested lines pass after correction | 4% (Phase 0), 7% (Phase 1) | |
+| **P7** | The Latte Line is real in general | coffee vs alcohol pooled across Phase 2 cities at p ≤ 0.05 | pooled p = 0.002 in Phase 1 after correction | |
+| P8 | Phase 0's "general" lines stay local | Factory, Laptop vs Hard Hat, Degree, Bicycle: at most one pooled at p ≤ 0.05 after Holm | none of the four replicated in Phase 1 (Z = 1.2–2.0) | |
+| P9 | Housing lines are not lines | Flats vs Houses, Renters, Grey: pooled Z ≤ 1 each | Phase 0 Z = −2.3 to −1.8; Phase 1 Z = −0.3 to 0.9 | |
+| P10 | European cities split by shopping less than US cities | venue lines pass in ≤ 2 of the 10 cities | US: venue lines pass in 3 of 8 cities (New York, LA, San Francisco) | |
+| **P11** | Slopes, not cliffs | ≥ 90% of lines have no sharp stretch | 98% (Phase 0), 94% (Phase 1) | |
+| P12 | Sharp stretches are short | each covers < 15% of its line | 5–12% | |
+| **P13** | Money is a slope, not a line | where a money variable exists (income or rent), no city's Money Line passes after Holm across cities | 0 of 14 after Holm (lowest Christchurch 0.025, Holm 0.35) | |
+| P14 | Money follows class, as in Australia and the US | Money Line's route has the Degree or a manual-work line among its two closest routes, matching ≥ 65% of areas, in every city with a money variable | 12 of 12 AU/US cities (69–83%); New Zealand follows renting and cars instead | |
+| **P15** | There is no grammar beyond shared gradients | factor baseline p ≤ 0.05 in at most 2 of the 10 cities | 1 of 26 cities (Auckland; 1.3 expected by chance) | |
+| P16 | The apparent grammar is shared gradients | against the weaker mixed baseline, p ≤ 0.05 in ≥ 5 of the 10 cities | 19 of 26 under mixed vs 1 of 26 under factor | |
+| P17 | Grammar is a little more alike within a country | within-country word-pair correlation > across-country, under both baselines | factor 0.23 vs 0.13; mixed 0.35 vs 0.25 | |
+| P18 | Rules rarely beat chance | 4–20% of testable rules beat the copula-plus-spatial baseline | 12% overall (4–18% by city) | |
+| P19 | Nothing is retuned | no setting changed for Phase 2 | one deviation in Phase 1 (US light rail) | |
+| P20 | Many predictions fail | at least a third fail or partly hold | 21 of 45 in Phase 1 | |
+
+**Exploratory, not scored as predictions:** whether any passing Berlin line follows the 1961–89 sector border, and whether Paris's passing lines follow the Boulevard Périphérique. These are reported either way.
