@@ -108,6 +108,15 @@ SA3 = {"Botany", "Kogarah - Rockdale", "Hurstville", "Blacktown", "Blacktown - N
        "Penrith", "St Marys"}
 NOT = {"Ashfield - North", "Ashfield - South", "Dulwich Hill - Lewisham", "Haberfield - Summer Hill"}   # Inner West Council
 concern = (geo.SA3_NAME21.isin(SA3) | geo.SA3_NAME21.eq("Strathfield - Burwood - Ashfield")).values & ~geo.SA2_NAME21.isin(NOT).values
+LGA = os.environ.get("LGA_SHP")   # exact test: ABS LGA 2021 boundaries (each suburb goes to the council holding most of its area)
+if LGA:
+    CONCERN = {"Bayside", "Blacktown", "Burwood", "Campbelltown", "Canterbury-Bankstown", "Cumberland", "Fairfield", "Georges River",
+               "Liverpool", "Parramatta", "Strathfield", "Penrith"}
+    lg = gpd.read_file(LGA).to_crs(7856); lg["nm"] = lg.LGA_NAME21.str.replace(r" \(NSW\)", "", regex=True)
+    ov = gpd.overlay(G[["SA2_CODE21", "geometry"]], lg[["nm", "geometry"]], how="intersection", keep_geom_type=True)
+    ov["a"] = ov.area; best = ov.sort_values("a").groupby("SA2_CODE21").nm.last()
+    concern = pd.Series(codes).map(best).isin(CONCERN).values
+    print("exact councils:", concern.sum(), "suburbs of concern", flush=True)
 def bal(side_ff):   # balanced accuracy: concern areas on the fast-food side, others on the café side
     return 0.5 * (side_ff[concern].mean() + (~side_ff[~concern]).mean())
 m7 = bal(~cafe); p7, nm7 = vs_null(m7, lambda s: bal(~s))

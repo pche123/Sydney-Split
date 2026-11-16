@@ -344,7 +344,7 @@ export function start(DATA: CityData, C: CityConfig) {
     const fmtP = (p: number) => (p >= 0.995 ? "1, the highest it can be" : p < 0.001 ? "below 0.001" : String(p));
     const own = l.p_own, ng = l.n_group || 1;
     const tech = own !== undefined && ng > 1 && Math.abs(own - l.p) > 0.0015
-      ? `p = ${fmtP(own)} for this line on its own. We tested ${ng} lines of this kind together, which raises the bar; allowing for that, p = ${fmtP(l.p)}.`
+      ? `p = ${fmtP(own)} for this line on its own. ${ng > 100 ? `It came out of a search over ${ng.toLocaleString("en")} candidate maps` : `We tested ${ng} lines of this kind together`}, which raises the bar; allowing for that, p = ${fmtP(l.p)}.`
       : `p = ${fmtP(l.p)}`;
     const mixedNote = l.p_mixed !== undefined && l.p_mixed <= 0.05
       ? `<p class="small">In fact the two chains are more mixed together than chance would give (p = ${fmtP(l.p_mixed)}). Each chain seems to spread its own shops out, so the two end up interleaved.</p>` : "";

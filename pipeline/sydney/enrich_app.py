@@ -41,6 +41,9 @@ for g in ["Food", "Night"]:
     for l, pv, hv in zip(ls, ps, h):
         assert abs(round(hv, 3) - l["p"]) <= 0.002, l["id"]
         l["p_own"], l["n_group"] = round(float(pv), 3), m
+cen = pd.read_csv(os.path.join(ROOT, "results", "final_census_Sydney.csv")).set_index("line").p_cal
+for l in d["lines"]:   # census lines: corrected for the whole search over 1,596 candidate maps (Section 5.4), not Holm
+    if l["id"] in cen.index: l["p_own"], l["n_group"] = round(float(cen[l["id"]]), 3), 1596
 d["meta"]["claims"] = json.load(open(os.path.join(ROOT, "pipeline", "sydney", "latte_claims.json")))
 json.dump(d, open(P, "w"), separators=(",", ":"), ensure_ascii=False)
 print("updated", P)
