@@ -59,6 +59,12 @@ export const CITY_LIST: { id: string; name: string; country: string }[] = [
   { id: "kobe", name: "Kobe-Hanshin", country: "Japan" }, { id: "fukuoka", name: "Fukuoka", country: "Japan" }, { id: "sapporo", name: "Sapporo", country: "Japan" },
   { id: "london", name: "London", country: "UK" }, { id: "manchester", name: "Manchester", country: "UK" },
   { id: "birmingham", name: "Birmingham", country: "UK" }, { id: "liverpool", name: "Liverpool", country: "UK" }, { id: "brighton", name: "Brighton", country: "UK" },
+  { id: "newyork", name: "New York", country: "US (held out)" }, { id: "losangeles", name: "Los Angeles", country: "US (held out)" },
+  { id: "chicago", name: "Chicago", country: "US (held out)" }, { id: "sanfrancisco", name: "San Francisco–Oakland", country: "US (held out)" },
+  { id: "washington", name: "Washington", country: "US (held out)" }, { id: "austin", name: "Austin", country: "US (held out)" },
+  { id: "seattle", name: "Seattle", country: "US (held out)" }, { id: "miami", name: "Miami", country: "US (held out)" },
+  { id: "auckland", name: "Auckland", country: "New Zealand (held out)" }, { id: "christchurch", name: "Christchurch", country: "New Zealand (held out)" },
+  { id: "singapore", name: "Singapore", country: "Singapore (held out)" },
 ];
 const LINKS = CITY_LIST.map((c) => ({ id: c.id, name: c.name, href: c.id === "sydney" ? "./index.html" : `./${c.id}.html` }));
 
@@ -96,6 +102,7 @@ export const SYDNEY: CityConfig = {
       "<b>You've heard of the Latte Line.</b> We used the Census, café and chicken-shop maps, and liquor licences to find it, plus a dozen more.",
       "<b>Each line splits Sydney in two.</b> Orange is one side, blue is the other. Tap or hover over any suburb to see which side it's on.",
       "<b>We check every line against random versions of Sydney that are just as smooth,</b> so you can tell a real line from a gentle pattern or a coincidence.",
+      "<b>Then we put the Latte Line's reputation to the test:</b> ten things Wikipedia and the papers say about it, checked one by one. Open the Latte Line to see which hold up.",
     ],
     refButton: "Show me the Latte Line", placeButton: "Find my suburb",
   },
@@ -191,10 +198,15 @@ export const TOKYO: CityConfig = {
 // ---------- the newer cities share one template per country; their caveats come with the data (meta.notes)
 const GROUPS: [string, string][] = [["Work", "Work (Census)"], ["Homes", "People & homes (Census)"], ["Around", "Getting around (Census)"],
   ["Food", "Food & cafés"], ["Night", "After dark"], ["Chains", "Chain wars"]];
-function generic(id: string, name: string, country: "au" | "jp" | "uk"): CityConfig {
-  const place = country === "au" ? "suburb" : country === "jp" ? "neighbourhood" : "area";
+type Country = "au" | "jp" | "uk" | "us" | "nz" | "sg";
+const NEW_SOURCES: Record<string, string> = {
+  us: "the American Community Survey 2019–2023 and OpenStreetMap", nz: "the 2023 Census and OpenStreetMap", sg: "the 2020 Census, the URA Master Plan and OpenStreetMap",
+};
+function generic(id: string, name: string, country: Country): CityConfig {
+  const isNew = country === "us" || country === "nz" || country === "sg";
+  const place = country === "au" || country === "nz" ? "suburb" : country === "jp" ? "neighbourhood" : country === "sg" ? "subzone" : "area";
   const places = place + "s";
-  const sources = country === "au" ? "the 2021 Census, OpenStreetMap and liquor licences" : country === "jp"
+  const sources = isNew ? NEW_SOURCES[country] : country === "au" ? "the 2021 Census, OpenStreetMap and liquor licences" : country === "jp"
     ? "the 2020 Census, OpenStreetMap and HotPepper restaurant listings" : "the 2021 Census, OpenStreetMap, food hygiene ratings and the gambling register";
   return {
     id, name, place, places, placeholder: "Search by name",
@@ -223,10 +235,11 @@ function generic(id: string, name: string, country: "au" | "jp" | "uk"): CityCon
     heritageClustering: country === "jp" ? (h) => `<li>How clustered: about <b>${Math.round((h.D ?? 0) * 100)}%</b> of foreign residents would have to move house to be spread evenly across ${name}.</li>` : undefined,
     warnBullet: country === "au" ? "Only people born overseas are counted. Their Australian-born kids aren't." : country === "jp" ? "Only residents without Japanese nationality are counted. Naturalised citizens and their kids aren't, and the small-area tables don't say which country people are from." : "Only people born outside the UK are counted. Their UK-born kids aren't.",
     peakWord: "highest", movedTitle: "Biggest moves", movedNote: `${places[0].toUpperCase() + places.slice(1)} that changed side with the biggest moves (top 10% of change).`,
-    chainDefault: country === "au" ? ["Woolworths", "Coles"] : country === "jp" ? ["7-Eleven", "FamilyMart"] : ["Greggs", "Pret"],
+    chainDefault: country === "au" ? ["Woolworths", "Coles"] : country === "jp" ? ["7-Eleven", "FamilyMart"] : country === "us" ? ["Starbucks", "Dunkin'"]
+      : country === "nz" ? ["New World", "Pak'nSave"] : country === "sg" ? ["Cold Storage", "FairPrice"] : ["Greggs", "Pret"],
     chainOffset: country === "jp" ? 50 : 200, chainDraws: 99,
     footer: {
-      lines: (d) => `${d.meta.sources}. Covers ${d.meta.areas} ${name} ${places}. Shop and café locations come from OpenStreetMap, which volunteers map, so some are missing. A ${place}'s side describes the area, not the people in it. ${d.meta.calibrated ? "Every line was double-checked the same way as Sydney and Tokyo's (random landscapes, with the check itself calibrated)." : "This city's lines were checked with one round of random landscapes; the extra double-check used for Sydney and Tokyo is still to come."}`,
+      lines: (d) => `${d.meta.sources}. ${isNew ? `A held-out city: its lines were tested only after our predictions for it were written down (see HYPOTHESES.md on GitHub). ` : ""}Covers ${d.meta.areas} ${name} ${places}. Shop and café locations come from OpenStreetMap, which volunteers map, so some are missing. A ${place}'s side describes the area, not the people in it. ${d.meta.calibrated ? "Every line was double-checked the same way as Sydney and Tokyo's (random landscapes, with the check itself calibrated)." : "This city's lines were checked with one round of random landscapes; the extra double-check used for Sydney and Tokyo is still to come."}`,
       timelineLines: country === "au" ? "ABS Census 2011–2021 (Time Series Profile), all years on today's suburbs. Each year the line splits the city's suburbs in half, so it shows who is relatively high or low that year."
         : "Japan Census 2000–2020 (e-Stat small areas), each year shared onto today's neighbourhoods by area. Each year the line splits the city in half, so it shows who is relatively high or low that year. The Census changed its job categories in 2010; comparing within each year keeps the job lines fair.",
       timelineGroups: country === "au" ? "ABS Census 2011–2021 (Time Series Profile, country of birth), all years on today's suburbs. A place's colour describes the area, not anyone in it." : "",
@@ -248,4 +261,8 @@ export const CITIES: Record<string, CityConfig> = {
   london: generic("london", "London", "uk"), manchester: generic("manchester", "Manchester", "uk"), birmingham: generic("birmingham", "Birmingham", "uk"),
   liverpool: generic("liverpool", "Liverpool", "uk"),
   brighton: generic("brighton", "Brighton", "uk"),
+  newyork: generic("newyork", "New York", "us"), losangeles: generic("losangeles", "Los Angeles", "us"), chicago: generic("chicago", "Chicago", "us"),
+  sanfrancisco: generic("sanfrancisco", "San Francisco–Oakland", "us"), washington: generic("washington", "Washington", "us"), austin: generic("austin", "Austin", "us"),
+  seattle: generic("seattle", "Seattle", "us"), miami: generic("miami", "Miami", "us"),
+  auckland: generic("auckland", "Auckland", "nz"), christchurch: generic("christchurch", "Christchurch", "nz"), singapore: generic("singapore", "Singapore", "sg"),
 };

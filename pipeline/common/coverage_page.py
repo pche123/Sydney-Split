@@ -10,8 +10,11 @@ OUT = os.path.join(ROOT, "app", "public", "compare.html")
 
 ORDER = [("Australia", ["sydney", "melbourne", "brisbane", "perth", "adelaide"]),
          ("Japan", ["tokyo", "osaka", "kyoto", "nagoya", "yokohama", "kobe", "fukuoka", "sapporo"]),
-         ("England", ["london", "manchester", "birmingham", "liverpool", "brighton"])]
-NAME = {"yokohama": "Yokohama–Kawasaki", "kobe": "Kobe–Hanshin"}
+         ("England", ["london", "manchester", "birmingham", "liverpool", "brighton"]),
+         ("US (held out)", ["newyork", "losangeles", "chicago", "sanfrancisco", "washington", "austin", "seattle", "miami"]),
+         ("New Zealand (held out)", ["auckland", "christchurch"]), ("Singapore (held out)", ["singapore"])]
+NAME = {"yokohama": "Yokohama–Kawasaki", "kobe": "Kobe–Hanshin", "newyork": "New York", "losangeles": "Los Angeles",
+        "sanfrancisco": "San Francisco–Oakland"}
 PAGE = lambda c: "index.html" if c == "sydney" else f"{c}.html"
 
 # rows: (family, label, line ids that count as this measure in any city)

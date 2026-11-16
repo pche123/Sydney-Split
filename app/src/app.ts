@@ -1,7 +1,7 @@
 // The Split app: one codebase for every city. City-specific words live in config.ts.
 import type { CityConfig } from "./config";
 import { CITY_LIST, CITATION, SUPPORT_URL } from "./config";
-import type { CityData, Identity, IdentityRow, Line, HeritageGroup, TimelineLine, TimelineGroup, Brand } from "./types";
+import type { CityData, Claims, Identity, IdentityRow, Line, HeritageGroup, TimelineLine, TimelineGroup, Brand } from "./types";
 import { verdict, rankNormal, splitOf, Graph, quickCheck, chainField, chainTest, minCutSides, lamOf } from "./stats";
 import { Viewport } from "./viewport";
 
@@ -361,6 +361,7 @@ export function start(DATA: CityData, C: CityConfig) {
       <div class="box"><h3>What else changes across it</h3>
         <p class="small" style="margin:0 0 6px">The orange side also has:</p><div class="chips ca"></div>
         <p class="small" style="margin:10px 0 6px">The blue side also has:</p><div class="chips cb"></div></div>
+      ${claimsBox(l)}
       ${familyBox(l)}
       ${identityBox()}
       ${(DATA.meta.explain || {})[l.id] || ""}
@@ -382,6 +383,15 @@ export function start(DATA: CityData, C: CityConfig) {
   const showSel = $("#showas") as HTMLSelectElement;
   showSel.addEventListener("change", () => { SHOW = showSel.value as typeof SHOW; render(); });
   let idOpen = false;
+  function claimsBox(l: Line) {
+    const cl = DATA.meta.claims as Claims | undefined;
+    if (!cl || !cl.lines.includes(l.id)) return "";
+    const esc = (t: string) => t.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!));
+    const MARK: Record<string, [string, string]> = { yes: ["✓", "good"], partly: ["◐", "gentle"], no: ["✗", "meh"], untested: ["–", "muted"] };
+    const rows = cl.items.map((c) => { const [m, k] = MARK[c.kind] || MARK.untested;
+      return `<li class="claim"><span class="cm ${k}">${m}</span><div><b>“${esc(c.claim)}”</b> <span class="small">(${esc(c.who)})</span><br><span class="small"><b>${esc(c.verdict)}.</b> ${esc(c.finding)}</span></div></li>`; }).join("");
+    return `<div class="box claims"><h3>${esc(cl.title)}</h3><p class="small">${esc(cl.intro)}</p><ul class="claimlist">${rows}</ul><footer>${esc(cl.footer)}</footer></div>`;
+  }
   function identityBox() {
     const id = DATA.meta.identity as Identity | undefined;
     if (!id) return "";

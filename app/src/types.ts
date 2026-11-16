@@ -36,6 +36,8 @@ export interface MakeData {
 }
 
 export interface IdentityRow { id: string; name: string; verdict: string; cities: number; real_in: number; p: number | null; only_here: boolean }
+export interface Claim { claim: string; who: string; finding: string; verdict: string; kind: "yes" | "partly" | "no" | "untested" }
+export interface Claims { title: string; intro: string; footer: string; lines: string[]; items: Claim[] }
 export interface Identity { country: string; n_cities: number; found_in: boolean; lines: IdentityRow[]; city_real: string[]; city_only: string[] }
 
 export interface CityData {
