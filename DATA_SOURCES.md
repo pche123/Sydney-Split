@@ -188,3 +188,14 @@ Counted on the data we already have, inside the study areas:
 
 Wine vs sake in Tokyo has enough venues on both sides for a line; a whisky line does not anywhere.
 `venues.py` only tags a drink when a venue's own name or licence type says it, never from anything else.
+
+## Phase 2 (Europe)
+
+| Country | Census | Areas | Licence |
+|---|---|---|---|
+| Germany | Zensus 2022 grid tables (Destatis), read from the [jslth/z22data](https://github.com/jslth/z22data) mirror on GitHub | 1 km grid cells with at least 1,000 residents | Datenlizenz Deutschland – Namensnennung 2.0 (© Statistisches Bundesamt, Zensus 2022) |
+| France | INSEE recensement 2021, base infracommunale (IRIS) | IRIS, IGN CONTOURS-IRIS 2023 | Licence Ouverte / Etalab |
+| Italy | ISTAT Censimento permanente 2021, dati per sezione | Basi Territoriali 2021 (sezioni di censimento) | CC BY 4.0 (Istat) |
+| Spain | INE Censo 2021, indicadores por sección censal | INE secciones censales, 1 Jan 2021 | INE terms: cite "INE, www.ine.es" as the source |
+
+Berlin's borough outlines come from [funkeinteraktiv/Berlin-Geodaten](https://github.com/funkeinteraktiv/Berlin-Geodaten); the 1961–89 border inside Mitte and Friedrichshain-Kreuzberg is approximated by a polyline through Bornholmer Straße, Bernauer Straße, the Reichstag, Brandenburger Tor, Potsdamer Platz, Checkpoint Charlie and the Spree to Treptower Park (experiments/phase2_germany.py), which is exact enough for 1 km cells.
