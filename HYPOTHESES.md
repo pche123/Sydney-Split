@@ -142,6 +142,10 @@ Written on 16 Nov 2026 after some Phase 1 verdicts had been seen (counts of pass
 | 59 | Work and cycling lines are real in general | Factory, Laptop vs Hard Hat, Degree and Bicycle each pooled across Phase 1 cities (Stouffer) at p ≤ 0.05 after Holm across lines | all four, Z = 3.2–5.4 over 15–16 cities | ✗ The Factory Line Z = 1.2 over 10 cities; The Laptop vs Hard Hat Line Z = 1.3 over 10 cities; The Degree Line Z = 2.0 over 10 cities; The Bicycle Line Z = 1.7 over 10 cities (p = 0.827) |
 | 60 | Housing lines are not lines anywhere | Flats vs Houses, Renters, Grey pooled Z ≤ 0 | Z = −2.3, −1.8, −1.8 | ◐ Flats vs Houses Z = -0.3; The Renters Line Z = -0.2; The Grey Line Z = 0.9 |
 
+## Notes after scoring
+
+- **Hypothesis 1** was about the benchmark's single-fit test, and stays failed as written (Chicago 10 of 100). The calibrated test that every verdict uses was benchmarked afterwards on 72 fresh Chicago maps with no line, run exactly as the verdicts are (close calls refit 200 times): 5 false alarms (6.9%, 95% interval 2.3–15.5%, p = 0.29 against 5%). The single-fit test called 3 of the same 72 maps (`experiments/calibrated_benchmark.py`).
+
 ## Deviations
 
 - **US train commuting includes light rail** (recorded 16 Nov 2026, before any Phase 1 hypothesis was scored). The first US build counted subway and commuter rail only. Before any calibrated test was run, light rail and streetcar were added, to match the English definition ("underground, metro, light rail, tram"). Washington's first-pass p-values had been seen; Washington has almost no light rail. Most affected: Seattle and Los Angeles, whose main rail lines are light rail.

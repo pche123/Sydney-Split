@@ -60,6 +60,10 @@ def tests(f):
                            ("moran", lambda F: moran_i(F, I, J, W), False, fs), ("lgmax", lgmax, False, fs)]:
         o = st(x[:, None])[0]; nl = st(Fs); out[nm] = (1 + ((nl <= o) if low else (nl >= o)).sum()) / (B + 1)
     es = edge_stat(MS, par); o = es(fs[:, None])[0]; nl = es(Fs); out["edge"] = (1 + (nl >= o).sum()) / (B + 1)
+    # the same two jump tests on ranks (values and null maps both rank-normalised), to measure the ranking pitfall
+    Fr = _rn(Fs)
+    o = lgmax(fr[:, None])[0]; out["lgmax_ranked"] = (1 + (lgmax(Fr) >= o).sum()) / (B + 1)
+    o = es(fr[:, None])[0]; out["edge_ranked"] = (1 + (es(Fr) >= o).sum()) / (B + 1)
     return out
 
 rows = pd.read_csv(OUT).to_dict("records") if os.path.exists(OUT) else []
@@ -71,5 +75,5 @@ for kind in ("smooth", "rough"):
             if (k + 1) % 25 == 0 or k + 1 == NM:
                 pd.DataFrame(rows).to_csv(OUT, index=False); d = pd.DataFrame(rows); d = d[(d.background == kind) & (d.jump == jump)]
                 print(f"{kind:6s} jump={jump} {k + 1:4d} maps ({time.time() - t:.1f}s/map) reject@0.05: " +
-                      " ".join(f"{c}={(d[c] <= 0.05).mean():.2f}" for c in ["join", "geary", "moran", "edge", "lgmax"]), flush=True)
+                      " ".join(f"{c}={(d[c] <= 0.05).mean():.2f}" for c in ["join", "geary", "moran", "edge", "lgmax"] + [c for c in ["edge_ranked", "lgmax_ranked"] if c in d]), flush=True)
 print("DONE", city)

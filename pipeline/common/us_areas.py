@@ -45,7 +45,7 @@ def main(city, raw, out):
     g["km2"] = g.area / 1e6
     keep = (g.population >= 100) & (g.population / g.km2 >= 1000)
     S = g[keep].reset_index(drop=True)
-    target = max(8000, S.population.sum() / 400)
+    target = float(os.environ["US_TARGET_POP"]) if os.environ.get("US_TARGET_POP") else max(8000, S.population.sum() / 400)   # 0 = keep tracts
 
     buf = gpd.GeoDataFrame(geometry=S.buffer(5), crs=S.crs)
     pr = gpd.sjoin(buf, buf, predicate="intersects"); pr = pr[pr.index < pr.index_right]
@@ -59,7 +59,7 @@ def main(city, raw, out):
         A = ((A + A.T) > 0).astype(float)
         ncomp, comp = connected_components(A, directed=False)
         for k_ in range(ncomp):
-            sub = np.where(comp == k_)[0]; k = int(max(1, round(S.population.values[idx[sub]].sum() / target)))
+            sub = np.where(comp == k_)[0]; k = len(sub) if target <= 0 else int(max(1, round(S.population.values[idx[sub]].sum() / target)))
             if k >= len(sub): l = np.arange(len(sub))
             elif k == 1: l = np.zeros(len(sub), int)
             else: l = AgglomerativeClustering(n_clusters=k, connectivity=A.tocsr()[sub][:, sub], linkage="ward").fit_predict(xy[idx[sub]])
