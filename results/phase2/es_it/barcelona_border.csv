@@ -1,0 +1,6 @@
+border,line,match,null_mean,p,cells,border_side,p_holm
+B2 Diagonal,the-grey-line,0.6625,0.5836711711711711,0.152,80,51,0.608
+B2 Diagonal,the-renters-line,0.5875,0.6269144144144144,0.671,80,51,1.0
+B2 Diagonal,the-degree-line,0.5625,0.612575075075075,0.744,80,51,1.0
+B2 Diagonal,the-jobless-line,0.5125,0.5961586586586587,1.0,80,51,1.0
+B2 Diagonal,the-living-alone-line,0.6125,0.6309184184184183,0.587,80,51,

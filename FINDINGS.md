@@ -49,3 +49,13 @@ How sure each result is: see "Confirmatory or exploratory?" in [HYPOTHESES.md](H
 
 - Ten European cities (Paris, Lyon, Marseille, Berlin, Munich, Hamburg, Rome, Milan, Madrid, Barcelona) against 20 predictions already on record, including whether Berlin's lines still follow the Wall.
 - The 2026 Australian Census, to test "hardening" properly.
+
+## Phase 2b so far (Spain, Italy; 16 Nov 2026)
+
+Census only (venues wait for the OpenStreetMap cut). Same 1 km grid as Germany. Pre-registered in HYPOTHESES.md (Phase 2b) before testing.
+
+- **Madrid's north–south divide (B1) holds, as a slope.** University degrees put 78% of the city's cells on the side of the seven southern districts that matches (random Madrids of the same smoothness: 59%; p = 0.008, 0.03 after Holm). Unemployment points the same way (74%, p = 0.03, 0.08 after Holm). But the Degree Line itself is not a sharp line: calibrated p = 0.055 (R = 200). Degrees rise steadily to the north (rank correlation with northing 0.62); the border sits across a slope.
+- **Barcelona's Diagonal (B2) fails, as predicted.** No line matches the avenue better than random Barcelonas (best: the Grey Line, 66% vs 58%, p = 0.15).
+- **Quick tests:** Rome's Living Alone Line p = 0.04 and Grey Line 0.06; Barcelona's Living Alone 0.07; calibrations running.
+- **Exploratory, not pre-registered: who lives in the middle.** Living alone falls from the centre outwards in all seven European cities (rank correlation with distance from the centre −0.59 to −0.86). Old age goes the other way north and south of the Alps: in Berlin, Munich and Hamburg the share aged 65+ rises towards the edge (+0.31 to +0.42), in Madrid, Barcelona and Rome it falls (−0.39 to −0.60; Milan about 0).
+- **Caveat on border tests.** The Berlin, Madrid and Barcelona border tests use the single-fit null, which Phase 1 found makes simulated cities slightly too rough (P2). A too-rough null can make a smooth slope look like it follows a big border more often than chance. A calibrated border test is the next step before B1 is final.
