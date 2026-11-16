@@ -2,7 +2,7 @@
 
 The Latte Line, the Hi-Vis Line, the Konbini Wars: informal city divides, found in census, venue and licence data, and tested properly. Every line is checked against random versions of its city that are just as smooth, and gets one of three verdicts: **Real line**, **Real pattern, gentle** or **Could be chance**.
 
-**Live:** [18 cities](https://pche123.github.io/Sydney-Split/) in Australia, Japan and England, a [city comparison page](https://pche123.github.io/Sydney-Split/compare.html) and data downloads for every city.
+**Live:** [29 cities](https://pche123.github.io/Sydney-Split/) in six countries, a [city comparison page](https://pche123.github.io/Sydney-Split/compare.html) and data downloads for every city.
 **In plain words:** [FINDINGS.md](FINDINGS.md) · **Data sources:** [DATA_SOURCES.md](DATA_SOURCES.md)
 
 | Country | Cities |
@@ -10,8 +10,18 @@ The Latte Line, the Hi-Vis Line, the Konbini Wars: informal city divides, found 
 | Australia | Sydney, Melbourne, Brisbane, Perth, Adelaide |
 | Japan | Tokyo, Osaka, Kyoto, Nagoya, Yokohama-Kawasaki, Kobe-Hanshin, Fukuoka, Sapporo |
 | England | London, Manchester, Birmingham, Liverpool, Brighton |
+| US (held out) | New York, Los Angeles, Chicago, San Francisco–Oakland, Washington, Austin, Seattle, Miami |
+| New Zealand (held out) | Auckland, Christchurch |
+| Singapore (held out) | Singapore |
 
-Coming next: New York (by borough), Los Angeles, Chicago, San Francisco–Oakland, Washington, Austin, Seattle, Miami, Auckland, Christchurch and Singapore. They are held back as a test set: hypotheses formed on the 18 cities above are checked on them without retuning anything.
+The held-out cities were opened only after 58 predictions from the first 18 were written down ([HYPOTHESES.md](HYPOTHESES.md)): 29 held, 15 failed, 6 partly held. Ten European cities are next, against predictions already on record.
+
+## What we found
+
+- **Few lines are real** (4–7% of those tested), and almost none has a sharp edge: most divides are slopes. The app draws them that way.
+- **Lines rarely travel.** Four lines that looked general in the first 18 cities failed in the held-out ones. The **Latte Line** (cafés vs fast food) is the exception: patterned in all 29 cities, and real when pooled over the held-out ones (p = 0.002).
+- **The Latte Line on trial.** Of 11 claims from Wikipedia and the press, 5 hold, 5 hold in part and 1 fails. It does run north-east against south-west through Parramatta, and the 2021 lockdown's councils of concern sat on its fast-food side; money follows it as a slope, and it did not harden between 2001 and 2021. See the Latte Line in the Sydney app.
+- **Countries have their own lines**, such as the Factory Line across Australia, which no single Australian city shows on its own.
 
 ## What the tests do
 
@@ -64,6 +74,10 @@ Sydney and Tokyo have their own pipelines in `pipeline/sydney/` and `pipeline/to
 | Benchmark against other nulls | `python experiments/null_benchmark.py kyoto work 400` (and `melbourne`) |
 | Which statistic notices a step | `python experiments/stat_power.py kyoto work 100` (and `melbourne`) |
 | Urban rules and transfer | `python experiments/rules.py work` |
+| The Latte Line's claims | `python experiments/latte_claims.py <data> <work>` |
+| Held-out scoring | `python experiments/phase1_scoring.py <apps> <downloads> results/phase1/hypotheses.csv` |
+| Lines pooled across cities and countries | `python experiments/pooled_lines.py <apps>`, `python experiments/country_lines.py <apps>` |
+| Money Line, city grammar | `python experiments/money_line.py ...`, `python experiments/city_grammar.py ...` |
 | Sydney and Tokyo audit | `experiments/audit/` (see its README) |
 
 ## Run the app
@@ -80,4 +94,4 @@ Pushing to `main` deploys the site to GitHub Pages.
 
 ## Credits and licences
 
-ABS Census and ASGS data © Commonwealth of Australia (CC BY 4.0). Japanese census data © Statistics Bureau of Japan via e-Stat. England and Wales census data © Office for National Statistics (Open Government Licence). Venue data © OpenStreetMap contributors (ODbL). Liquor licence data © NSW Liquor & Gaming and the Victorian Government (CC BY 4.0). Food hygiene data © Food Standards Agency (OGL). Restaurant listings Powered by ホットペッパー Webサービス (HotPepper Gourmet); check Recruit's current terms before any paid use. A place's colour describes the area, not the people in it.
+ABS Census and ASGS data © Commonwealth of Australia (CC BY 4.0). Japanese census data © Statistics Bureau of Japan via e-Stat. England and Wales census data © Office for National Statistics (Open Government Licence). US data © US Census Bureau (public domain). New Zealand data © Stats NZ (CC BY 4.0). Singapore data © data.gov.sg (Singapore Open Data Licence). Venue data © OpenStreetMap contributors (ODbL). Liquor licence data © NSW Liquor & Gaming and the Victorian Government (CC BY 4.0). Food hygiene data © Food Standards Agency (OGL). Restaurant listings Powered by ホットペッパー Webサービス (HotPepper Gourmet); check Recruit's current terms before any paid use. A place's colour describes the area, not the people in it.
