@@ -228,3 +228,16 @@ Committed before any test was run on Spanish, Italian or Canadian data (the Span
 Borders needing OpenStreetMap geometry (B3–B5) wait for the OSM cut; B1 and B2 use census districts and the avenue's end points.
 
 **Variable mapping for Spain and Italy, committed 16 Nov 2026 before the first test.** Areas: census sections allocated to the same 1 km grid cells as Germany (area-weighted), cells with ≥ 1,000 residents, largest connected piece. Spain (INE 2021 section indicators): Degree Line = t9 (higher education, of 16+); Grey Line = t4_3 (65+); Renters Line = t20_2 / (t20_1 + t20_2 + t20_3); Living Alone Line = t22_1 / t21_1; Jobless Line (new) = t10 (unemployed, of the active). Italy (ISTAT 2021 sections) has no education, tenure or unemployment at section level: Grey Line = P27 + P28 + P29 (65+); Living Alone Line = PF3 / PF1; Jobless Line = 1 − (IT10 + ST31) / (IT2 + ST23), the share of 15–64s not in work (includes the inactive, so it is not the Spanish unemployment rate); Empty Homes Line (exploratory) = A3 / A8. Nationality columns are not used. On the borders B1–B5, "degrees, unemployment, renting, 65+" become, in Italy, "not in work, living alone, 65+" (Holm across three).
+
+## Phase 2b food lines, written 16 Nov 2026
+
+Committed before any European OpenStreetMap data was opened (the cut is still running). Same line test, same settings as every venue line; each city's own p, then calibrated pooling across the cities named. Venues are OSM points inside each city's box; a venue's brand comes from its `brand` or `name` tag.
+
+| # | Line | Side A vs side B (OSM tags) | Cities | Prediction |
+|---|---|---|---|---|
+| F1 | The Croissant Line | bakeries and pâtisseries (`shop=bakery`, `shop=pastry`) vs fast food (`amenity=fast_food`) | Paris, Lyon, Marseille | fails in each city (bakeries are everywhere in France) |
+| F2 | The Bread Line (Bäcker vs Backshop) | independent bakeries (`shop=bakery`, no chain brand) vs chain bake-shops (Back-Factory, BackWerk, Kamps, Ditsch, Le Crobag, Wiener Feinbäcker, Lila Bäcker, Junge, Steinecke, Backhaus Mahl, Bäckerei Junge, Mr. Baker) | Berlin, Munich, Hamburg | fails in each city; chains sit at stations, so it is a slope towards the centre |
+| F3 | The Paella Line | Spanish and tapas restaurants (`cuisine` contains spanish, tapas, paella, regional) vs fast food | Madrid, Barcelona | fails in each city |
+| F4 | The Starbucks Line | independent cafés (`amenity=cafe`, no chain brand) vs Starbucks | all eight French, German and Spanish cities, pooled | passes pooled (a centre-to-edge slope shared by every city) |
+
+Italy (Rome, Milan) is run on F4 as exploratory only. Food names are a joke; what is scored is where cheap, chain or traditional food sits, never who lives there.
