@@ -1,0 +1,486 @@
+country,city,line,name,group,p,z,tier
+au,brisbane,the-hi-vis-line,The Hi-Vis Line,Work,0.035,1.8119106729525978,gentle
+au,brisbane,the-factory-line,The Factory Line,Work,0.015,2.1700903775845606,gentle
+au,brisbane,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.22,0.7721932141886848,gentle
+au,brisbane,the-degree-line,The Degree Line,Work,0.085,1.372203808998726,gentle
+au,brisbane,the-grey-line,The Grey Line,Homes,0.805,-0.8596173642419117,gentle
+au,brisbane,the-living-alone-line,The Living Alone Line,Homes,0.976,-1.9773684281819461,gentle
+au,brisbane,flats-vs-houses,Flats vs Houses,Homes,0.854,-1.0537443021306667,gentle
+au,brisbane,the-renters-line,The Renters Line,Homes,0.951,-1.6546279023510777,gentle
+au,brisbane,train-vs-car,Train vs Car,Around,0.463,0.0928786087772564,gentle
+au,brisbane,the-no-car-line,The No-Car Line,Around,0.902,-1.2930319761442421,gentle
+au,brisbane,the-bicycle-line,The Bicycle Line,Around,0.03,1.880793608151251,gentle
+au,brisbane,the-latte-line,The Latte Line,Food,0.01,2.3263478740408408,line
+au,brisbane,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.829,-0.9502209415410152,gentle
+au,brisbane,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.195,0.8596173642419115,gentle
+au,brisbane,woolies-vs-coles,Woolies vs Coles,Chains,0.982,-2.096927429164342,chance
+au,brisbane,maccas-vs-kfc,Maccas vs KFC,Chains,0.97,-1.8807936081512509,chance
+au,brisbane,maccas-vs-hungry-jacks,Maccas vs Hungry Jack's,Chains,0.998,-2.878161739095483,chance
+au,brisbane,nandos-vs-grilld,Nando's vs Grill'd,Chains,0.983,-2.1200716897421508,chance
+jp,sapporo,the-hi-vis-line,The Hi-Vis Line,Work,0.244,0.6934933462832895,gentle
+jp,sapporo,the-factory-line,The Factory Line,Work,0.366,0.34246630146539064,gentle
+jp,sapporo,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.268,0.6188730405486286,gentle
+jp,sapporo,the-degree-line,The Degree Line,Work,0.22,0.7721932141886848,gentle
+jp,sapporo,the-grey-line,The Grey Line,Homes,0.02,2.053748910631823,gentle
+jp,sapporo,the-living-alone-line,The Living Alone Line,Homes,0.927,-1.4538063589405756,gentle
+jp,sapporo,flats-vs-houses,Flats vs Houses,Homes,0.171,0.9502209415410152,gentle
+jp,sapporo,the-renters-line,The Renters Line,Homes,0.293,0.544641654799999,gentle
+jp,sapporo,train-vs-car,Train vs Car,Around,0.561,-0.15350506037805722,gentle
+jp,sapporo,the-bicycle-line,The Bicycle Line,Around,0.366,0.34246630146539064,gentle
+jp,sapporo,the-latte-line,The Latte Line,Food,0.439,0.15350506037805708,gentle
+jp,sapporo,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.561,-0.15350506037805722,gentle
+jp,sapporo,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.585,-0.21470156800174442,gentle
+jp,sapporo,the-late-night-line,The Late-Night Line,Night,0.902,-1.2930319761442421,gentle
+jp,sapporo,wine-vs-sake,Wine vs Sake,Night,0.09,1.3407550336902165,gentle
+jp,sapporo,izakaya-vs-bistro,Izakaya vs Italian & French,Night,0.244,0.6934933462832895,gentle
+jp,sapporo,bars-vs-izakaya,Bars vs Izakaya,Night,0.104,1.2590839804270721,gentle
+jp,sapporo,konbini-wars,Konbini Wars: 7-Eleven vs FamilyMart,Chains,0.794,-0.8203791459684608,chance
+jp,sapporo,lawson-vs-familymart,Lawson vs FamilyMart,Chains,0.863,-1.0938973526034372,chance
+jp,sapporo,sukiya-vs-yoshinoya,Sukiya vs Yoshinoya,Chains,0.971,-1.895697923991838,chance
+jp,fukuoka,the-hi-vis-line,The Hi-Vis Line,Work,0.146,1.0537443021306667,gentle
+jp,fukuoka,the-factory-line,The Factory Line,Work,0.02,2.053748910631823,gentle
+jp,fukuoka,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.341,0.4097354803212811,gentle
+jp,fukuoka,the-degree-line,The Degree Line,Work,0.415,0.21470156800174456,gentle
+jp,fukuoka,the-grey-line,The Grey Line,Homes,0.293,0.544641654799999,gentle
+jp,fukuoka,the-living-alone-line,The Living Alone Line,Homes,0.707,-0.5446416547999989,gentle
+jp,fukuoka,flats-vs-houses,Flats vs Houses,Homes,0.61,-0.27931903444745415,gentle
+jp,fukuoka,the-renters-line,The Renters Line,Homes,0.951,-1.6546279023510777,gentle
+jp,fukuoka,train-vs-car,Train vs Car,Around,0.463,0.0928786087772564,gentle
+jp,fukuoka,the-bicycle-line,The Bicycle Line,Around,0.61,-0.27931903444745415,gentle
+jp,fukuoka,the-latte-line,The Latte Line,Food,0.02,2.053748910631823,line
+jp,fukuoka,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.146,1.0537443021306667,gentle
+jp,fukuoka,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.08,1.4050715603096329,gentle
+jp,fukuoka,the-late-night-line,The Late-Night Line,Night,0.171,0.9502209415410152,gentle
+jp,fukuoka,wine-vs-sake,Wine vs Sake,Night,0.015,2.1700903775845606,gentle
+jp,fukuoka,izakaya-vs-bistro,Izakaya vs Italian & French,Night,0.005,2.575829303548901,line
+jp,fukuoka,bars-vs-izakaya,Bars vs Izakaya,Night,0.732,-0.6188730405486286,gentle
+jp,fukuoka,konbini-wars,Konbini Wars: 7-Eleven vs FamilyMart,Chains,0.177,0.9268585128160437,chance
+jp,fukuoka,lawson-vs-familymart,Lawson vs FamilyMart,Chains,0.888,-1.2159604197073188,chance
+uk,brighton,the-hi-vis-line,The Hi-Vis Line,Work,0.195,0.8596173642419115,gentle
+uk,brighton,the-degree-line,The Degree Line,Work,0.075,1.4395314709384563,gentle
+uk,brighton,the-grey-line,The Grey Line,Homes,0.341,0.4097354803212811,gentle
+uk,brighton,the-living-alone-line,The Living Alone Line,Homes,0.03,1.880793608151251,gentle
+uk,brighton,flats-vs-houses,Flats vs Houses,Homes,0.244,0.6934933462832895,gentle
+uk,brighton,the-renters-line,The Renters Line,Homes,0.171,0.9502209415410152,gentle
+uk,brighton,train-vs-car,Train vs Car,Around,0.537,-0.09287860877725654,gentle
+uk,brighton,the-no-car-line,The No-Car Line,Around,0.195,0.8596173642419115,gentle
+uk,brighton,the-bicycle-line,The Bicycle Line,Around,0.015,2.1700903775845606,line
+uk,brighton,the-latte-line,The Latte Line,Food,0.317,0.4761044034893951,gentle
+uk,brighton,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.902,-1.2930319761442421,gentle
+uk,brighton,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.927,-1.4538063589405756,gentle
+uk,brighton,the-chicken-shop-line,The Takeaway Line,Food,0.512,-0.03008407662018911,gentle
+uk,brighton,the-betting-shop-line,The Betting Shop Line,Night,0.366,0.34246630146539064,gentle
+uk,brighton,the-pub-line,The Pub Line,Night,0.366,0.34246630146539064,gentle
+au,perth,the-hi-vis-line,The Hi-Vis Line,Work,0.561,-0.15350506037805722,gentle
+au,perth,the-factory-line,The Factory Line,Work,0.195,0.8596173642419115,gentle
+au,perth,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.06,1.5547735945968535,gentle
+au,perth,the-degree-line,The Degree Line,Work,0.463,0.0928786087772564,gentle
+au,perth,the-grey-line,The Grey Line,Homes,0.999,-3.090232306167813,gentle
+au,perth,the-living-alone-line,The Living Alone Line,Homes,0.707,-0.5446416547999989,gentle
+au,perth,flats-vs-houses,Flats vs Houses,Homes,0.317,0.4761044034893951,gentle
+au,perth,the-renters-line,The Renters Line,Homes,0.488,0.03008407662018911,gentle
+au,perth,train-vs-car,Train vs Car,Around,0.268,0.6188730405486286,gentle
+au,perth,the-no-car-line,The No-Car Line,Around,0.732,-0.6188730405486286,gentle
+au,perth,the-bicycle-line,The Bicycle Line,Around,0.195,0.8596173642419115,gentle
+au,perth,the-latte-line,The Latte Line,Food,0.488,0.03008407662018911,gentle
+au,perth,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.976,-1.9773684281819461,gentle
+au,perth,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.22,0.7721932141886848,gentle
+au,perth,woolies-vs-coles,Woolies vs Coles,Chains,0.584,-0.21213719831752412,chance
+au,perth,maccas-vs-kfc,Maccas vs KFC,Chains,0.938,-1.5381988585840638,chance
+au,perth,maccas-vs-hungry-jacks,Maccas vs Hungry Jack's,Chains,0.99,-2.3263478740408408,chance
+au,perth,nandos-vs-grilld,Nando's vs Grill'd,Chains,0.796,-0.8274183207043821,chance
+au,melbourne,the-hi-vis-line,The Hi-Vis Line,Work,0.025,1.9599639845400545,gentle
+au,melbourne,the-factory-line,The Factory Line,Work,0.015,2.1700903775845606,gentle
+au,melbourne,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.03,1.880793608151251,gentle
+au,melbourne,the-degree-line,The Degree Line,Work,0.015,2.1700903775845606,gentle
+au,melbourne,the-grey-line,The Grey Line,Homes,0.707,-0.5446416547999989,gentle
+au,melbourne,the-living-alone-line,The Living Alone Line,Homes,0.951,-1.6546279023510777,gentle
+au,melbourne,flats-vs-houses,Flats vs Houses,Homes,0.488,0.03008407662018911,gentle
+au,melbourne,the-renters-line,The Renters Line,Homes,0.902,-1.2930319761442421,gentle
+au,melbourne,train-vs-car,Train vs Car,Around,0.415,0.21470156800174456,gentle
+au,melbourne,the-no-car-line,The No-Car Line,Around,0.61,-0.27931903444745415,gentle
+au,melbourne,the-bicycle-line,The Bicycle Line,Around,0.317,0.4761044034893951,gentle
+au,melbourne,the-latte-line,The Latte Line,Food,0.164,0.9781502862624715,gentle
+au,melbourne,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.78,-0.7721932141886848,gentle
+au,melbourne,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.976,-1.9773684281819461,gentle
+au,melbourne,the-pokies-line,The Pokies Line,Night,0.109,1.2318637087349833,gentle
+au,melbourne,woolies-vs-coles,Woolies vs Coles,Chains,0.986,-2.197286376641052,chance
+au,melbourne,maccas-vs-kfc,Maccas vs KFC,Chains,0.998,-2.878161739095483,chance
+au,melbourne,maccas-vs-hungry-jacks,Maccas vs Hungry Jack's,Chains,0.999,-3.090232306167813,chance
+au,melbourne,nandos-vs-grilld,Nando's vs Grill'd,Chains,0.603,-0.26111995954851813,chance
+uk,liverpool,the-hi-vis-line,The Hi-Vis Line,Work,0.439,0.15350506037805708,gentle
+uk,liverpool,the-factory-line,The Factory Line,Work,0.02,2.053748910631823,gentle
+uk,liverpool,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.244,0.6934933462832895,gentle
+uk,liverpool,the-degree-line,The Degree Line,Work,0.045,1.6953977102721358,gentle
+uk,liverpool,the-grey-line,The Grey Line,Homes,0.683,-0.4761044034893952,gentle
+uk,liverpool,the-living-alone-line,The Living Alone Line,Homes,0.415,0.21470156800174456,gentle
+uk,liverpool,flats-vs-houses,Flats vs Houses,Homes,0.829,-0.9502209415410152,gentle
+uk,liverpool,the-renters-line,The Renters Line,Homes,0.951,-1.6546279023510777,gentle
+uk,liverpool,train-vs-car,Train vs Car,Around,0.829,-0.9502209415410152,gentle
+uk,liverpool,the-no-car-line,The No-Car Line,Around,0.537,-0.09287860877725654,gentle
+uk,liverpool,the-bicycle-line,The Bicycle Line,Around,0.415,0.21470156800174456,gentle
+uk,liverpool,the-latte-line,The Latte Line,Food,0.293,0.544641654799999,gentle
+uk,liverpool,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.439,0.15350506037805708,gentle
+uk,liverpool,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.268,0.6188730405486286,gentle
+uk,liverpool,the-chicken-shop-line,The Takeaway Line,Food,0.61,-0.27931903444745415,gentle
+uk,liverpool,the-betting-shop-line,The Betting Shop Line,Night,0.122,1.1650469223056024,gentle
+uk,liverpool,the-pub-line,The Pub Line,Night,0.634,-0.34246630146539064,gentle
+uk,liverpool,costa-vs-starbucks,Costa vs Starbucks,Chains,0.816,-0.9002259857014332,chance
+uk,liverpool,tesco-vs-sainsburys,Tesco vs Sainsbury's,Chains,0.293,0.544641654799999,chance
+uk,liverpool,maccas-vs-kfc,McDonald's vs KFC,Chains,0.995,-2.5758293035489004,chance
+jp,kobe,the-hi-vis-line,The Hi-Vis Line,Work,0.732,-0.6188730405486286,gentle
+jp,kobe,the-factory-line,The Factory Line,Work,0.659,-0.4097354803212812,gentle
+jp,kobe,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.065,1.5141018876192835,gentle
+jp,kobe,the-degree-line,The Degree Line,Work,0.415,0.21470156800174456,gentle
+jp,kobe,the-grey-line,The Grey Line,Homes,0.61,-0.27931903444745415,gentle
+jp,kobe,the-living-alone-line,The Living Alone Line,Homes,0.829,-0.9502209415410152,gentle
+jp,kobe,flats-vs-houses,Flats vs Houses,Homes,0.976,-1.9773684281819461,gentle
+jp,kobe,the-renters-line,The Renters Line,Homes,0.756,-0.6934933462832895,gentle
+jp,kobe,train-vs-car,Train vs Car,Around,0.78,-0.7721932141886848,gentle
+jp,kobe,the-bicycle-line,The Bicycle Line,Around,0.244,0.6934933462832895,gentle
+jp,kobe,the-latte-line,The Latte Line,Food,0.488,0.03008407662018911,gentle
+jp,kobe,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.02,2.053748910631823,line
+jp,kobe,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.146,1.0537443021306667,gentle
+jp,kobe,the-late-night-line,The Late-Night Line,Night,0.39,0.27931903444745415,gentle
+jp,kobe,wine-vs-sake,Wine vs Sake,Night,0.01,2.3263478740408408,line
+jp,kobe,izakaya-vs-bistro,Izakaya vs Italian & French,Night,0.065,1.5141018876192835,gentle
+jp,kobe,bars-vs-izakaya,Bars vs Izakaya,Night,0.146,1.0537443021306667,gentle
+jp,kobe,konbini-wars,Konbini Wars: 7-Eleven vs FamilyMart,Chains,0.013,2.226211769317175,chance
+jp,kobe,lawson-vs-familymart,Lawson vs FamilyMart,Chains,0.07,1.4757910281791706,chance
+jp,kobe,gyudon-wars,Gyudon Wars: Matsuya vs Yoshinoya,Chains,0.09,1.3407550336902165,chance
+jp,kobe,sukiya-vs-yoshinoya,Sukiya vs Yoshinoya,Chains,0.673,-0.44821228145660935,chance
+jp,kobe,starbucks-vs-doutor,Starbucks vs Doutor,Chains,0.499,0.0025066308995717666,chance
+jp,kobe,saizeriya-vs-gusto,Saizeriya vs Gusto,Chains,0.604,-0.26371439822153003,chance
+au,adelaide,the-hi-vis-line,The Hi-Vis Line,Work,0.732,-0.6188730405486286,gentle
+au,adelaide,the-factory-line,The Factory Line,Work,0.015,2.1700903775845606,gentle
+au,adelaide,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.366,0.34246630146539064,gentle
+au,adelaide,the-degree-line,The Degree Line,Work,0.075,1.4395314709384563,gentle
+au,adelaide,the-grey-line,The Grey Line,Homes,0.488,0.03008407662018911,gentle
+au,adelaide,the-living-alone-line,The Living Alone Line,Homes,0.439,0.15350506037805708,gentle
+au,adelaide,flats-vs-houses,Flats vs Houses,Homes,0.22,0.7721932141886848,gentle
+au,adelaide,the-renters-line,The Renters Line,Homes,0.659,-0.4097354803212812,gentle
+au,adelaide,train-vs-car,Train vs Car,Around,0.095,1.3105791121681285,gentle
+au,adelaide,the-no-car-line,The No-Car Line,Around,0.366,0.34246630146539064,gentle
+au,adelaide,the-bicycle-line,The Bicycle Line,Around,0.005,2.575829303548901,line
+au,adelaide,the-latte-line,The Latte Line,Food,0.317,0.4761044034893951,gentle
+au,adelaide,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.268,0.6188730405486286,gentle
+au,adelaide,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.561,-0.15350506037805722,gentle
+au,adelaide,woolies-vs-coles,Woolies vs Coles,Chains,0.716,-0.5709994731129873,chance
+au,adelaide,maccas-vs-kfc,Maccas vs KFC,Chains,0.95,-1.6448536269514722,chance
+au,adelaide,maccas-vs-hungry-jacks,Maccas vs Hungry Jack's,Chains,0.988,-2.257129244486225,chance
+jp,kyoto,the-hi-vis-line,The Hi-Vis Line,Work,0.585,-0.21470156800174442,gentle
+jp,kyoto,the-factory-line,The Factory Line,Work,0.39,0.27931903444745415,gentle
+jp,kyoto,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.268,0.6188730405486286,gentle
+jp,kyoto,the-degree-line,The Degree Line,Work,0.585,-0.21470156800174442,gentle
+jp,kyoto,the-grey-line,The Grey Line,Homes,0.341,0.4097354803212811,gentle
+jp,kyoto,the-living-alone-line,The Living Alone Line,Homes,0.122,1.1650469223056024,gentle
+jp,kyoto,flats-vs-houses,Flats vs Houses,Homes,0.04,1.75068607125217,gentle
+jp,kyoto,the-renters-line,The Renters Line,Homes,0.805,-0.8596173642419117,gentle
+jp,kyoto,train-vs-car,Train vs Car,Around,0.707,-0.5446416547999989,gentle
+jp,kyoto,the-bicycle-line,The Bicycle Line,Around,0.01,2.3263478740408408,line
+jp,kyoto,the-latte-line,The Latte Line,Food,0.268,0.6188730405486286,gentle
+jp,kyoto,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.463,0.0928786087772564,gentle
+jp,kyoto,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.463,0.0928786087772564,gentle
+jp,kyoto,the-late-night-line,The Late-Night Line,Night,0.634,-0.34246630146539064,chance
+jp,kyoto,wine-vs-sake,Wine vs Sake,Night,0.08,1.4050715603096329,gentle
+jp,kyoto,izakaya-vs-bistro,Izakaya vs Italian & French,Night,0.927,-1.4538063589405756,gentle
+jp,kyoto,bars-vs-izakaya,Bars vs Izakaya,Night,0.268,0.6188730405486286,gentle
+jp,kyoto,konbini-wars,Konbini Wars: 7-Eleven vs FamilyMart,Chains,0.533,-0.08281329193188133,chance
+jp,kyoto,lawson-vs-familymart,Lawson vs FamilyMart,Chains,0.445,0.13830420796140452,chance
+jp,osaka,the-hi-vis-line,The Hi-Vis Line,Work,0.244,0.6934933462832895,gentle
+jp,osaka,the-factory-line,The Factory Line,Work,0.146,1.0537443021306667,gentle
+jp,osaka,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.171,0.9502209415410152,gentle
+jp,osaka,the-degree-line,The Degree Line,Work,0.22,0.7721932141886848,gentle
+jp,osaka,the-grey-line,The Grey Line,Homes,0.976,-1.9773684281819461,gentle
+jp,osaka,the-living-alone-line,The Living Alone Line,Homes,0.05,1.6448536269514729,gentle
+jp,osaka,flats-vs-houses,Flats vs Houses,Homes,0.999,-3.090232306167813,gentle
+jp,osaka,the-renters-line,The Renters Line,Homes,0.78,-0.7721932141886848,gentle
+jp,osaka,train-vs-car,Train vs Car,Around,0.341,0.4097354803212811,gentle
+jp,osaka,the-bicycle-line,The Bicycle Line,Around,0.829,-0.9502209415410152,gentle
+jp,osaka,the-latte-line,The Latte Line,Food,0.756,-0.6934933462832895,gentle
+jp,osaka,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.244,0.6934933462832895,gentle
+jp,osaka,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.463,0.0928786087772564,gentle
+jp,osaka,the-late-night-line,The Late-Night Line,Night,0.293,0.544641654799999,gentle
+jp,osaka,wine-vs-sake,Wine vs Sake,Night,0.122,1.1650469223056024,gentle
+jp,osaka,izakaya-vs-bistro,Izakaya vs Italian & French,Night,0.951,-1.6546279023510777,gentle
+jp,osaka,bars-vs-izakaya,Bars vs Izakaya,Night,0.463,0.0928786087772564,gentle
+jp,osaka,konbini-wars,Konbini Wars: 7-Eleven vs FamilyMart,Chains,0.749,-0.6713462148778053,chance
+jp,osaka,lawson-vs-familymart,Lawson vs FamilyMart,Chains,0.55,-0.12566134685507416,chance
+jp,osaka,gyudon-wars,Gyudon Wars: Matsuya vs Yoshinoya,Chains,0.845,-1.0152220332170279,chance
+jp,osaka,sukiya-vs-yoshinoya,Sukiya vs Yoshinoya,Chains,0.973,-1.9268365732639106,chance
+jp,osaka,starbucks-vs-doutor,Starbucks vs Doutor,Chains,0.384,0.29499198822262623,chance
+jp,osaka,saizeriya-vs-gusto,Saizeriya vs Gusto,Chains,0.986,-2.197286376641052,chance
+uk,manchester,the-hi-vis-line,The Hi-Vis Line,Work,0.333,0.431644239383956,gentle
+uk,manchester,the-factory-line,The Factory Line,Work,0.01,2.3263478740408408,line
+uk,manchester,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.154,1.0194276182343704,gentle
+uk,manchester,the-degree-line,The Degree Line,Work,0.05,1.6448536269514729,gentle
+uk,manchester,the-grey-line,The Grey Line,Homes,0.999,-3.090232306167813,gentle
+uk,manchester,the-living-alone-line,The Living Alone Line,Homes,0.905,-1.3105791121681285,gentle
+uk,manchester,flats-vs-houses,Flats vs Houses,Homes,0.524,-0.060195411728956635,gentle
+uk,manchester,the-renters-line,The Renters Line,Homes,0.714,-0.5651084520065836,gentle
+uk,manchester,train-vs-car,Train vs Car,Around,0.238,0.7127507602200429,gentle
+uk,manchester,the-no-car-line,The No-Car Line,Around,0.81,-0.8778962950512289,gentle
+uk,manchester,the-bicycle-line,The Bicycle Line,Around,0.19,0.8778962950512288,gentle
+uk,manchester,the-latte-line,The Latte Line,Food,0.286,0.5651084520065838,gentle
+uk,manchester,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.143,1.066937632192765,gentle
+uk,manchester,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.19,0.8778962950512288,gentle
+uk,manchester,the-chicken-shop-line,The Takeaway Line,Food,0.524,-0.060195411728956635,gentle
+uk,manchester,the-betting-shop-line,The Betting Shop Line,Night,0.238,0.7127507602200429,gentle
+uk,manchester,the-pub-line,The Pub Line,Night,0.714,-0.5651084520065836,gentle
+uk,manchester,costa-vs-starbucks,Costa vs Starbucks,Chains,0.577,-0.19422462759888326,chance
+uk,manchester,tesco-vs-sainsburys,Tesco vs Sainsbury's,Chains,0.851,-1.040731886467544,chance
+uk,manchester,maccas-vs-kfc,McDonald's vs KFC,Chains,0.999,-3.090232306167813,chance
+uk,birmingham,the-hi-vis-line,The Hi-Vis Line,Work,0.146,1.0537443021306667,gentle
+uk,birmingham,the-factory-line,The Factory Line,Work,0.005,2.575829303548901,line
+uk,birmingham,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.139,1.0848231279419567,gentle
+uk,birmingham,the-degree-line,The Degree Line,Work,0.104,1.2590839804270721,gentle
+uk,birmingham,the-grey-line,The Grey Line,Homes,0.524,-0.060195411728956635,gentle
+uk,birmingham,the-living-alone-line,The Living Alone Line,Homes,0.714,-0.5651084520065836,gentle
+uk,birmingham,flats-vs-houses,Flats vs Houses,Homes,0.999,-3.090232306167813,gentle
+uk,birmingham,the-renters-line,The Renters Line,Homes,0.762,-0.7127507602200429,gentle
+uk,birmingham,train-vs-car,Train vs Car,Around,0.857,-1.066937632192765,gentle
+uk,birmingham,the-no-car-line,The No-Car Line,Around,0.952,-1.6645628612027212,gentle
+uk,birmingham,the-bicycle-line,The Bicycle Line,Around,0.905,-1.3105791121681285,gentle
+uk,birmingham,the-latte-line,The Latte Line,Food,0.81,-0.8778962950512289,gentle
+uk,birmingham,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.476,0.060195411728956635,gentle
+uk,birmingham,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.143,1.066937632192765,gentle
+uk,birmingham,the-chicken-shop-line,The Takeaway Line,Food,0.524,-0.060195411728956635,gentle
+uk,birmingham,the-betting-shop-line,The Betting Shop Line,Night,0.238,0.7127507602200429,gentle
+uk,birmingham,the-pub-line,The Pub Line,Night,0.119,1.180000540347729,gentle
+uk,birmingham,costa-vs-starbucks,Costa vs Starbucks,Chains,0.726,-0.6007597742493187,chance
+uk,birmingham,tesco-vs-sainsburys,Tesco vs Sainsbury's,Chains,0.979,-2.0335201492530506,chance
+uk,birmingham,maccas-vs-kfc,McDonald's vs KFC,Chains,0.943,-1.5804668183993615,chance
+uk,london,the-hi-vis-line,The Hi-Vis Line,Work,0.28,0.5828415072712162,gentle
+uk,london,the-factory-line,The Factory Line,Work,0.275,0.5977601260424784,gentle
+uk,london,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.03,1.880793608151251,gentle
+uk,london,the-degree-line,The Degree Line,Work,0.33,0.4399131656732338,gentle
+uk,london,the-grey-line,The Grey Line,Homes,0.48,0.05015358346473367,gentle
+uk,london,the-living-alone-line,The Living Alone Line,Homes,0.17,0.9541652531461943,gentle
+uk,london,flats-vs-houses,Flats vs Houses,Homes,0.675,-0.45376219016987956,gentle
+uk,london,the-renters-line,The Renters Line,Homes,0.3,0.5244005127080409,gentle
+uk,london,train-vs-car,Train vs Car,Around,0.42,0.20189347914185088,gentle
+uk,london,the-no-car-line,The No-Car Line,Around,0.22,0.7721932141886848,gentle
+uk,london,the-bicycle-line,The Bicycle Line,Around,0.02,2.053748910631823,gentle
+uk,london,the-latte-line,The Latte Line,Food,0.06,1.5547735945968535,gentle
+uk,london,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.075,1.4395314709384563,gentle
+uk,london,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.425,0.18911842627279252,gentle
+uk,london,the-chicken-shop-line,The Takeaway Line,Food,0.47,0.0752698620998299,gentle
+uk,london,the-betting-shop-line,The Betting Shop Line,Night,0.245,0.6903088239330339,gentle
+uk,london,the-pub-line,The Pub Line,Night,0.345,0.39885506564233686,gentle
+uk,london,greggs-vs-pret,Greggs vs Pret,Chains,0.002,2.878161739095483,line
+uk,london,costa-vs-starbucks,Costa vs Starbucks,Chains,0.025,1.9599639845400545,chance
+uk,london,waitrose-vs-lidl-aldi,Waitrose vs Lidl & Aldi,Chains,0.001,3.090232306167813,line
+uk,london,tesco-vs-sainsburys,Tesco vs Sainsbury's,Chains,0.753,-0.6839606723506823,chance
+uk,london,maccas-vs-kfc,McDonald's vs KFC,Chains,0.994,-2.5121443279304616,chance
+jp,yokohama,the-hi-vis-line,The Hi-Vis Line,Work,0.381,0.30285548089134906,gentle
+jp,yokohama,the-factory-line,The Factory Line,Work,0.03,1.880793608151251,gentle
+jp,yokohama,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.333,0.431644239383956,gentle
+jp,yokohama,the-degree-line,The Degree Line,Work,0.333,0.431644239383956,gentle
+jp,yokohama,the-grey-line,The Grey Line,Homes,0.19,0.8778962950512288,gentle
+jp,yokohama,the-living-alone-line,The Living Alone Line,Homes,0.524,-0.060195411728956635,gentle
+jp,yokohama,flats-vs-houses,Flats vs Houses,Homes,0.429,0.17892066027131204,gentle
+jp,yokohama,the-renters-line,The Renters Line,Homes,0.164,0.9781502862624715,gentle
+jp,yokohama,train-vs-car,Train vs Car,Around,0.714,-0.5651084520065836,gentle
+jp,yokohama,the-bicycle-line,The Bicycle Line,Around,0.857,-1.066937632192765,gentle
+jp,yokohama,the-latte-line,The Latte Line,Food,0.05,1.6448536269514729,gentle
+jp,yokohama,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.571,-0.1789206602713119,gentle
+jp,yokohama,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.286,0.5651084520065838,gentle
+jp,yokohama,the-late-night-line,The Late-Night Line,Night,0.381,0.30285548089134906,gentle
+jp,yokohama,wine-vs-sake,Wine vs Sake,Night,0.81,-0.8778962950512289,gentle
+jp,yokohama,izakaya-vs-bistro,Izakaya vs Italian & French,Night,0.333,0.431644239383956,gentle
+jp,yokohama,bars-vs-izakaya,Bars vs Izakaya,Night,0.055,1.5981931399228175,gentle
+jp,yokohama,konbini-wars,Konbini Wars: 7-Eleven vs FamilyMart,Chains,0.971,-1.895697923991838,chance
+jp,yokohama,lawson-vs-familymart,Lawson vs FamilyMart,Chains,0.516,-0.0401168101849681,chance
+jp,yokohama,gyudon-wars,Gyudon Wars: Matsuya vs Yoshinoya,Chains,0.767,-0.7290027178052185,chance
+jp,yokohama,sukiya-vs-yoshinoya,Sukiya vs Yoshinoya,Chains,0.905,-1.3105791121681285,chance
+jp,yokohama,starbucks-vs-doutor,Starbucks vs Doutor,Chains,0.782,-0.7789655643475452,chance
+jp,yokohama,saizeriya-vs-gusto,Saizeriya vs Gusto,Chains,0.376,0.31600330441248287,chance
+jp,nagoya,the-hi-vis-line,The Hi-Vis Line,Work,0.195,0.8596173642419115,gentle
+jp,nagoya,the-factory-line,The Factory Line,Work,0.268,0.6188730405486286,gentle
+jp,nagoya,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.244,0.6934933462832895,gentle
+jp,nagoya,the-degree-line,The Degree Line,Work,0.463,0.0928786087772564,gentle
+jp,nagoya,the-grey-line,The Grey Line,Homes,0.415,0.21470156800174456,gentle
+jp,nagoya,the-living-alone-line,The Living Alone Line,Homes,0.61,-0.27931903444745415,gentle
+jp,nagoya,flats-vs-houses,Flats vs Houses,Homes,0.976,-1.9773684281819461,gentle
+jp,nagoya,the-renters-line,The Renters Line,Homes,0.439,0.15350506037805708,gentle
+jp,nagoya,train-vs-car,Train vs Car,Around,0.561,-0.15350506037805722,gentle
+jp,nagoya,the-bicycle-line,The Bicycle Line,Around,0.04,1.75068607125217,gentle
+jp,nagoya,the-latte-line,The Latte Line,Food,0.244,0.6934933462832895,gentle
+jp,nagoya,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.293,0.544641654799999,gentle
+jp,nagoya,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.129,1.1311309008386337,gentle
+jp,nagoya,the-late-night-line,The Late-Night Line,Night,0.293,0.544641654799999,gentle
+jp,nagoya,wine-vs-sake,Wine vs Sake,Night,0.854,-1.0537443021306667,gentle
+jp,nagoya,izakaya-vs-bistro,Izakaya vs Italian & French,Night,0.927,-1.4538063589405756,gentle
+jp,nagoya,bars-vs-izakaya,Bars vs Izakaya,Night,0.927,-1.4538063589405756,gentle
+jp,nagoya,konbini-wars,Konbini Wars: 7-Eleven vs FamilyMart,Chains,0.589,-0.22497335831381135,chance
+jp,nagoya,lawson-vs-familymart,Lawson vs FamilyMart,Chains,0.398,0.2585272773163097,chance
+jp,nagoya,gyudon-wars,Gyudon Wars: Matsuya vs Yoshinoya,Chains,0.831,-0.9581244654219025,chance
+jp,nagoya,sukiya-vs-yoshinoya,Sukiya vs Yoshinoya,Chains,0.745,-0.6588376927361878,chance
+jp,nagoya,saizeriya-vs-gusto,Saizeriya vs Gusto,Chains,0.626,-0.3212776395459965,chance
+nz,christchurch,the-hi-vis-line,The Hi-Vis Line,Work,0.683,-0.4761044034893952,gentle
+nz,christchurch,the-factory-line,The Factory Line,Work,0.512,-0.03008407662018911,gentle
+nz,christchurch,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.109,1.2318637087349833,gentle
+nz,christchurch,the-degree-line,The Degree Line,Work,0.317,0.4761044034893951,gentle
+nz,christchurch,the-grey-line,The Grey Line,Homes,0.055,1.5981931399228175,gentle
+nz,christchurch,the-living-alone-line,The Living Alone Line,Homes,0.585,-0.21470156800174442,gentle
+nz,christchurch,flats-vs-houses,Flats vs Houses,Homes,0.561,-0.15350506037805722,gentle
+nz,christchurch,the-renters-line,The Renters Line,Homes,0.951,-1.6546279023510777,gentle
+nz,christchurch,train-vs-car,Train vs Car,Around,0.341,0.4097354803212811,gentle
+nz,christchurch,the-no-car-line,The No-Car Line,Around,0.561,-0.15350506037805722,gentle
+nz,christchurch,the-bicycle-line,The Bicycle Line,Around,0.114,1.205526795972518,gentle
+nz,christchurch,the-latte-line,The Latte Line,Food,0.146,1.0537443021306667,gentle
+nz,christchurch,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.195,0.8596173642419115,gentle
+nz,christchurch,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.707,-0.5446416547999989,gentle
+us,seattle,the-hi-vis-line,The Hi-Vis Line,Work,0.122,1.1650469223056024,gentle
+us,seattle,the-factory-line,The Factory Line,Work,0.439,0.15350506037805708,gentle
+us,seattle,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.195,0.8596173642419115,gentle
+us,seattle,the-degree-line,The Degree Line,Work,0.317,0.4761044034893951,gentle
+us,seattle,the-grey-line,The Grey Line,Homes,0.854,-1.0537443021306667,gentle
+us,seattle,the-living-alone-line,The Living Alone Line,Homes,0.463,0.0928786087772564,gentle
+us,seattle,flats-vs-houses,Flats vs Houses,Homes,0.39,0.27931903444745415,gentle
+us,seattle,the-renters-line,The Renters Line,Homes,0.317,0.4761044034893951,gentle
+us,seattle,train-vs-car,Train vs Car,Around,0.659,-0.4097354803212812,gentle
+us,seattle,the-no-car-line,The No-Car Line,Around,0.878,-1.1650469223056024,gentle
+us,seattle,the-bicycle-line,The Bicycle Line,Around,0.195,0.8596173642419115,gentle
+us,seattle,the-latte-line,The Latte Line,Food,0.146,1.0537443021306667,gentle
+us,seattle,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.035,1.8119106729525978,gentle
+us,seattle,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.195,0.8596173642419115,gentle
+us,seattle,cvs-vs-walgreens,CVS vs Walgreens,Chains,0.404,0.24300696740998223,chance
+us,washington,the-hi-vis-line,The Hi-Vis Line,Work,0.171,0.9502209415410152,gentle
+us,washington,the-factory-line,The Factory Line,Work,0.927,-1.4538063589405756,gentle
+us,washington,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.244,0.6934933462832895,gentle
+us,washington,the-degree-line,The Degree Line,Work,0.537,-0.09287860877725654,gentle
+us,washington,the-grey-line,The Grey Line,Homes,0.805,-0.8596173642419117,gentle
+us,washington,the-living-alone-line,The Living Alone Line,Homes,0.854,-1.0537443021306667,gentle
+us,washington,flats-vs-houses,Flats vs Houses,Homes,0.878,-1.1650469223056024,gentle
+us,washington,the-renters-line,The Renters Line,Homes,0.756,-0.6934933462832895,gentle
+us,washington,train-vs-car,Train vs Car,Around,0.171,0.9502209415410152,gentle
+us,washington,the-no-car-line,The No-Car Line,Around,0.195,0.8596173642419115,gentle
+us,washington,the-bicycle-line,The Bicycle Line,Around,0.878,-1.1650469223056024,gentle
+us,washington,the-latte-line,The Latte Line,Food,0.122,1.1650469223056024,gentle
+us,washington,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.537,-0.09287860877725654,gentle
+us,washington,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.512,-0.03008407662018911,gentle
+us,washington,starbucks-vs-dunkin,Starbucks vs Dunkin',Chains,0.419,0.2044523815368209,chance
+us,chicago,the-hi-vis-line,The Hi-Vis Line,Work,0.146,1.0537443021306667,gentle
+us,chicago,the-factory-line,The Factory Line,Work,0.659,-0.4097354803212812,gentle
+us,chicago,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.659,-0.4097354803212812,gentle
+us,chicago,the-degree-line,The Degree Line,Work,0.05,1.6448536269514729,gentle
+us,chicago,the-grey-line,The Grey Line,Homes,0.805,-0.8596173642419117,gentle
+us,chicago,the-living-alone-line,The Living Alone Line,Homes,0.878,-1.1650469223056024,gentle
+us,chicago,flats-vs-houses,Flats vs Houses,Homes,0.805,-0.8596173642419117,gentle
+us,chicago,the-renters-line,The Renters Line,Homes,0.122,1.1650469223056024,gentle
+us,chicago,train-vs-car,Train vs Car,Around,0.683,-0.4761044034893952,gentle
+us,chicago,the-no-car-line,The No-Car Line,Around,0.439,0.15350506037805708,gentle
+us,chicago,the-bicycle-line,The Bicycle Line,Around,0.045,1.6953977102721358,gentle
+us,chicago,the-latte-line,The Latte Line,Food,0.707,-0.5446416547999989,gentle
+us,chicago,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.512,-0.03008407662018911,gentle
+us,chicago,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.122,1.1650469223056024,gentle
+us,chicago,mcdonalds-vs-burger-king,McDonald's vs Burger King,Chains,0.999,-3.090232306167813,chance
+us,chicago,mcdonalds-vs-wendys,McDonald's vs Wendy's,Chains,0.98,-2.0537489106318225,chance
+us,chicago,starbucks-vs-dunkin,Starbucks vs Dunkin',Chains,0.168,0.9620987539131419,chance
+us,chicago,cvs-vs-walgreens,CVS vs Walgreens,Chains,0.999,-3.090232306167813,chance
+us,sanfrancisco,the-hi-vis-line,The Hi-Vis Line,Work,0.683,-0.4761044034893952,gentle
+us,sanfrancisco,the-factory-line,The Factory Line,Work,0.61,-0.27931903444745415,gentle
+us,sanfrancisco,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.585,-0.21470156800174442,gentle
+us,sanfrancisco,the-degree-line,The Degree Line,Work,0.268,0.6188730405486286,gentle
+us,sanfrancisco,the-grey-line,The Grey Line,Homes,0.005,2.575829303548901,line
+us,sanfrancisco,the-living-alone-line,The Living Alone Line,Homes,0.268,0.6188730405486286,gentle
+us,sanfrancisco,flats-vs-houses,Flats vs Houses,Homes,0.366,0.34246630146539064,gentle
+us,sanfrancisco,the-renters-line,The Renters Line,Homes,0.04,1.75068607125217,gentle
+us,sanfrancisco,train-vs-car,Train vs Car,Around,0.045,1.6953977102721358,gentle
+us,sanfrancisco,the-no-car-line,The No-Car Line,Around,0.61,-0.27931903444745415,gentle
+us,sanfrancisco,the-bicycle-line,The Bicycle Line,Around,0.341,0.4097354803212811,gentle
+us,sanfrancisco,the-latte-line,The Latte Line,Food,0.005,2.575829303548901,line
+us,sanfrancisco,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.005,2.575829303548901,line
+us,sanfrancisco,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.005,2.575829303548901,line
+us,newyork,the-hi-vis-line,The Hi-Vis Line,Work,0.005,2.575829303548901,line
+us,newyork,the-factory-line,The Factory Line,Work,0.114,1.205526795972518,gentle
+us,newyork,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.171,0.9502209415410152,gentle
+us,newyork,the-degree-line,The Degree Line,Work,0.08,1.4050715603096329,gentle
+us,newyork,the-grey-line,The Grey Line,Homes,0.244,0.6934933462832895,gentle
+us,newyork,the-living-alone-line,The Living Alone Line,Homes,0.366,0.34246630146539064,gentle
+us,newyork,flats-vs-houses,Flats vs Houses,Homes,0.122,1.1650469223056024,gentle
+us,newyork,the-renters-line,The Renters Line,Homes,0.244,0.6934933462832895,gentle
+us,newyork,train-vs-car,Train vs Car,Around,0.146,1.0537443021306667,gentle
+us,newyork,the-no-car-line,The No-Car Line,Around,0.119,1.180000540347729,gentle
+us,newyork,the-bicycle-line,The Bicycle Line,Around,0.122,1.1650469223056024,gentle
+us,newyork,the-latte-line,The Latte Line,Food,0.122,1.1650469223056024,gentle
+us,newyork,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.025,1.9599639845400545,line
+us,newyork,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.146,1.0537443021306667,gentle
+us,newyork,mcdonalds-vs-burger-king,McDonald's vs Burger King,Chains,0.861,-1.0848231279419567,chance
+us,newyork,mcdonalds-vs-wendys,McDonald's vs Wendy's,Chains,0.84,-0.994457883209753,chance
+us,newyork,starbucks-vs-dunkin,Starbucks vs Dunkin',Chains,0.001,3.090232306167813,line
+us,newyork,cvs-vs-walgreens,CVS vs Walgreens,Chains,0.089,1.3469386261102798,chance
+us,austin,the-hi-vis-line,The Hi-Vis Line,Work,0.39,0.27931903444745415,gentle
+us,austin,the-factory-line,The Factory Line,Work,0.293,0.544641654799999,gentle
+us,austin,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.854,-1.0537443021306667,gentle
+us,austin,the-degree-line,The Degree Line,Work,0.585,-0.21470156800174442,gentle
+us,austin,the-grey-line,The Grey Line,Homes,0.293,0.544641654799999,gentle
+us,austin,the-living-alone-line,The Living Alone Line,Homes,0.878,-1.1650469223056024,gentle
+us,austin,flats-vs-houses,Flats vs Houses,Homes,0.39,0.27931903444745415,gentle
+us,austin,the-renters-line,The Renters Line,Homes,0.683,-0.4761044034893952,gentle
+us,austin,train-vs-car,Train vs Car,Around,0.439,0.15350506037805708,gentle
+us,austin,the-no-car-line,The No-Car Line,Around,0.829,-0.9502209415410152,gentle
+us,austin,the-bicycle-line,The Bicycle Line,Around,0.114,1.205526795972518,gentle
+us,austin,the-latte-line,The Latte Line,Food,0.415,0.21470156800174456,gentle
+us,austin,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.683,-0.4761044034893952,gentle
+us,austin,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.78,-0.7721932141886848,gentle
+us,austin,mcdonalds-vs-wendys,McDonald's vs Wendy's,Chains,0.889,-1.2212272221055689,chance
+us,austin,cvs-vs-walgreens,CVS vs Walgreens,Chains,0.195,0.8596173642419115,chance
+sg,singapore,flats-vs-houses,Flats vs Houses,Homes,0.065,1.5141018876192835,gentle
+sg,singapore,the-latte-line,The Latte Line,Food,0.293,0.544641654799999,gentle
+sg,singapore,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.317,0.4761044034893951,gentle
+sg,singapore,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.268,0.6188730405486286,gentle
+sg,singapore,mcdonalds-vs-kfc,McDonald's vs KFC,Chains,0.95,-1.6448536269514722,chance
+sg,singapore,cold-storage-vs-fairprice,Cold Storage vs FairPrice,Chains,0.001,3.090232306167813,line
+sg,singapore,seven-eleven-vs-cheers,7-Eleven vs Cheers,Chains,0.565,-0.16365848623314114,chance
+nz,auckland,the-hi-vis-line,The Hi-Vis Line,Work,0.08,1.4050715603096329,gentle
+nz,auckland,the-factory-line,The Factory Line,Work,0.02,2.053748910631823,gentle
+nz,auckland,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.065,1.5141018876192835,gentle
+nz,auckland,the-degree-line,The Degree Line,Work,0.05,1.6448536269514729,gentle
+nz,auckland,the-grey-line,The Grey Line,Homes,0.154,1.0194276182343704,gentle
+nz,auckland,the-living-alone-line,The Living Alone Line,Homes,0.146,1.0537443021306667,gentle
+nz,auckland,flats-vs-houses,Flats vs Houses,Homes,0.78,-0.7721932141886848,gentle
+nz,auckland,the-renters-line,The Renters Line,Homes,0.854,-1.0537443021306667,gentle
+nz,auckland,train-vs-car,Train vs Car,Around,0.244,0.6934933462832895,gentle
+nz,auckland,the-no-car-line,The No-Car Line,Around,0.951,-1.6546279023510777,gentle
+nz,auckland,the-bicycle-line,The Bicycle Line,Around,0.146,1.0537443021306667,gentle
+nz,auckland,the-latte-line,The Latte Line,Food,0.109,1.2318637087349833,gentle
+nz,auckland,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.195,0.8596173642419115,gentle
+nz,auckland,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.39,0.27931903444745415,gentle
+nz,auckland,maccas-vs-burger-king,Maccas vs Burger King,Chains,0.996,-2.6520698079021954,chance
+us,miami,the-hi-vis-line,The Hi-Vis Line,Work,0.415,0.21470156800174456,gentle
+us,miami,the-factory-line,The Factory Line,Work,0.537,-0.09287860877725654,gentle
+us,miami,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.634,-0.34246630146539064,gentle
+us,miami,the-degree-line,The Degree Line,Work,0.585,-0.21470156800174442,gentle
+us,miami,the-grey-line,The Grey Line,Homes,0.561,-0.15350506037805722,gentle
+us,miami,the-living-alone-line,The Living Alone Line,Homes,0.951,-1.6546279023510777,gentle
+us,miami,flats-vs-houses,Flats vs Houses,Homes,0.878,-1.1650469223056024,gentle
+us,miami,the-renters-line,The Renters Line,Homes,0.512,-0.03008407662018911,gentle
+us,miami,train-vs-car,Train vs Car,Around,0.366,0.34246630146539064,gentle
+us,miami,the-no-car-line,The No-Car Line,Around,0.561,-0.15350506037805722,gentle
+us,miami,the-bicycle-line,The Bicycle Line,Around,0.707,-0.5446416547999989,gentle
+us,miami,the-latte-line,The Latte Line,Food,0.195,0.8596173642419115,gentle
+us,miami,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.927,-1.4538063589405756,gentle
+us,miami,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.902,-1.2930319761442421,gentle
+us,miami,mcdonalds-vs-burger-king,McDonald's vs Burger King,Chains,0.899,-1.2758741791491297,chance
+us,miami,cvs-vs-walgreens,CVS vs Walgreens,Chains,0.778,-0.7654560966908779,chance
+us,losangeles,the-hi-vis-line,The Hi-Vis Line,Work,0.415,0.21470156800174456,gentle
+us,losangeles,the-factory-line,The Factory Line,Work,0.02,2.053748910631823,gentle
+us,losangeles,the-laptop-vs-hard-hat-line,The Laptop vs Hard Hat Line,Work,0.171,0.9502209415410152,gentle
+us,losangeles,the-degree-line,The Degree Line,Work,0.317,0.4761044034893951,gentle
+us,losangeles,the-grey-line,The Grey Line,Homes,0.707,-0.5446416547999989,gentle
+us,losangeles,the-living-alone-line,The Living Alone Line,Homes,0.04,1.75068607125217,gentle
+us,losangeles,flats-vs-houses,Flats vs Houses,Homes,0.683,-0.4761044034893952,gentle
+us,losangeles,the-renters-line,The Renters Line,Homes,0.829,-0.9502209415410152,gentle
+us,losangeles,train-vs-car,Train vs Car,Around,0.512,-0.03008407662018911,gentle
+us,losangeles,the-no-car-line,The No-Car Line,Around,0.805,-0.8596173642419117,gentle
+us,losangeles,the-bicycle-line,The Bicycle Line,Around,0.732,-0.6188730405486286,gentle
+us,losangeles,the-latte-line,The Latte Line,Food,0.005,2.575829303548901,line
+us,losangeles,coffee-vs-alcohol,Coffee vs Alcohol,Food,0.05,1.6448536269514729,line
+us,losangeles,drink-out-vs-drink-in,Drink Out vs Drink In,Night,0.561,-0.15350506037805722,gentle
+us,losangeles,mcdonalds-vs-burger-king,McDonald's vs Burger King,Chains,0.98,-2.0537489106318225,chance
+us,losangeles,mcdonalds-vs-wendys,McDonald's vs Wendy's,Chains,0.327,0.44821228145660924,chance
+us,losangeles,starbucks-vs-dunkin,Starbucks vs Dunkin',Chains,0.998,-2.878161739095483,chance
+us,losangeles,cvs-vs-walgreens,CVS vs Walgreens,Chains,0.418,0.20701262338518725,chance
+us,losangeles,whole-foods-vs-walmart,Whole Foods vs Walmart,Chains,0.002,2.878161739095483,line

@@ -1,7 +1,7 @@
 // The Split app: one codebase for every city. City-specific words live in config.ts.
 import type { CityConfig } from "./config";
 import { CITY_LIST, CITATION, SUPPORT_URL } from "./config";
-import type { CityData, Line, HeritageGroup, TimelineLine, TimelineGroup, Brand } from "./types";
+import type { CityData, Identity, IdentityRow, Line, HeritageGroup, TimelineLine, TimelineGroup, Brand } from "./types";
 import { verdict, rankNormal, splitOf, Graph, quickCheck, chainField, chainTest, minCutSides, lamOf } from "./stats";
 import { Viewport } from "./viewport";
 
@@ -10,6 +10,7 @@ const svgNS = "http://www.w3.org/2000/svg";
 const $ = (s: string) => document.querySelector(s) as any;
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 const RAMP = ["#fbf3dc", "#f6d9a0", "#efb066", "#e0803c", "#c4501f", "#8f2a12"];
+const SLOPE = ["#a8571a", "#d98e2b", "#ecc189", "#efe9dc", "#a9c4dc", "#5e8fb8", "#2f5f87"];   // orange side ... blue side
 const rampIdx = (lq: number) => (lq < 0.5 ? 0 : lq < 1 ? 1 : lq < 2 ? 2 : lq < 4 ? 3 : lq < 8 ? 4 : 5);
 const GREY = `<div><i style="background:var(--empty)"></i><span>Not mapped: few people live here</span></div>`;
 const isPhone = () => window.matchMedia("(max-width: 760px)").matches;
@@ -76,6 +77,7 @@ export function start(DATA: CityData, C: CityConfig) {
 
   // ---------- modes and lists
   const her = DATA.heritage;
+  let SHOW: "auto" | "line" | "slope" = "auto";   // draw a line as a sharp split or as a slope
   let SM = 0;   // smoothing slider position, shared by every view
   const SMOOTH_HINT = "Drag to see the overall shape. Display only: it doesn't change any test.";
   let mode = "lines", herKind = C.herKinds[0][0], curHer = her.find((h) => h.kind === herKind) || her[0], ovLine = ref;
@@ -294,6 +296,13 @@ export function start(DATA: CityData, C: CityConfig) {
       sidesLegend(tLine.a, tLine.b, `<div><i style="border:2.6px solid var(--ink);background:none"></i><span>${C.movedTitle}, ${Y0}–${Y1}</span></div>`);
     } else if (mode === "lines") {
       const cmpOn = compare && compare !== current;
+      if (asSlope(current)) {
+        el.innerHTML = `<div class="slopekey">${SLOPE.map((c) => `<span style="background:${c}"></span>`).join("")}</div>
+          <div class="slopewords"><span></span><span></span></div>
+          <div><i style="border-top:2px dashed var(--cut);height:0;background:none"></i><span>Halfway point, not an edge</span></div>${GREY}`;
+        const w = el.querySelectorAll(".slopewords span"); w[0].textContent = "← " + current.a; w[1].textContent = current.b + " →";
+        return;
+      }
       sidesLegend(cmpOn ? `${current.a} (both lines agree)` : current.a, cmpOn ? `${current.b} (both lines agree)` : current.b,
         (cmpOn ? `<div><i class="sw-x"></i><span>The lines disagree here</span></div>` : "")
         + (current.sharp && current.sharp.length && !SM ? `<div><i style="background:var(--cut);height:6px"></i><span>Sharpest stretch of the line</span></div>` : ""));
@@ -314,9 +323,15 @@ export function start(DATA: CityData, C: CityConfig) {
     const l = current, sd = smoothSide(l.side, l.f);
     const flip = !!compare && compare !== current && compare.side.filter((v, i) => v === l.side[i]).length < N / 2;   // line up matching sides first
     const cs = compare && compare !== current ? smoothSide(compare.side, compare.f).map((v) => v !== flip) : null;   // agreement map when comparing
-    areaEls.forEach((p, i) => { p.style.fill = ""; p.setAttribute("class", "area " + (cs && cs[i] !== sd[i] ? "x" : sd[i] ? "a" : "b") + (picked === i ? " picked" : "")); });
+    const slope = asSlope(l);
+    if (slope) {
+      const v = SM ? kernel(l.f!) : l.f!, order = v.map((_, i) => i).sort((a, b) => v[a] - v[b]), rk: number[] = new Array(N);
+      order.forEach((i, k) => (rk[i] = k / Math.max(N - 1, 1)));
+      areaEls.forEach((p, i) => { p.setAttribute("class", "area h" + (picked === i ? " picked" : "")); p.style.fill = SLOPE[6 - Math.min(6, Math.floor(rk[i] * 7))]; });
+    } else areaEls.forEach((p, i) => { p.style.fill = ""; p.setAttribute("class", "area " + (cs && cs[i] !== sd[i] ? "x" : sd[i] ? "a" : "b") + (picked === i ? " picked" : "")); });
+    cutEl.setAttribute("class", slope ? "cut soft" : "cut");
     cutEl.setAttribute("d", SM ? borderPath(sd) : l.cut); smoothNote(l.side, sd);
-    sharpEl.setAttribute("d", !SM && l.sharp ? l.sharp.map((e) => MKD.ep[e]).join("") : "");
+    sharpEl.setAttribute("d", !SM && !slope && l.sharp ? l.sharp.map((e) => MKD.ep[e]).join("") : "");
     drawCompare();
     const [cls, txt] = verdict(l.tier);
     const sureText = l.tier === "line"
@@ -324,6 +339,8 @@ export function start(DATA: CityData, C: CityConfig) {
       : l.tier === "gentle"
         ? `The pattern is real: ${City} clearly isn't random here. But a random ${City} that's just as smooth often draws a border this clean, so read it as a gentle slope across the city rather than a sharp line.`
         : `Versions of ${City} with no real pattern often produce a split like this. The map may still tell a story, but the data can't show it yet.`;
+    const slopeNote = slope ? `<p class="small">Drawn as a slope: the colour fades from orange to blue across ${City}, and the dashed line only marks the halfway point, not an edge.</p>`
+      : l.tier !== "line" && l.f ? `<p class="small">Drawn as a hard split so you can see the halfway line. Set "Show as" to Slope to see the gradient.</p>` : "";
     const fmtP = (p: number) => (p >= 0.995 ? "1, the highest it can be" : p < 0.001 ? "below 0.001" : String(p));
     const own = l.p_own, ng = l.n_group || 1;
     const tech = own !== undefined && ng > 1 && Math.abs(own - l.p) > 0.0015
@@ -340,11 +357,12 @@ export function start(DATA: CityData, C: CityConfig) {
         <div class="side"><span class="sw a"></span><div><b class="ta"></b><div class="ex ea"></div></div></div>
         <div class="side"><span class="sw b"></span><div><b class="tb"></b><div class="ex eb"></div></div></div>
       </div>
-      <div class="box"><h3>How sure are we?</h3><div class="sure ${cls}"><strong>${txt}</strong></div><p class="small">${sureText}</p><p class="small" style="font-size:11.5px">${tech}</p>${mixedNote}${sharpNote}${adj}</div>
+      <div class="box"><h3>How sure are we?</h3><div class="sure ${cls}"><strong>${txt}</strong></div><p class="small">${sureText}</p>${slopeNote}<p class="small" style="font-size:11.5px">${tech}</p>${mixedNote}${sharpNote}${adj}</div>
       <div class="box"><h3>What else changes across it</h3>
         <p class="small" style="margin:0 0 6px">The orange side also has:</p><div class="chips ca"></div>
         <p class="small" style="margin:10px 0 6px">The blue side also has:</p><div class="chips cb"></div></div>
       ${familyBox(l)}
+      ${identityBox()}
       ${(DATA.meta.explain || {})[l.id] || ""}
       ${C.lineExtra ? C.lineExtra(l, DATA) : ""}
       ${C.splitNote ? C.splitNote(l, DATA) : ""}
@@ -357,6 +375,32 @@ export function start(DATA: CityData, C: CityConfig) {
     l.less.forEach((t) => d.querySelector(".cb")!.appendChild(chip(t, "b")));
     renderPassport();
   }
+  function asSlope(l: Line) {
+    if (!l.f || (compare && compare !== l)) return false;
+    return SHOW === "slope" || (SHOW === "auto" && l.tier !== "line");
+  }
+  const showSel = $("#showas") as HTMLSelectElement;
+  showSel.addEventListener("change", () => { SHOW = showSel.value as typeof SHOW; render(); });
+  let idOpen = false;
+  function identityBox() {
+    const id = DATA.meta.identity as Identity | undefined;
+    if (!id) return "";
+    const esc = (t: string) => t.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!));
+    const li = (r: IdentityRow) => `<li><b>${esc(r.name)}</b><span class="small"> · real on its own in ${r.real_in} of ${r.cities} ${r.cities === 1 ? "city" : "cities"}</span></li>`;
+    const real = id.lines.filter((r) => r.verdict === "real across the country"), lean = id.lines.filter((r) => r.verdict === "leaning");
+    const only = id.lines.filter((r) => r.only_here && r.verdict !== "real across the country" && r.verdict !== "leaning");
+    const sec = (t: string, rs: IdentityRow[]) => (rs.length ? `<p class="small" style="margin:8px 0 4px"><b>${t}</b></p><ul class="idlist">${rs.map(li).join("")}</ul>` : "");
+    const many = id.n_cities > 1;
+    return `<details class="box identity" ${idOpen ? "open" : ""}><summary><h3>What makes ${esc(City)} ${esc(City)}</h3></summary>
+      <p class="small">Lines can only be compared between cities that measure the same thing, and chains, local job words and venue types differ by country. So besides the lines every city shares, each country and city has its own.</p>
+      ${many ? sec(`Real across ${id.country}`, real) + sec(`Leaning across ${id.country} (not after allowing for how many lines we tried)`, lean) : ""}
+      ${sec(`Only measured in ${id.country}`, only)}
+      ${many && !real.length ? `<p class="small">No line is real across ${id.country} as a whole: its cities each split their own way.</p>` : ""}
+      <p class="small" style="margin:8px 0 4px"><b>${esc(City)}'s own</b></p>
+      <p class="small">${id.city_real.length ? `Real lines here: ${id.city_real.map(esc).join(", ")}.` : `No line passes here on its own; everything is a slope.`}${id.city_only.length && many ? ` Not a line across ${id.country}: ${id.city_only.map(esc).join(", ")}.` : ""}</p>
+      <footer>${many ? `Pooled over ${id.n_cities} cities in ${id.country} (each city's own p, Stouffer's method, allowing for how many lines we tried). ` : ""}${id.found_in ? `These are the cities we first explored, so treat country lines as found, not yet confirmed.` : `Pooled after the fact, so treat country lines as leads to confirm.`}</footer></details>`;
+  }
+  document.addEventListener("toggle", (e) => { const t = e.target as HTMLElement; if (t.classList && t.classList.contains("identity")) idOpen = (t as HTMLDetailsElement).open; }, true);
   // ---------- line families: lines that trace the same divide (from correlating line scores across 16 cities)
   const FAMILY: Record<string, [string, string]> = {};
   const fam = (ids: string[], name: string, what: string) => ids.forEach((i) => (FAMILY[i] = [name, what]));

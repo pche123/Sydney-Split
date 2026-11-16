@@ -35,6 +35,9 @@ export interface MakeData {
   rep: [number, number][]; signals: Signal[]; brands: Brand[];
 }
 
+export interface IdentityRow { id: string; name: string; verdict: string; cities: number; real_in: number; p: number | null; only_here: boolean }
+export interface Identity { country: string; n_cities: number; found_in: boolean; lines: IdentityRow[]; city_real: string[]; city_only: string[] }
+
 export interface CityData {
   w: number; h: number;
   areas: Area[]; empty: { name: string; d: string }[];
