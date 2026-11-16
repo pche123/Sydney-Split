@@ -6,7 +6,7 @@ Rent per area, ranked within the city (so price levels and inflation cancel out)
   Australia   2021 Census G02 median weekly rent (SA2)
   USA         ACS 2019-2023 median gross rent (B25064), averaged over tracts weighted by renting households
   NZ          Census 2023 weekly rent bands, grouped median (linear within the band holding the middle household)
-Tested with the calibrated landscape test (app settings), and compared with each line's route
+Tested with the calibrated landscape test exactly as the app runs it (200 refits for close calls), and compared with each line's route
 (share of areas on matching sides, orientation ignored).
 """
 import json, os, sys
@@ -48,13 +48,15 @@ for spec in sys.argv[2:]:
     r = np.where(np.isnan(r), np.nanmedian(r), r)
     G = gpd.read_file(f"{wk}/areas.gpkg").to_crs(CITIES[city]["crs"]).reset_index(drop=True)
     z = np.load(f"{wk}/fields.npz"); MS = MultiScaleNull(G.geometry, z["I"], z["J"], z["W"], m=9 if n > 600 else 25)
-    res = calibrated_map_test(MS, rn(r), B=199, R=40, Bin=99, seed=7)
+    res = calibrated_map_test(MS, rn(r), B=199, R=40, Bin=99, seed=7); res["R"] = 40
+    if res["p_cal"] < 0.1:   # as the app does: close calls get 200 refits
+        res = calibrated_map_test(MS, rn(r), B=199, R=200, Bin=99, seed=7); res["R"] = 200
     s = r > np.median(r); match = {}
     for l in d["lines"]:
         if l["group"] == "Chains": continue
         m_ = (s == np.asarray(l["side"], bool)).mean(); match[l["name"]] = max(m_, 1 - m_)
     top = sorted(match.items(), key=lambda x: -x[1])[:3]
-    rows.append(dict(city=city, country=CITIES[city]["country"], areas=n, p_raw=res["p_raw"], p_cal=res["p_cal"],
+    rows.append(dict(city=city, country=CITIES[city]["country"], areas=n, p_raw=res["p_raw"], p_cal=res["p_cal"], R=res["R"],
                      follows=top[0][0], match=round(top[0][1], 3), second=top[1][0], match2=round(top[1][1], 3),
                      latte_match=round(match.get("The Latte Line", np.nan), 3), hivis_match=round(match.get("The Hi-Vis Line", np.nan), 3)))
     print(f"{city:13s} Money Line p = {res['p_cal']:.3f} (raw {res['p_raw']:.3f}); follows {top[0][0]} ({top[0][1]:.0%}), "

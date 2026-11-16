@@ -1,0 +1,15 @@
+city,country,areas,p_raw,p_cal,follows,match,second,match2,latte_match,hivis_match,R,p_holm
+melbourne,au,307,0.165,0.1194029850746268,The Hi-Vis Line,0.772,The Degree Line,0.73,0.645,0.772,200,1.0
+brisbane,au,200,0.64,0.8780487804878049,The Hi-Vis Line,0.69,The No-Car Line,0.69,0.56,0.69,40,1.0
+perth,au,136,0.155,0.2439024390243902,The No-Car Line,0.787,The Hi-Vis Line,0.713,0.581,0.713,40,1.0
+adelaide,au,86,0.305,0.3902439024390244,The Factory Line,0.767,The Hi-Vis Line,0.721,0.651,0.721,40,1.0
+newyork,us,403,0.085,0.0547263681592039,The Degree Line,0.749,The Hi-Vis Line,0.707,0.67,0.707,200,0.711
+losangeles,us,402,0.53,0.7317073170731707,The Hi-Vis Line,0.796,The Degree Line,0.761,0.662,0.796,40,1.0
+chicago,us,401,0.195,0.1463414634146341,The Degree Line,0.783,The Hi-Vis Line,0.766,0.599,0.766,40,1.0
+sanfrancisco,us,187,0.24,0.2195121951219512,The Hi-Vis Line,0.717,The Degree Line,0.701,0.658,0.717,40,1.0
+washington,us,131,0.5,0.7804878048780488,The Degree Line,0.832,The Hi-Vis Line,0.824,0.649,0.824,40,1.0
+austin,us,103,0.645,0.8536585365853658,The Factory Line,0.689,The Hi-Vis Line,0.68,0.612,0.68,40,1.0
+seattle,us,100,0.185,0.2195121951219512,The Hi-Vis Line,0.74,The Degree Line,0.7,0.66,0.74,40,1.0
+miami,us,282,0.62,0.7804878048780488,The Hi-Vis Line,0.723,The Degree Line,0.716,0.518,0.723,40,1.0
+auckland,nz,456,0.17,0.1442786069651741,The Renters Line,0.829,The No-Car Line,0.763,0.596,0.737,200,1.0
+christchurch,nz,126,0.03,0.0248756218905472,The No-Car Line,0.881,The Renters Line,0.802,0.659,0.706,200,0.348

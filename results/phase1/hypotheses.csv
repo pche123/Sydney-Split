@@ -7,8 +7,8 @@ id,verdict,figure,p,n,rule
 6,held,98%–100%,,,"shuffling areas, every no-line scenario"
 7,held,Geary and Moran at a 3 SD step: 0%–2%,,,Seattle; < 10% on both backgrounds
 8,held,"rough background: border 9%, 21% vs edge 1%, 8% (2 and 3 SD)",,,Seattle; border count ≥ edge test at 2 and 3 SD
-9,not testable,needs a large low-density city; the power study was run on Seattle (100 areas),,,
-10,not testable,the ranked versions of the jump tests were not rerun,,,
+9,held,"Los Angeles, smooth background, 3 SD step: edge 54% vs border 36%",,,Los Angeles as the large low-density city
+10,held,smooth: edge 12% standardised vs 1% ranked; rough: edge 8% standardised vs 2% ranked,,,"edge test at a 3 SD step, Seattle; held if ranking halves detection on both backgrounds (the sharpest-border test has too little power to judge)"
 11,held,11 of 167 (7%),0.08442952422438262,167.0,p tests whether the pass rate is below 10%
 12,failed,1 cities: newyork,,,
 13,failed,"passes in no city; candidates tested: seattle, sanfrancisco, christchurch",,,
@@ -47,15 +47,15 @@ id,verdict,figure,p,n,rule
 46,held,closest: chicago–brighton at 0.23,,,
 47,held,"nearest: adelaide (0.18), then perth (0.19)",,,nearest city in another country; held if it is Australian
 48,held,"8 of 8 US cities: newyork→chicago, losangeles→austin, chicago→washington, sanfrancisco→chicago, washington→chicago, austin→miami, seattle→washington, miami→austin",,,
-49,not testable,tract-level rebuild not run yet,,,
-50,not testable,tract-level rebuild not run yet,,,
-51,not testable,tract-level rebuild not run yet,,,
+49,held,"3 of 56 verdicts change at tract level (5%; seattle, austin, washington, sanfrancisco)",,,
+50,held,sanfrancisco the-latte-line: line at tract level; sanfrancisco drink-out-vs-drink-in: line at tract level; sanfrancisco the-grey-line: gentle at tract level; sanfrancisco coffee-vs-alcohol: line at tract level,,,
+51,not testable,needs both levels in many cities; four cities are too few,,,
 52,not testable,income table (B19013) was not downloaded,,,
 53,failed,"newyork: gentle, sanfrancisco: gentle, washington: gentle",,,
 54,not testable,commute-time table was not downloaded,,,
 55,held,"work-from-home side matches Degree on 80%, Train on 56% of areas (mean over 8 cities)",,,
 56,not testable,estate boundaries not available as a map layer,,,
 57,partly,one recorded deviation: US train commuting widened to include light rail (see HYPOTHESES.md),,,
-58,held,21 of 45 scored hypotheses failed or partly held,,,
+58,held,21 of 49 scored hypotheses failed or partly held,,,
 59,failed,The Factory Line Z = 1.2 over 10 cities; The Laptop vs Hard Hat Line Z = 1.3 over 10 cities; The Degree Line Z = 2.0 over 10 cities; The Bicycle Line Z = 1.7 over 10 cities,0.8269152592938286,,"each line pooled over Phase 1 cities (Stouffer), Holm across lines; p shown is the largest of the four"
 60,partly,Flats vs Houses Z = -0.3; The Renters Line Z = -0.2; The Grey Line Z = 0.9,,,

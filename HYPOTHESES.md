@@ -8,9 +8,9 @@ Each phase ends with written predictions; the next phase's cities test them. The
 
 ## Phase 1 in brief (scored 16 Nov 2026)
 
-Eleven held-out cities: eight US cities, Auckland, Christchurch and Singapore. Of 46 scorable hypotheses, 25 held, 15 failed and 6 partly held; 14 could not be tested with this phase's data (mostly change over time). The scoring code is `experiments/phase1_scoring.py`; each verdict's exact rule is in `results/phase1/hypotheses.csv`.
+Eleven held-out cities: eight US cities, Auckland, Christchurch and Singapore. Of 50 scorable hypotheses, 29 held, 15 failed and 6 partly held; 10 could not be tested with this phase's data (mostly change over time). The scoring code is `experiments/phase1_scoring.py`; each verdict's exact rule is in `results/phase1/hypotheses.csv`.
 
-- **The method claims hold.** The published Moran spectral randomisation calls lines on 26–66% of smooth maps with no line, and on 99% of Chicago's gradients; ours stays at 0–10%. But ours reaches 10% on Chicago's smooth maps, above the predicted 8%: a real, mild weakness in very large cities.
+- **The method claims hold.** The published Moran spectral randomisation calls lines on 26–66% of smooth maps with no line, and on 99% of Chicago's gradients; ours stays at 0–10%. But the quick single-fit version reaches 10% on Chicago's smooth maps, above the predicted 8%. The cause is general, not a big-city problem: one map cannot pin down landscape scales as large as the city, so the simulated cities come out slightly too rough (about +0.3–0.4 SD on the border count in both Chicago and Seattle). The calibrated test that every verdict uses absorbs this: 5 false alarms in 72 Chicago maps (6.9%, p = 0.29 against 5%).
 - **Few lines are real** (11 of 167), and **they are slopes, not cliffs** (94% of lines have no sharp stretch).
 - **Which lines exist does not transfer well.** The four lines that looked real in general after pooling Phase 0 (Factory, Laptop vs Hard Hat, Degree, Bicycle) do not replicate in the new cities. The Latte Line does (pooled p = 0.002 after correction), and so does the Hi-Vis Line in direction (it passes outright in New York), though not after correction.
 - **US cities split by shopping more than other countries do:** Starbucks vs Dunkin' in New York, the Latte Line and Whole Foods vs Walmart in Los Angeles, and Cold Storage vs FairPrice in Singapore.
@@ -32,8 +32,8 @@ Eleven held-out cities: eight US cities, Auckland, Christchurch and Singapore. O
 |---|---|---|---|---|
 | 7 | Global Geary's C and Moran's I never detect a line | < 10% detection at a 3 SD step | 0–4% | ✓ Geary and Moran at a 3 SD step: 0%–2% |
 | 8 | Counting the border is never the worst statistic | border count ≥ edge test on rough backgrounds | 26/46% vs 13/22% | ✓ rough background: border 9%, 21% vs edge 1%, 8% (2 and 3 SD) |
-| 9 | The edge test wins in calm, spread-out cities | edge > border count on smooth backgrounds in large low-density cities | Melbourne 48% vs 28% | – needs a large low-density city; the power study was run on Seattle (100 areas) |
-| 10 | Ranking hides jumps | ranking first cuts jump-test power by more than half | near-zero power when ranked | – the ranked versions of the jump tests were not rerun |
+| 9 | The edge test wins in calm, spread-out cities | edge > border count on smooth backgrounds in large low-density cities | Melbourne 48% vs 28% | ✓ Los Angeles, smooth background, 3 SD step: edge 54% vs border 36% |
+| 10 | Ranking hides jumps | ranking first cuts jump-test power by more than half | near-zero power when ranked | ✓ smooth: edge 12% standardised vs 1% ranked; rough: edge 8% standardised vs 2% ranked |
 
 ## C. Which lines are real?
 
@@ -112,9 +112,9 @@ Eleven held-out cities: eight US cities, Auckland, Christchurch and Singapore. O
 
 | # | Hypothesis | Holds if | Phase 0 | Phase 1 |
 |---|---|---|---|---|
-| 49 | Results don't hinge on area size | merging tracts changes < 20% of verdicts | Brighton fingerprint unchanged | – tract-level rebuild not run yet |
-| 50 | Real lines survive merging | passing lines stay real or gentle, never chance | – | – tract-level rebuild not run yet |
-| 51 | More areas mean more power, not more false passes | pass rate rises with areas; false alarms don't | – | – tract-level rebuild not run yet |
+| 49 | Results don't hinge on area size | merging tracts changes < 20% of verdicts | Brighton fingerprint unchanged | ✓ 3 of 56 verdicts change at tract level (5%; seattle, austin, washington, sanfrancisco) |
+| 50 | Real lines survive merging | passing lines stay real or gentle, never chance | – | ✓ sanfrancisco the-latte-line: line at tract level; sanfrancisco drink-out-vs-drink-in: line at tract level; sanfrancisco the-grey-line: gentle at tract level; sanfrancisco coffee-vs-alcohol: line at tract level |
+| 51 | More areas mean more power, not more false passes | pass rate rises with areas; false alarms don't | – | – needs both levels in many cities; four cities are too few |
 
 ## K. Questions only the new cities can answer
 
@@ -131,7 +131,7 @@ Eleven held-out cities: eight US cities, Auckland, Christchurch and Singapore. O
 | # | Hypothesis | Holds if | Phase 0 | Phase 1 |
 |---|---|---|---|---|
 | 57 | Nothing is retuned | no setting changed for Phase 1 | – | ◐ one recorded deviation: US train commuting widened to include light rail (see HYPOTHESES.md) |
-| 58 | Most hypotheses won't survive untouched | at least a third fail or partly hold | – | ✓ 21 of 45 scored hypotheses failed or partly held |
+| 58 | Most hypotheses won't survive untouched | at least a third fail or partly hold | – | ✓ 21 of 49 scored hypotheses failed or partly held |
 
 ## Added during Phase 1 (not pre-registered)
 
@@ -177,6 +177,6 @@ Committed before any Phase 2 census or OpenStreetMap data was opened. Cities: Pa
 | P17 | Grammar is a little more alike within a country | within-country word-pair correlation > across-country, under both baselines | factor 0.23 vs 0.13; mixed 0.35 vs 0.25 | |
 | P18 | Rules rarely beat chance | 4–20% of testable rules beat the copula-plus-spatial baseline | 12% overall (4–18% by city) | |
 | P19 | Nothing is retuned | no setting changed for Phase 2 | one deviation in Phase 1 (US light rail) | |
-| P20 | Many predictions fail | at least a third fail or partly hold | 21 of 45 in Phase 1 | |
+| P20 | Many predictions fail | at least a third fail or partly hold | 21 of 49 in Phase 1 | |
 
 **Exploratory, not scored as predictions:** whether any passing Berlin line follows the 1961–89 sector border, and whether Paris's passing lines follow the Boulevard Périphérique. These are reported either way.

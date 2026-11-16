@@ -86,8 +86,21 @@ if os.path.exists(spf):
         + " vs edge " + ", ".join(f"{det('rough', j, 'edge'):.0%}" for j in [2.0, 3.0]) + " (2 and 3 SD)", None, "Seattle; border count ≥ edge test at 2 and 3 SD")
 else:
     add(7, NA, "power study not run yet"); add(8, NA, "power study not run yet")
-add(9, NA, "needs a large low-density city; the power study was run on Seattle (100 areas)")
-add(10, NA, "the ranked versions of the jump tests were not rerun")
+la = f"{R1}/stat_power_losangeles.csv"
+if os.path.exists(la):
+    sp = pd.read_csv(la); det = lambda bg, j, col: (sp[(sp.background == bg) & (sp.jump == j)][col] <= 0.05).mean()
+    e, j_ = det("smooth", 3.0, "edge"), det("smooth", 3.0, "join")
+    add(9, "held" if e > j_ else "failed", f"Los Angeles, smooth background, 3 SD step: edge {pct(e)} vs border {pct(j_)}", rule="Los Angeles as the large low-density city")
+else:
+    add(9, NA, "power study in Los Angeles not run yet")
+rk = f"{R1}/stat_power_seattle_ranked.csv"
+if os.path.exists(rk):
+    sp = pd.read_csv(rk); det = lambda bg, col: (sp[(sp.background == bg) & (sp.jump == 3.0)][col] <= 0.05).mean()
+    pairs = [(bg, det(bg, "edge"), det(bg, "edge_ranked")) for bg in ("smooth", "rough")]
+    add(10, "held" if all(r <= e / 2 for _, e, r in pairs) else "failed", "; ".join(f"{bg}: edge {pct(e)} standardised vs {pct(r)} ranked" for bg, e, r in pairs),
+        rule="edge test at a 3 SD step, Seattle; held if ranking halves detection on both backgrounds (the sharpest-border test has too little power to judge)")
+else:
+    add(10, NA, "the ranked versions of the jump tests were not rerun")
 
 # ---------------------------------------------------------------- C. which lines are real
 def kind(l): return l.get("kind") or {"Chains": "chain", "Food": "records", "Night": "records"}.get(l["group"], "census")
@@ -336,7 +349,22 @@ else:
     add(47, NA, "Auckland fingerprint missing")
 
 # ---------------------------------------------------------------- J. scale
-for h, why in [(49, "tract-level rebuild not run yet"), (50, "tract-level rebuild not run yet"), (51, "tract-level rebuild not run yet")]: add(h, NA, why)
+TR = os.environ.get("SPLIT_TRACT_APPS", "/tmp/p1tract")
+tc = [c for c in ["seattle", "austin", "washington", "sanfrancisco"] if os.path.exists(f"{TR}/{c}.json") and json.load(open(f"{TR}/{c}.json"))["meta"].get("calibrated")]
+if tc:
+    ch_, tot_, real_ = 0, 0, []
+    for c in tc:
+        A = {l["id"]: l["tier"] for l in app1[c]["lines"] if l["group"] != "Chains"}
+        B = {l["id"]: l["tier"] for l in json.load(open(f"{TR}/{c}.json"))["lines"] if l["group"] != "Chains"}
+        for k in A.keys() & B.keys():
+            tot_ += 1; ch_ += A[k] != B[k]
+            if A[k] == "line": real_.append((c, k, B[k]))
+    add(49, "held" if ch_ / tot_ < 0.20 else "failed", f"{ch_} of {tot_} verdicts change at tract level ({pct(ch_ / tot_)}; {', '.join(tc)})")
+    add(50, ("held" if all(t != "chance" for *_, t in real_) else "failed") if real_ else NA,
+        "; ".join(f"{c} {k}: {t} at tract level" for c, k, t in real_) if real_ else "no census line passed in these cities at merged level")
+    add(51, NA, "needs both levels in many cities; four cities are too few")
+else:
+    for h in (49, 50, 51): add(h, NA, "tract-level rebuild not finished")
 
 # ---------------------------------------------------------------- K. new questions
 add(52, NA, "income table (B19013) was not downloaded")
