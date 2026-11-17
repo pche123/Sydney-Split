@@ -757,13 +757,13 @@ export function start(DATA: CityData, C: CityConfig) {
   // ---------- intro
   const intro = $("#intro") as HTMLElement;
   const openIntro = () => { intro.hidden = false; $("#introLatte").focus(); };
-  const closeIntro = () => { intro.hidden = true; try { localStorage.setItem(C.storageKey, "1"); } catch { /* private mode */ } };
+  const closeIntro = () => { intro.hidden = true; try { localStorage.setItem("split_intro_seen", "1"); } catch { /* private mode */ } };
   $("#introLatte").onclick = () => { closeIntro(); location.hash = ref.id; route(); };
   $("#introSuburb").onclick = () => { closeIntro(); if (mode !== "lines") { location.hash = ref.id; route(); } $("#suburb").focus(); };
   $("#introPlay").onclick = () => { closeIntro(); location.hash = "make"; };
   $("#introClose").onclick = closeIntro; $("#helpbtn").onclick = openIntro;
   intro.addEventListener("click", (e) => { if (e.target === intro) closeIntro(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !intro.hidden) closeIntro(); });
-  let seen = false; try { seen = localStorage.getItem(C.storageKey) === "1"; } catch { /* private mode */ }
+  let seen = false; try { seen = localStorage.getItem("split_intro_seen") === "1" || localStorage.getItem(C.storageKey) === "1"; } catch { /* private mode */ }
   if (!seen && !location.hash) openIntro();
 }
