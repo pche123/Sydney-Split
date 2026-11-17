@@ -139,3 +139,19 @@ shop=bakery (3,265) vs shop=pastry (441) on the 903 Paris food cells: quick p = 
 | São Paulo | Coffee vs Churrasco | 417 | 107 | 1012 | 0.95 | −0.15 | 1 |
 
 Latte pooled over the nine European cities: Stouffer Z = −0.76, p = 0.78. All three meme-line predictions hold (no line in any of them). Coffee vs Churrasco was predicted a slope; the slope is weak (ρ = −0.15, cafés relatively central). The Latte Line's spread is now mixed: pooled real across the Phase 2 European cities (p = 0.014, driven by Barcelona, Paris, Marseille, Rome), absent in the Netherlands, Sweden and Denmark. 82–95% of cafés inside each city box fall in a populated cell; OpenStreetMap coverage of São Paulo cafés is thin (509 in the box).
+
+## COVID-19 cases and Sydney's lines (pre-registered 17 Nov 2026, commit a619166)
+
+`experiments/covid_lines.py` → `results/covid/{summary.json, suburbs.csv}`; figure `experiments/covid_figure.py` → `results/covid/fig_covid_sides.png`. NSW Health confirmed cases by postcode of usual residence (one row per case, 25 Jan 2020 – 7 Feb 2022; 973,412 cases, 1.4% without a postcode), shared to the 300 Sydney suburbs with the ABS POA→SA2 2021 correspondence; 2021 Census population. Delta wave 16 Jun – 15 Dec 2021: 67,293 cases in the study suburbs (of 84,964 NSW cases with a postcode).
+
+| # | Result | Verdict |
+|---|---|---|
+| V1 | Spearman ρ (Delta rate, Latte field) = −0.63; 999 random Sydneys just as smooth: mean 0.00, 95% range −0.51 to 0.54; one-sided p = 0.003, Holm 0.003 | holds |
+| V2 | ρ (Delta rate, Hi-Vis field) = +0.74, p = 0.001 (Holm 0.002); |0.74| ≥ |0.63| | holds |
+| V3 | councils of concern 22.4 vs rest 5.8 cases per 1,000: ratio 3.84 (suburb bootstrap 95% CI 3.44–4.98) | holds (descriptive) |
+| V4 | fast-food side / café side: first wave 2020 0.74 (0.61–0.87), Delta 3.06 (2.47–3.75), Omicron to 7 Feb 2022 1.17 (1.03–1.30) | holds (descriptive) |
+| V5 | within the café side: ρ with household size −0.24, with Hi-Vis +0.40; fast-food side: +0.19 and +0.67 | fails for household size (negative on the café side); Hi-Vis positive on both |
+
+Delta rates: fast-food side 22.2 per 1,000 (about 1 resident in 45), café side 7.3 (1 in 137). By council of concern (per 1,000): Cumberland 38.9, Canterbury-Bankstown 34.9, Liverpool 27.8, Fairfield 27.3, Blacktown 19.8, Campbelltown 16.9, Penrith 15.9, Parramatta 12.1, Strathfield 12.1, Bayside 12.0, Georges River 9.8, Burwood 8.5.
+
+Deviation: the pre-registration said Omicron runs "to the end of the series"; the case-level PCR table ends on 7 Feb 2022, and the aggregated table that runs to 2023 adds rapid antigen tests from January 2022, so Omicron uses the case-level table only. The 2020 first wave had 3,105 study-area cases (≥ 1,000), so it is reported. Reading: these are confirmed cases by home postcode; they mix infection with testing, and the orders followed the cases, so none of this separates cause and effect.

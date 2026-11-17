@@ -1,0 +1,130 @@
+{
+ "source_rows": 973412,
+ "cases_total": 973412.0,
+ "cases_no_postcode": 13544.0,
+ "first_sydney_cases": 3104.8702062,
+ "first_nsw_cases_with_postcode": 4309.0,
+ "delta_sydney_cases": 67292.653847,
+ "delta_nsw_cases_with_postcode": 84964.0,
+ "omicron_sydney_cases": 576266.9011344,
+ "omicron_nsw_cases_with_postcode": 870167.0,
+ "V1": {
+  "rho_latte": -0.6294983977042448,
+  "p": 0.003,
+  "p_holm": 0.003,
+  "null_mean": 0.0032689958382964394,
+  "null_q025": -0.5125743385630781,
+  "null_q975": 0.5423641690161509
+ },
+ "V2": {
+  "rho_hivis": 0.7428540317114634,
+  "p": 0.001,
+  "p_holm": 0.002,
+  "holds": true
+ },
+ "V3": {
+  "ratio": 3.835696330176242,
+  "ci": [
+   3.43959949908958,
+   4.983654817303449
+  ],
+  "concern_suburbs": 155
+ },
+ "V4": {
+  "first": {
+   "ratio": 0.736475356591525,
+   "ci": [
+    0.6123201270942789,
+    0.8708358424850838
+   ]
+  },
+  "delta": {
+   "ratio": 3.055641832948918,
+   "ci": [
+    2.474429214286341,
+    3.746334415116365
+   ]
+  },
+  "omicron": {
+   "ratio": 1.1687264020034431,
+   "ci": [
+    1.0325877680156619,
+    1.2980555985637263
+   ]
+  },
+  "hivis_side": {
+   "first": 0.7624633861395179,
+   "delta": 3.373578666851851,
+   "omicron": 1.2738472401197063
+  }
+ },
+ "V5": {
+  "cafe": {
+   "rho_household": -0.24423299322744108,
+   "rho_hivis": 0.4009582648117694,
+   "n": 150
+  },
+  "fastfood": {
+   "rho_household": 0.18855408713036403,
+   "rho_hivis": 0.673258367038535,
+   "n": 150
+  }
+ },
+ "delta_rate_per_1000": {
+  "sydney": 14.733364608915643,
+  "fastfood": 22.24142351676564,
+  "cafe": 7.278805806667806,
+  "concern": 22.43758240498401,
+  "rest": 5.849676427318492
+ },
+ "councils": {
+  "Cumberland": {
+   "pop": 236605,
+   "delta_per_1000": 38.9
+  },
+  "Canterbury-Bankstown": {
+   "pop": 371788,
+   "delta_per_1000": 34.9
+  },
+  "Liverpool": {
+   "pop": 196331,
+   "delta_per_1000": 27.8
+  },
+  "Fairfield": {
+   "pop": 206535,
+   "delta_per_1000": 27.3
+  },
+  "Blacktown": {
+   "pop": 400991,
+   "delta_per_1000": 19.8
+  },
+  "Campbelltown": {
+   "pop": 177872,
+   "delta_per_1000": 16.9
+  },
+  "Penrith": {
+   "pop": 198035,
+   "delta_per_1000": 15.9
+  },
+  "Parramatta": {
+   "pop": 238989,
+   "delta_per_1000": 12.1
+  },
+  "Strathfield": {
+   "pop": 50131,
+   "delta_per_1000": 12.1
+  },
+  "Bayside": {
+   "pop": 187954,
+   "delta_per_1000": 12.0
+  },
+  "Georges River": {
+   "pop": 136462,
+   "delta_per_1000": 9.8
+  },
+  "Burwood": {
+   "pop": 44369,
+   "delta_per_1000": 8.5
+  }
+ }
+}
