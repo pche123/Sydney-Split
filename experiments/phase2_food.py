@@ -97,6 +97,14 @@ for city, cc in COUNTRY.items():
     I, J = neighbours(xy.x.values, xy.y.values); W = np.full(len(I), 1000.0)
     geom = gpd.GeoSeries([box(x, y, x + 1000, y + 1000) for x, y in zip(xy.x, xy.y)], crs=epsg)
     todo = WHICH[cc] + (["timmies"] if city in ("toronto", "calgary") else [])
+    wd = os.path.join(OUT, city); os.makedirs(wd, exist_ok=True)     # fields for the calibrated double-check
+    FF = {}
+    for line in todo:
+        a, b = LINES[line]; k = idx >= 0
+        A = np.bincount(idx[k & V[a].values], minlength=len(xy)); B = np.bincount(idx[k & V[b].values], minlength=len(xy))
+        FF[line] = np.log((A + 0.5) / (B + 0.5)) + 1e-9 * np.random.default_rng(0).normal(size=len(xy))
+    gpd.GeoDataFrame(xy, geometry=geom).to_file(os.path.join(wd, "areas.gpkg"), driver="GPKG")
+    np.savez_compressed(os.path.join(wd, "fields.npz"), I=I, J=J, W=W, ids=np.array(list(FF)), F=np.column_stack(list(FF.values())))
     todo = [l for l in todo if (city, l) not in done]
     if not todo: continue
     GN = MultiScaleNull(geom, I, J, W, m=9); print(f"{city}: {len(xy)} cells", flush=True)

@@ -112,7 +112,8 @@ LGA = os.environ.get("LGA_SHP")   # exact test: ABS LGA 2021 boundaries (each su
 if LGA:
     CONCERN = {"Bayside", "Blacktown", "Burwood", "Campbelltown", "Canterbury-Bankstown", "Cumberland", "Fairfield", "Georges River",
                "Liverpool", "Parramatta", "Strathfield", "Penrith"}
-    lg = gpd.read_file(LGA).to_crs(7856); lg["nm"] = lg.LGA_NAME21.str.replace(r" \(NSW\)", "", regex=True)
+    lg = gpd.read_file(LGA).to_crs(7856)   # ABS (LGA_NAME21) or Geoscape (ABB_NAME) council boundaries
+    lg["nm"] = lg.LGA_NAME21.str.replace(r" \(NSW\)", "", regex=True) if "LGA_NAME21" in lg else lg.ABB_NAME
     ov = gpd.overlay(G[["SA2_CODE21", "geometry"]], lg[["nm", "geometry"]], how="intersection", keep_geom_type=True)
     ov["a"] = ov.area; best = ov.sort_values("a").groupby("SA2_CODE21").nm.last()
     concern = pd.Series(codes).map(best).isin(CONCERN).values
@@ -124,7 +125,7 @@ pop_ff = pop[concern & ~cafe].sum() / pop[concern].sum()
 others = {k: bal(v) for k, v in [("Hi-Vis (work)", ~hv_prof), ("rent", ~split(rent)), ("income", ~split(inc))]}
 nopen = concern & ~geo.SA3_NAME21.isin({"Penrith", "St Marys"}).values
 add(7, "The 2021 lockdown 'LGAs of concern' were the Latte Line's other side", "Wikipedia, refs 52-55",
-    "councils of concern (approximated by ABS SA3 regions) vs the fast-food side, balanced accuracy, vs random Sydneys",
+    ("councils of concern (exact council boundaries)" if LGA else "councils of concern (approximated by ABS SA3 regions)") + " vs the fast-food side, balanced accuracy, vs random Sydneys",
     f"{pop_ff:.0%} of their residents on the fast-food side; balanced accuracy {m7:.0%} (random Sydneys {nm7:.0%}); "
     + ", ".join(f"{k} {v:.0%}" for k, v in others.items()) + f"; without Penrith {0.5 * ((~cafe)[nopen].mean() + cafe[~concern].mean()):.0%}", p7, "supported" if p7 <= 0.05 else "not supported")
 

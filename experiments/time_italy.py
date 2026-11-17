@@ -35,7 +35,7 @@ def to_cells(sec, cells):
     return ov[cols].mul(w, axis=0).assign(cid=ov.cid).groupby("cid").sum().reindex(cells.cid).fillna(0)
 
 
-rows, pairs = [], []
+rows, pairs, AREAS = [], [], []
 for city, (reg, _) in CITY.items():
     cells = gpd.read_file(os.path.join(ROOT, "results", "phase2", "es_it", city, "areas.gpkg")).reset_index(names="cid")
     now = gpd.read_file(os.path.join(ROOT, "results", "phase2", "es_it", f"{city}_cells.gpkg"))   # 2021 fields (normal scores)
@@ -49,6 +49,8 @@ for city, (reg, _) in CITY.items():
         V[("alone", y)] = (a.PF3 / a.PF1.clip(lower=1)).values
         rows += [dict(city=city, year=int(y), residents=float(a.P1.sum()))]
     V[("grey", "2021")] = now["the-grey-line"].values; V[("alone", "2021")] = now["the-living-alone-line"].values
+    AREAS.append(pd.DataFrame({"city": city, "x": c.x.values, "y": c.y.values, "dist": dist,
+                               **{f"{v}_{y}": np.asarray(V[(v, y)]) for (v, y) in V}}))
     for var in ("grey", "alone"):
         for y in ("1991", "2001", "2011", "2021"):
             rho = pd.Series(V[(var, y)]).corr(pd.Series(dist), method="spearman")
@@ -58,6 +60,7 @@ for city, (reg, _) in CITY.items():
             pairs.append(dict(city=city, var=var, from_=int(y0), to=int(y1), agree=float((s0 == s1).mean()),
                               spearman=pd.Series(V[(var, y0)]).corr(pd.Series(V[(var, y1)]), method="spearman")))
 pd.DataFrame(rows).to_csv(os.path.join(OUT, "italy.csv"), index=False)
+pd.concat(AREAS).to_csv(os.path.join(OUT, "italy_areas.csv.gz"), index=False)
 pd.DataFrame(pairs).rename(columns={"from_": "from"}).to_csv(os.path.join(OUT, "italy_pairs.csv"), index=False)
 print(pd.DataFrame(pairs).round(2).to_string())
 print(pd.DataFrame([r for r in rows if "var" in r]).pivot_table(index=["city", "var"], columns="year", values="rho_dist").round(2))

@@ -30,17 +30,20 @@ V11 = pd.DataFrame({"grey": P[("ALTER_KURZ", 5)] / P[("INSGESAMT", 0)].clip(lowe
     .join(pd.DataFrame({"alone": H[("HHGROESS_KLASS", 1)] / H[("INSGESAMT", 0)].clip(lower=1)}), how="outer") \
     .join(pd.DataFrame({"renters": Wn[("NUTZUNG_DETAIL_HHGEN", 21)] / (Wn[("NUTZUNG_DETAIL_HHGEN", 11)] + Wn[("NUTZUNG_DETAIL_HHGEN", 21)]).clip(lower=1)}), how="outer")
 NOW = {"grey": "the-grey-line", "alone": "the-living-alone-line", "renters": "the-renters-line"}
-rows = []
+rows, AREAS = [], []
 for city in ("berlin", "munich", "hamburg"):
     g = gpd.read_file(os.path.join(ROOT, "results", "phase2", "germany", f"{city}_cells.gpkg"))
     b = g.bounds; key = list(zip(b.minx.round().astype(int), b.miny.round().astype(int)))
     old = V11.reindex(pd.MultiIndex.from_tuples(key, names=["x", "y"]))
     c = g.geometry.centroid; cx, cy = np.average(c.x, weights=g["pop"]), np.average(c.y, weights=g["pop"])
     dist = pd.Series(np.hypot(c.x - cx, c.y - cy).values)
+    AREAS.append(pd.DataFrame({"city": city, "x": c.x.values, "y": c.y.values, "dist": dist.values,
+                               **{f"{v}_2011": old[v].values for v in NOW}, **{f"{v}_2022": g[col].values for v, col in NOW.items()}}))
     for var, col in NOW.items():
         a = pd.Series(old[var].values); n = pd.Series(g[col].values); ok = a.notna()
         s0 = a[ok] > a[ok].median(); s1 = n[ok] > n[ok].median()
         rows.append(dict(city=city, var=var, cells=int(ok.sum()), agree_2011_2022=float((s0 == s1).mean()),
                          spearman=a[ok].corr(n[ok], method="spearman"),
                          rho_dist_2011=a[ok].corr(dist[ok], method="spearman"), rho_dist_2022=n[ok].corr(dist[ok], method="spearman")))
+pd.concat(AREAS).to_csv(os.path.join(OUT, "germany_areas.csv.gz"), index=False)
 R = pd.DataFrame(rows); R.to_csv(os.path.join(OUT, "germany.csv"), index=False); print(R.round(2).to_string())
