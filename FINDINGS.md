@@ -160,3 +160,21 @@ Share of the study area's Delta cases: 75% on the fast-food side of the Latte Li
 ## Aarhus Grey Line, calibrated (R = 200)
 
 `experiments/aarhus_calibrated.py` → `results/phase3/aarhus_grey_calibrated.json`: quick p 0.005, calibrated p 0.005, size of the quick test on refit maps 2.5%. Holm within Aarhus (two lines) 0.01. The one Phase 3 line that passed stands.
+
+## Food lines with 200 refits (17 Nov 2026)
+
+`experiments/run_food_cal200.sh`; every food line with calibrated p (R = 40) below 0.1 rerun with R = 200 (smallest p 0.005).
+
+| Line | City | Calibrated p (R = 200) | Holm (family) |
+|---|---|---|---|
+| Latte | Barcelona | 0.010 | |
+| Latte | Ottawa | 0.010 | |
+| Latte | Marseille | 0.010 | |
+| Latte | Rome | 0.020 | |
+| Latte | Paris | 0.045 | |
+| Croissant | Paris | 0.005 | 0.015 (Paris, Lyon, Marseille) |
+| Bread | Hamburg | 0.005 | 0.010 (Berlin, Hamburg) |
+| Paella | Barcelona | 0.045 | 0.090 (Madrid, Barcelona) |
+| Timmies | Toronto | 0.040 | 0.080 (Toronto, Calgary) |
+
+Latte pooled over the ten European cities (calibrated where available): Stouffer Z = 2.67, p = 0.004 (was 2.20, 0.014 with R = 40). Canada: Z = 0.25, p = 0.40. Croissant and Bread now pass after Holm; Paella and Timmies do not.
