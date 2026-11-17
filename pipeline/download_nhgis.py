@@ -24,6 +24,16 @@ def call(path, body=None):
     except urllib.error.HTTPError as e:
         raise RuntimeError(f"{e.code}: {e.read().decode(errors='replace')[:2000]}")
 
+if len(sys.argv) > 1 and sys.argv[1] == "shapes":      # 2010 tract boundaries, the units every time series is on
+    ext = call(f"/extracts?{Q}", {"shapefiles": ["us_tract_2010_tl2010"], "description": "Split: 2010 tract shapes"})
+    n = ext["number"]; print("extract", n, "submitted; waiting ...", flush=True)
+    while (s := call(f"/extracts/{n}?{Q}")).get("status") != "completed":
+        if s.get("status") == "failed": sys.exit(f"extract failed: {s}")
+        time.sleep(30)
+    out = os.path.expanduser("~/Downloads/upload_us_tracts.zip")
+    with urllib.request.urlopen(urllib.request.Request(s["downloadLinks"]["gisData"]["url"], headers={"Authorization": KEY}), timeout=1200) as r, open(out, "wb") as f:
+        f.write(r.read())
+    sys.exit(f"saved {out}")
 tables, page = [], f"/metadata/time_series_tables?{Q}&pageSize=2500"
 while page:
     d = call(page); tables += d.get("data", [])
