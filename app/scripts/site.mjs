@@ -9,5 +9,5 @@ for (const c of cities) {
   copyFileSync(`dist/${c}/index.html`, c === "sydney" ? "site/index.html" : `site/${c}.html`);
 }
 if (existsSync("public/downloads")) cpSync("public/downloads", "site/downloads", { recursive: true });
-if (existsSync("public/compare.html")) copyFileSync("public/compare.html", "site/compare.html");
+for (const f of ["compare.html", "world.html"]) if (existsSync(`public/${f}`)) copyFileSync(`public/${f}`, `site/${f}`);
 console.log(`site/ ready: ${cities.length} cities`);
