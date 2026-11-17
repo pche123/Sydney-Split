@@ -23,11 +23,11 @@
    "finding": "Count cafés against fast-food places and Sydney really does sort into a café north-east and a fast-food south-west (p = 0.002). The border is cleaner than random on its own (p = 0.02), but not once we allow for the six food lines we tried (p = 0.12): a slope more than a wall."
   },
   {
-   "kind": "yes",
+   "kind": "partly",
    "claim": "There's a Latte Line in other cities too",
    "who": "Bernard Salt, 2011, about Melbourne",
-   "verdict": "Holds, and it's the one line that travels",
-   "finding": "Cafés and fast food sort apart in all 29 cities we tested. Pooled over the 11 cities we held back, the line is real (p = 0.02, after checking the pooling against maps with no line and allowing for every line we pooled). We found this by pooling every line, not as a written prediction, so our European cities are the real test. It passes outright in Brisbane, Fukuoka, Los Angeles and San Francisco."
+   "verdict": "Partly holds, and it's the line that travels furthest",
+   "finding": "Cafés and fast food sort apart in all 29 cities we tested. Pooled over the 11 cities we held back, the line is real (p = 0.02, after checking the pooling against maps with no line and allowing for every line we pooled). We found this by pooling every line, not as a written prediction, so our European cities are the real test: it held in southern Europe (Barcelona, Paris, Marseille, Rome) but not in the Netherlands, Sweden or Denmark. It passes outright in Brisbane, Fukuoka, Los Angeles and San Francisco."
   },
   {
    "kind": "partly",

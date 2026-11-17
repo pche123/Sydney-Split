@@ -119,3 +119,23 @@ Pooled Stouffer Z = −0.36 (p = 0.64). H1 (no line after Holm) holds. H2 holds 
 ## Paris boulangeries vs pâtisseries (exploratory, reader suggestion, not pre-registered)
 
 shop=bakery (3,265) vs shop=pastry (441) on the 903 Paris food cells: quick p = 0.67; Spearman with distance from the centre −0.40 (pâtisseries relatively central). `experiments/paris_bakeries.py`. Viennoiserie has no OSM tag.
+
+## Phase 3 meme lines (pre-registered 17 Nov 2026)
+
+`experiments/phase3_food.py` → `results/phase3/food_lines.csv`. Quick test (199 draws, m=9) on the Phase 3 1 km cells; field log((A+.5)/(B+.5)); slope = Spearman with distance from the population-weighted centre. Holm over all 11 tests.
+
+| City | Line | A | B | Cells | p | Slope | Holm |
+|---|---|---|---|---|---|---|---|
+| Amsterdam | Cafés vs fast food (Snackbar vs Koffiebar) | 740 | 743 | 129 | 0.89 | −0.30 | 1 |
+| Rotterdam | Cafés vs fast food (Snackbar vs Koffiebar) | 256 | 450 | 122 | 0.37 | −0.11 | 1 |
+| The Hague | Cafés vs fast food | 324 | 546 | 114 | 0.88 | 0.13 | 1 |
+| Utrecht | Cafés vs fast food | 149 | 238 | 49 | 0.81 | 0.31 | 1 |
+| Stockholm | Cafés vs fast food (Fika) | 656 | 730 | 221 | 0.31 | −0.04 | 1 |
+| Gothenburg | Cafés vs fast food (Fika) | 288 | 238 | 127 | 0.50 | −0.10 | 1 |
+| Malmö | Cafés vs fast food (Fika) | 159 | 193 | 60 | 0.52 | 0.20 | 1 |
+| Copenhagen | Cafés vs fast food | 957 | 1547 | 198 | 0.32 | 0.13 | 1 |
+| Aarhus | Cafés vs fast food | 183 | 344 | 72 | 0.63 | 0.18 | 1 |
+| São Paulo | Cafés vs fast food | 417 | 1306 | 1012 | 0.32 | 0.28 | 1 |
+| São Paulo | Coffee vs Churrasco | 417 | 107 | 1012 | 0.95 | −0.15 | 1 |
+
+Latte pooled over the nine European cities: Stouffer Z = −0.76, p = 0.78. All three meme-line predictions hold (no line in any of them). Coffee vs Churrasco was predicted a slope; the slope is weak (ρ = −0.15, cafés relatively central). The Latte Line's spread is now mixed: pooled real across the Phase 2 European cities (p = 0.014, driven by Barcelona, Paris, Marseille, Rome), absent in the Netherlands, Sweden and Denmark. 82–95% of cafés inside each city box fall in a populated cell; OpenStreetMap coverage of São Paulo cafés is thin (509 in the box).

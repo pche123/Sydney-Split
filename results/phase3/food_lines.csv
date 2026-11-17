@@ -1,0 +1,12 @@
+city,line,A,B,cells,p,slope_vs_distance,holm_all
+Amsterdam,Latte (cafés vs fast food),740,743,129,0.89,-0.2952202593917711,1.0
+Rotterdam,Latte (cafés vs fast food),256,450,122,0.365,-0.11304238635124464,1.0
+The Hague,Latte (cafés vs fast food),324,546,114,0.88,0.1342905165954517,1.0
+Utrecht,Latte (cafés vs fast food),149,238,49,0.805,0.31010204081632653,1.0
+Stockholm,Latte (cafés vs fast food),656,730,221,0.305,-0.04155669449787097,1.0
+Gothenburg,Latte (cafés vs fast food),288,238,127,0.5,-0.09591183914510686,1.0
+Malmö,Latte (cafés vs fast food),159,193,60,0.52,0.19666574048346766,1.0
+Copenhagen,Latte (cafés vs fast food),957,1547,198,0.315,0.12887000762928624,1.0
+Aarhus,Latte (cafés vs fast food),183,344,72,0.625,0.18280918387034537,1.0
+São Paulo,Latte (cafés vs fast food),417,1306,1012,0.32,0.2807090817461227,1.0
+São Paulo,Coffee vs Churrasco,417,107,1012,0.95,-0.14765566315835982,1.0
