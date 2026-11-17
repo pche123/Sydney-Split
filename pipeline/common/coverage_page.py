@@ -126,7 +126,7 @@ i.d {{ display:inline-block; width:12px; height:12px; border-radius:50%; vertica
 <h1>Which cities can be compared?</h1>
 <p class="lead">Planners often want to model one city on another. That only works if the same thing was measured the same way in both. This page shows which lines each city has, where the definitions differ, and what other countries' data could support.</p>
 <h2>Lines in each city</h2>
-<p class="key small"><span><i class="d d-line"></i> Real line</span><span><i class="d d-gentle"></i> Gentle pattern</span><span><i class="d d-chance"></i> Could be chance</span><span><i class="d d-todo"></i> Data exist, line not built yet</span><span class="t-none">– Not in this city's data</span> Hover a mark for its p-value; click to open the map.</p>
+<p class="key small"><span><i class="d d-line"></i> Real line</span><span><i class="d d-gentle"></i> Gentle pattern</span><span><i class="d d-chance"></i> Could be chance</span><span><i class="d d-todo"></i> Data exist, line not built yet</span><span class="t-none">– Not in this city's data</span> Tap or hover on a mark for its p-value; tap a city to open its map.</p>
 <div class="wrap"><table class="m"><thead><tr><th></th>{head}</tr><tr><th></th>{sub}</tr></thead><tbody>{body}</tbody></table></div>
 <p class="small">The verdict is about each city on its own: whether its border is sharper than random maps of that same city. Compare verdicts, not raw percentages.</p>
 <h2>Same name, different measure</h2>

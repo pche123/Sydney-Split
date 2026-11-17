@@ -100,3 +100,22 @@ Predictions Q1–Q5 in HYPOTHESES.md, committed before the first statistic. Line
 - **Q3 holds:** living alone falls from centre to edge in every Dutch city and year.
 - **Q4 holds:** 1 of 25 lines passes after Holm (Aarhus Grey Line, quick p = 0.005, Holm 0.01; calibrated check pending).
 - **Q5 holds: cities have national sisters.** Comparing each city's slopes for age, living alone and renting, the most similar city is in the same country for 13 of 22 cities (59%; permutation p = 0.001). Cross-border pairs: Amsterdam–Washington, Hamburg–Seattle, Madrid–Calgary, Barcelona–Edmonton, Austin–Toronto, Ottawa–Miami. Figures: results/phase3/fig_sisters.png, fig_age_front.png, fig_age_maps.png.
+
+
+## The Chippy Line (pre-registered 17 Nov 2026, commit 7651aa7)
+
+Chippies (fish_and_chips cuisine or chip / fish bar names) vs cafés, Phase 1 England areas, quick test (199 draws). `experiments/chippy_line.py` → `results/chippy/chippy_line.csv`.
+
+| City | Chippies | Cafés | Chippies per café | p | Holm | Spearman with Latte field |
+|---|---|---|---|---|---|---|
+| London | 638 | 6878 | 0.09 | 0.28 | 1 | −0.45 |
+| Manchester | 332 | 1029 | 0.32 | 0.63 | 1 | −0.44 |
+| Birmingham | 345 | 819 | 0.42 | 0.58 | 1 | −0.60 |
+| Liverpool | 206 | 630 | 0.33 | 0.95 | 1 | −0.63 |
+| Brighton | 58 | 408 | 0.14 | 0.23 | 1 | −0.35 |
+
+Pooled Stouffer Z = −0.36 (p = 0.64). H1 (no line after Holm) holds. H2 holds in substance: the Latte field is log(cafés/fast food), so a negative correlation means chippies sit on the fast-food side; |ρ| > 0.3 in the predicted direction in all five cities. Deviation: the pre-registration wrote "> 0.3" without fixing the sign convention. H3 (Brighton and Liverpool most chippies per café) fails: Birmingham is first, Liverpool second, Brighton fourth.
+
+## Paris boulangeries vs pâtisseries (exploratory, reader suggestion, not pre-registered)
+
+shop=bakery (3,265) vs shop=pastry (441) on the 903 Paris food cells: quick p = 0.67; Spearman with distance from the centre −0.40 (pâtisseries relatively central). `experiments/paris_bakeries.py`. Viennoiserie has no OSM tag.
