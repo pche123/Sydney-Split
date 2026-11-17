@@ -91,3 +91,12 @@ All venue p-values below are from the quick test (199 draws); cities with quick 
 **Canada census lines (quick test, 25 tests).** None passes after Holm within its city (lowest: Toronto Jobless 0.02, Montreal Renters 0.02, Edmonton Degree 0.035), so P6 holds. Pooled: Degree Z = 2.52 (p = 0.006), Renters Z = 1.69 (P9 fails for Canada: renting leans towards a line), Grey Z = −0.71. Living alone falls outward in all five cities (rho −0.34 to −0.70), as everywhere else.
 
 **Did the lines move? Block bootstrap of the change in centre-to-edge slope** (5 km squares resampled, Holm over 37 city–variable tests). The age slope rose — older residents spreading outward — in all 13 cities measured (sign test p = 0.0002); it survives Holm in Los Angeles (+0.19), Washington (+0.37), Milan (+0.82), Berlin (+0.18) and Hamburg (+0.11), with Chicago (+0.32) and Austin (+0.38) at Holm 0.08 and 0.32. Renting and living alone changed by less than 0.07 in 20 of 24 cases; the exceptions are living alone in Miami (−0.22), Austin (+0.17) and Chicago (+0.10), and renting in Austin (+0.15).
+
+## Phase 3: Netherlands, Sweden, Denmark, São Paulo, sister cities (17 Nov 2026)
+
+Predictions Q1–Q5 in HYPOTHESES.md, committed before the first statistic. Line tests are quick tests (199 draws).
+- **Q1 holds: older residents move outward almost everywhere.** The over-65 (São Paulo 60+) centre-to-edge slope rose in 18 of 21 cities with two or more censuses (sign test p = 0.0015): all 13 Phase 2 cities, all four Dutch cities (The Hague +0.29, Holm 0.01; Utrecht +0.39; Rotterdam +0.20; Amsterdam +0.04) and São Paulo (+0.11, Holm 0.01). **Sweden is the exception:** Stockholm (−0.11, p = 0.02), Gothenburg (−0.20) and Malmö (−0.10) moved the other way between 2015 and 2025, the shortest series.
+- **Q2 holds: housing lines stay put.** Renting, living alone and household size changed slope by less than 0.1 per decade in 11 of 13 city–variable pairs (85%).
+- **Q3 holds:** living alone falls from centre to edge in every Dutch city and year.
+- **Q4 holds:** 1 of 25 lines passes after Holm (Aarhus Grey Line, quick p = 0.005, Holm 0.01; calibrated check pending).
+- **Q5 holds: cities have national sisters.** Comparing each city's slopes for age, living alone and renting, the most similar city is in the same country for 13 of 22 cities (59%; permutation p = 0.001). Cross-border pairs: Amsterdam–Washington, Hamburg–Seattle, Madrid–Calgary, Barcelona–Edmonton, Austin–Toronto, Ottawa–Miami. Figures: results/phase3/fig_sisters.png, fig_age_front.png, fig_age_maps.png.
