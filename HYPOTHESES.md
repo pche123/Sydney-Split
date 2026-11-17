@@ -252,3 +252,21 @@ Italy (Rome, Milan) is run on F4 as exploratory only. Food names are a joke; wha
 **Time questions, committed 17 Nov 2026 before any spatial statistic on an older census was computed** (files had been checked only for completeness and national totals). Exploratory throughout. T1 *Lines stay put*: for a variable measured in two censuses on the same areas, the median-split sides agree on ≥ 80% of areas across ten years. T2 *Gradients do not sharpen*: the centre-to-edge Spearman correlation changes by less than 0.1 per decade. T3 *Living alone keeps falling outward*: negative centre-to-edge correlation in every census year where it can be measured. Areas: Italy 1991, 2001, 2011 census sections on the Rome and Milan 1 km cells; Germany 2011 (100 m grid) vs 2022 on the Berlin, Munich and Hamburg cells; Japan 500 m mesh 1995–2020 for Tokyo and Osaka; US 2010 tracts 1990–2020 once tract shapes are in hand.
 
 **Canada census lines, mapping committed 17 Nov 2026 before the first test** (the file had been checked only for completeness). Statistics Canada 2021 Census Profile, dissemination areas allocated by area to 1 km cells (EPSG 3347), cells with ≥ 1,000 residents, largest connected piece; Toronto, Ottawa, Montreal, Calgary, Edmonton boxes as in the OpenStreetMap cut. Grey Line = 65+ (id 24) / all ages (8); Living Alone Line = one-person households (51) / households (50); Renters Line = renters (1416) / tenure total (1414); Degree Line = bachelor's or higher (2008) / 15+ (1998); Jobless Line = unemployment rate (2230), population-weighted. Heritage, language and immigration columns are not used. Scored by the existing predictions: P6 (few lines pass), P9 (housing lines are not lines, pooled Z ≤ 1 for Renters and Grey).
+
+## Phase 3 predictions (Netherlands, Sweden, Denmark, São Paulo), written 17 Nov 2026
+
+Committed before any Phase 3 statistic was computed. Files had been checked only for integrity, row counts, column names and, for Brazil, that column groups sum to their stated totals (to identify variables without the data dictionary).
+
+**Cities and areas.** Amsterdam, Rotterdam, The Hague, Utrecht (CBS 100 m grid summed to 1 km, Dutch RD); Stockholm, Gothenburg, Malmö (SCB 1 km grid); Copenhagen, Aarhus (Eurostat 2021 1 km grid); São Paulo city (IBGE census sectors 2010 and 2022 shared out by area to 1 km cells). Cells with ≥ 1,000 residents, largest connected piece, rook neighbours; city boxes as in `pipeline/get_phase3.py`.
+
+**Variables.** Grey Line = 65+ share (São Paulo: 60+, the nearest band published in both 2010 and 2022). Living Alone Line = one-person households / households (Netherlands). Renters Line = rented share of dwellings, weighted by dwellings (Netherlands). Full House Line = mean household size (Netherlands, São Paulo). Working Line = employed / residents (Eurostat 2021, Denmark only). Years: Netherlands age 2011, 2015, 2020, 2023 and households 2015, 2020, 2023; Sweden 2015, 2020, 2025; São Paulo 2010, 2022. Heritage, migration-background and race columns are not used.
+
+| # | Prediction | Holds if |
+|---|---|---|
+| Q1 | Older residents move outward | the over-65 (60+) centre-to-edge slope rises from first to last year in a majority of the 9 cities with two or more years; sign test p ≤ 0.05 together with the 13 Phase 2 cities |
+| Q2 | Housing lines stay put | Renters, Living Alone and Full House slopes change by less than 0.1 per decade in ≥ 80% of city–variable pairs |
+| Q3 | Living alone falls from centre to edge | negative slope in every Dutch city and year |
+| Q4 | Few lines pass | < 10% of quick-tested city–lines pass after Holm within city |
+| Q5 | Sister cities are national | a city's most similar city (correlation of its slope profile over shared variables) is in the same country more often than chance |
+
+**Meme lines (venue data still to be cut; definitions fixed now).** São Paulo *Coffee vs Churrasco*: cafés (`amenity=cafe`) vs churrascarias (`cuisine` contains churrasco, steak_house, barbecue or brazilian with "churrasc" in the name), predicted a slope, not a line. Amsterdam/Rotterdam *Snackbar vs Koffiebar*: fast food (`amenity=fast_food`) vs cafés, predicted to fail. Stockholm/Gothenburg/Malmö *Fika Line*: cafés vs fast food, predicted to fail. Copenhagen/Aarhus *Pølsevogn Line* is dropped: sausage stands are rarely mapped.
