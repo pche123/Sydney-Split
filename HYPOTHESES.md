@@ -272,3 +272,23 @@ Committed before any Phase 3 statistic was computed. Files had been checked only
 **Meme lines (venue data still to be cut; definitions fixed now).** São Paulo *Coffee vs Churrasco*: cafés (`amenity=cafe`) vs churrascarias (`cuisine` contains churrasco, steak_house, barbecue or brazilian with "churrasc" in the name), predicted a slope, not a line. Amsterdam/Rotterdam *Snackbar vs Koffiebar*: fast food (`amenity=fast_food`) vs cafés, predicted to fail. Stockholm/Gothenburg/Malmö *Fika Line*: cafés vs fast food, predicted to fail. Copenhagen/Aarhus *Pølsevogn Line* is dropped: sausage stands are rarely mapped.
 
 **The Chippy Line, committed 17 Nov 2026 before any chippy was counted** (suggested by a reader). England's five test cities (London, Manchester, Birmingham, Liverpool, Brighton) on the Phase 1 areas and fields. A = chippies: `amenity` fast_food or restaurant with `cuisine` containing fish_and_chips, or name containing "chip" or "fish bar" / "fish & chips". B = cafés (`amenity=cafe`). Field log((A+.5)/(B+.5)) per area, rank-normal; Phase 1 quick landscape test (199 draws, m=9), Holm across the five cities, Stouffer pooled. Predictions: (H1) a gentle pattern, not a line: no city passes after Holm; (H2) it runs the same way as the Latte Line (Spearman of the two fields > 0.3 in at least four of five cities); (H3) Brighton and Liverpool have the most chippies per café. Exploratory.
+
+## COVID-19 cases and Sydney's lines, written 17 Nov 2026
+
+Committed before the case data was downloaded. Motivation: the 2021 lockdown test (claim 7) showed where the extra rules fell; this asks where the disease itself fell. It is descriptive and spatial. It does not judge the public-health orders, and it cannot say why cases were higher anywhere.
+
+**Data.** NSW Health "COVID-19 cases by location" (confirmed cases by notification date and postcode of usual residence; data.nsw.gov.au, CC BY), and the "likely source of infection" table where it covers the period. Postcodes are shared out to the 300 Sydney SA2 suburbs with the ABS ASGS 2021 POA→SA2 correspondence (population ratios). Rate = cases per 1,000 residents (2021 Census population). Postcodes that NSW Health suppressed or left blank are dropped; the share dropped is reported.
+
+**Waves.** Delta: notifications 16 June 2021 to 15 December 2021 (Bondi cluster to the start of Omicron). Omicron: 16 December 2021 to the end of the series. First wave: March to December 2020, reported only if it has at least 1,000 Sydney cases.
+
+**Lines.** The Latte Line field and the Hi-Vis Line field exactly as on the site; the twelve councils of concern from claim 7 (exact council boundaries).
+
+| # | Prediction | Test | Holds if |
+|---|---|---|---|
+| V1 | Delta cases were higher on the fast-food side of the Latte Line | Spearman ρ between the Delta case rate and the Latte field, against the same statistic for 999 random Sydneys just as smooth (the claim-7 null) | ρ < 0 with one-sided p ≤ 0.05 |
+| V2 | The jobs divide predicts Delta cases at least as well as the café divide | same, Hi-Vis field | |ρ_HiVis| ≥ |ρ_Latte| |
+| V3 | The councils of concern had higher Delta rates than the rest of Sydney | population-weighted rate ratio with a 1,000-draw suburb bootstrap CI | ratio > 1, CI excluding 1 (descriptive: the orders followed cases, so this cannot separate cause and effect) |
+| V4 | The divide narrowed in Omicron | rate ratio fast-food side / café side, Delta vs Omicron | Omicron ratio closer to 1 (descriptive; testing changed in Jan 2022, so stated with that caveat) |
+| V5 | Where people live with more others and work on site, Delta rates were higher | Spearman of the Delta rate with household size and with the Hi-Vis field, within each side of the Latte Line | both positive on both sides (exploratory) |
+
+Holm over V1 and V2's p-values. Heritage, language and birthplace are not used, as everywhere in this project. Deaths are not published by postcode, so are not studied.
