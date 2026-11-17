@@ -292,3 +292,16 @@ Committed before the case data was downloaded. Motivation: the 2021 lockdown tes
 | V5 | Where people live with more others and work on site, Delta rates were higher | Spearman of the Delta rate with household size and with the Hi-Vis field, within each side of the Latte Line | both positive on both sides (exploratory) |
 
 Holm over V1 and V2's p-values. Heritage, language and birthplace are not used, as everywhere in this project. Deaths are not published by postcode, so are not studied.
+
+## Korea (Seoul, Busan), written 18 Nov 2026
+
+Committed before any Korean statistic was computed. The file (Statistics Korea / 국가데이터처, "SGIS grid statistics and boundaries", data.go.kr, 2024, 1 km grid, EPSG 5179) was opened only to read its code book and column names. It has one year (2024), so no change-over-time questions. It has no tenure, so no Renters Line.
+
+**Areas.** 1 km cells in boxes around Seoul (126.76–127.19 E, 37.42–37.71 N) and Busan (128.80–129.30 E, 35.00–35.40 N), cells with ≥ 1,000 residents, largest rook-connected piece. **Lines.** Grey = 65+ share (in_age_014–021 over in_age_001–021); Living Alone = one-person households (ga_sd_005) over all households (ga_sd_001–006); Apartment Line = apartments (ho_gb_003) over all dwellings (ho_gb_001–006), Korea's "apartment vs villa" divide. Masked or missing values are treated as missing.
+
+| # | Prediction | Holds if |
+|---|---|---|
+| K1 | Few lines | no Korean city–line passes the quick test after Holm within city (6 tests) |
+| K2 | Living alone falls from centre to edge | negative Spearman slope with distance in both cities |
+| K3 | The age front | over-65 share rises from centre to edge (positive slope) in both cities |
+| K4 | Seoul's sister is East Asian | Seoul's nearest city by the (Grey, Living Alone) slope profile is Japanese |
