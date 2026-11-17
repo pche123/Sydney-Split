@@ -1,7 +1,7 @@
 {
  "title": "The Latte Line on trial",
  "intro": "The Latte Line started as a joke and ended up on Wikipedia. Here is what people say about it, checked against the data. Each test compares real Sydney with random Sydneys that are just as smooth.",
- "footer": "Sources of the claims: the Wikipedia article 'Latte Line' and the press it cites. Tests: experiments/latte_claims.py (results/latte_claims/claims.csv). The lockdown councils are approximated by the ABS regions that make them up. Of the six claims with a p-value, only the lockdown one survives a correction for testing all six. We never test heritage or ethnicity against a line.",
+ "footer": "Sources of the claims: the Wikipedia article 'Latte Line' and the press it cites. Tests: experiments/latte_claims.py (results/latte_claims/claims.csv). The lockdown councils use the exact NSW council boundaries (Geoscape, data.gov.au). Of the six claims with a p-value, only the lockdown one survives a correction for testing all six. We never test heritage or ethnicity against a line.",
  "lines": [
   "the-latte-line",
   "the-red-rooster-line",
@@ -62,7 +62,7 @@
    "claim": "The 2021 lockdown's 'councils of concern' were the line's other side",
    "who": "Wikipedia and the 2021 press",
    "verdict": "Holds",
-   "finding": "79% of their residents lived on the fast-food side. The lockdown map matched the Latte Line far better than random Sydneys do (81% vs 50%, p = 0.004; 0.02 after allowing for the six claims we tested with a p-value), and the jobs line slightly better still (83%). This shows where the rules fell, not whether they were fair."
+   "finding": "78% of their residents lived on the fast-food side. The lockdown map matched the Latte Line far better than random Sydneys do (80% vs 50%, p = 0.005; 0.03 after allowing for the six claims we tested with a p-value), and the jobs line slightly better still (82%). This shows where the rules fell, not whether they were fair."
   },
   {
    "kind": "no",
