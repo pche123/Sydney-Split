@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Split: side by side</title>
+<style>
+:root { --paper:#f3f4f1; --panel:#fff; --ink:#1c2126; --muted:#5d6870; --rule:#dfe2dc; --a:#f0a33a; }
+@media (prefers-color-scheme: dark) { :root { --paper:#14181b; --panel:#1c2125; --ink:#e8ebe7; --muted:#9aa4ab; --rule:#2e353a; } }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--paper); color:var(--ink); font:15px/1.5 "IBM Plex Sans","Segoe UI",system-ui,sans-serif; }
+header { padding:12px 16px 8px; display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; border-bottom:1px solid var(--rule); }
+header h1 { font:800 22px/1.1 "Bricolage Grotesque","Avenir Next",system-ui,sans-serif; margin:0; }
+header a { color:inherit; font-size:14px; }
+.modes { display:flex; flex-wrap:wrap; gap:6px; }
+.modes button { border:1px solid var(--rule); background:var(--panel); color:var(--ink); border-radius:8px; padding:7px 11px; font:inherit; font-size:14px; cursor:pointer; }
+.modes button:hover { border-color:var(--ink); }
+p.help { margin:6px 16px 0; color:var(--muted); font-size:14px; }
+.panes { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:10px; height:calc(100vh - 120px); min-height:560px; }
+.pane { display:flex; flex-direction:column; background:var(--panel); border:1px solid var(--rule); border-radius:12px; overflow:hidden; }
+.bar { display:flex; gap:8px; align-items:center; padding:8px 10px; border-bottom:1px solid var(--rule); flex-wrap:wrap; }
+.bar b { font-size:13px; color:var(--muted); }
+.bar select { font:inherit; font-size:14px; padding:5px 6px; border-radius:7px; border:1px solid var(--rule); background:var(--paper); color:var(--ink); max-width:60%; }
+.bar button { font:inherit; font-size:13px; border:1px solid var(--rule); background:var(--paper); color:var(--ink); border-radius:7px; padding:5px 8px; cursor:pointer; }
+iframe { flex:1; width:100%; border:0; background:var(--paper); }
+#sister { margin:6px 16px 0; font-size:14px; min-height:1.4em; }
+@media (max-width: 820px) { .panes { grid-template-columns:1fr; height:auto; } .pane { height:78vh; } }
+</style></head><body>
+<header>
+  <h1>Side by side</h1>
+  <div class="modes">
+    <button id="mLines">Same city, two lines</button>
+    <button id="mCities">Same line, two cities</button>
+    <button id="mSister">Show me a sister city</button>
+  </div>
+  <a href="index.html">← Back to the maps</a>
+</header>
+<p class="help">Pick a city and a line in each map. Tap an area to see which side it is on. The line list sits in each map, as on the main site.</p>
+<p id="sister"></p>
+<div class="panes">
+  <div class="pane"><div class="bar"><b>Left</b><select id="cA"></select><button id="copyA" title="Show the right map's line here">⇐ same line as right</button></div><iframe id="fA" title="Left map"></iframe></div>
+  <div class="pane"><div class="bar"><b>Right</b><select id="cB"></select><button id="copyB" title="Show the left map's line here">same line as left ⇒</button></div><iframe id="fB" title="Right map"></iframe></div>
+</div>
+<script>
+const CITIES = [["sydney","Sydney"],["melbourne","Melbourne"],["brisbane","Brisbane"],["perth","Perth"],["adelaide","Adelaide"],
+ ["tokyo","Tokyo"],["osaka","Osaka"],["kyoto","Kyoto"],["nagoya","Nagoya"],["yokohama","Yokohama-Kawasaki"],["kobe","Kobe-Hanshin"],["fukuoka","Fukuoka"],["sapporo","Sapporo"],
+ ["london","London"],["manchester","Manchester"],["birmingham","Birmingham"],["liverpool","Liverpool"],["brighton","Brighton"],
+ ["newyork","New York"],["losangeles","Los Angeles"],["chicago","Chicago"],["sanfrancisco","San Francisco–Oakland"],["washington","Washington"],["austin","Austin"],["seattle","Seattle"],["miami","Miami"],
+ ["auckland","Auckland"],["christchurch","Christchurch"],["singapore","Singapore"]];
+const NAME = Object.fromEntries(CITIES);
+const file = (c) => (c === "sydney" ? "index.html" : c + ".html");
+const $ = (s) => document.querySelector(s);
+for (const id of ["#cA", "#cB"]) $(id).innerHTML = CITIES.map(([k, n]) => `<option value="${k}">${n}</option>`).join("");
+const hashOf = (f) => { try { return f.contentWindow.location.hash.slice(1); } catch (e) { return ""; } };
+function load(side, city, line) {
+  $("#c" + side).value = city;
+  $("#f" + side).src = `${file(city)}?embed=1${line ? "#" + line : ""}`;
+}
+let SIS = {};
+fetch("sisters.json").then((r) => r.json()).then((j) => (SIS = j)).catch(() => {});
+const q = new URLSearchParams(location.search);
+const a = q.get("a") || "sydney", la = q.get("la") || "the-latte-line";
+load("A", a, la); load("B", q.get("b") || a, q.get("lb") || (q.get("b") ? la : "the-hi-vis-line"));
+$("#cA").onchange = () => load("A", $("#cA").value, hashOf($("#fA")));
+$("#cB").onchange = () => load("B", $("#cB").value, hashOf($("#fB")));
+$("#copyA").onclick = () => load("A", $("#cA").value, hashOf($("#fB")));
+$("#copyB").onclick = () => load("B", $("#cB").value, hashOf($("#fA")));
+$("#mLines").onclick = () => { const c = $("#cA").value; load("B", c, "the-hi-vis-line"); load("A", c, "the-latte-line"); $("#sister").textContent = ""; };
+$("#mCities").onclick = () => { const l = hashOf($("#fA")) || "the-latte-line"; const b = $("#cB").value === $("#cA").value ? (($("#cA").value === "london") ? "sydney" : "london") : $("#cB").value; load("B", b, l); $("#sister").textContent = ""; };
+$("#mSister").onclick = () => {
+  const c = $("#cA").value, s = (SIS[c] || [])[0];
+  if (!s) { $("#sister").textContent = `We can't fingerprint ${NAME[c]} yet: its census doesn't have the eleven measures we compare.`; return; }
+  load("B", s.city, hashOf($("#fA")));
+  const alt = (SIS[c] || []).slice(1).map((x) => NAME[x.city]).join(" and ");
+  $("#sister").innerHTML = `<b>${NAME[c]}'s sister is ${NAME[s.city]}.</b> Their neighbourhoods sort themselves the same way: where older people, kids, people living alone, house-dwellers, graduates, professionals and train, car, bike and foot commuters live relative to each other. Runners-up: ${alt}.`;
+};
+</script>
+</body></html>

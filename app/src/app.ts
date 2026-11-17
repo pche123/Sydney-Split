@@ -79,7 +79,7 @@ export function start(DATA: CityData, C: CityConfig) {
   const her = DATA.heritage;
   let SHOW: "auto" | "line" | "slope" = "auto";   // draw a line as a sharp split or as a slope
   let SM = 0;   // smoothing slider position, shared by every view
-  const SMOOTH_HINT = "Drag to see the overall shape. Display only: it doesn't change any test.";
+  const SMOOTH_HINT = "Islands are real: pockets of one side surrounded by the other. Drag to see the overall split. Display only: it doesn't change any test.";
   let mode = "lines", herKind = C.herKinds[0][0], curHer = her.find((h) => h.kind === herKind) || her[0], ovLine = ref;
   const TL = DATA.timeline;
   let tKind = "lines", tLine: TimelineLine = TL.lines[0], tGroup: TimelineGroup = TL.groups[0], tYear = Math.max(0, TL.years.length - 1);
@@ -248,9 +248,13 @@ export function start(DATA: CityData, C: CityConfig) {
     if (!t) { tip.style.opacity = "0"; return; }
     tip.innerHTML = "<b></b><br><span></span>"; tip.querySelector("b")!.textContent = t[0]; tip.querySelector("span")!.textContent = t[1];
     const r = map.getBoundingClientRect();
-    const w = Math.min(270, r.width * 0.72);
-    tip.style.left = Math.max(8, Math.min(e.clientX - r.left + 14, r.width - w - 8)) + "px";
-    tip.style.top = Math.max(8, Math.min(e.clientY - r.top + 14, r.height - 70)) + "px";
+    tip.style.left = "0px"; tip.style.top = "0px";
+    const w = tip.offsetWidth, h = tip.offsetHeight;            // measured, so the box never runs off the screen
+    let x = e.clientX - r.left + 14, y = e.clientY - r.top + 14;
+    if (x + w > r.width - 8) x = e.clientX - r.left - w - 14;     // flip to the left of the finger
+    if (y + h > r.height - 8) y = e.clientY - r.top - h - 14;     // or above it
+    tip.style.left = Math.max(8, Math.min(x, r.width - w - 8)) + "px";
+    tip.style.top = Math.max(8, Math.min(y, r.height - h - 8)) + "px";
     tip.style.opacity = "1";
     if (tipTimer) clearTimeout(tipTimer);
     if (sticky) tipTimer = setTimeout(() => (tip.style.opacity = "0"), 3500);
@@ -746,6 +750,8 @@ export function start(DATA: CityData, C: CityConfig) {
   // ---------- routing
   function route() {
     const h = location.hash.slice(1);
+    const pl = document.getElementById("pairlink") as HTMLAnchorElement | null;
+    if (pl) pl.href = `pair.html?a=${__CITY__}&la=${encodeURIComponent(h)}`;
     if (["make"].includes(h) || (["heritage", "overlay"].includes(h) && hasHer) || (h === "timeline" && hasTL)) { setMode(h); return; }
     current = byId[h] || current || lines[0];
     if (mode !== "lines") setMode("lines"); else render();
@@ -764,6 +770,7 @@ export function start(DATA: CityData, C: CityConfig) {
   $("#introClose").onclick = closeIntro; $("#helpbtn").onclick = openIntro;
   intro.addEventListener("click", (e) => { if (e.target === intro) closeIntro(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !intro.hidden) closeIntro(); });
-  let seen = false; try { seen = localStorage.getItem("split_intro_seen") === "1" || localStorage.getItem(C.storageKey) === "1"; } catch { /* private mode */ }
+  const EMBED = new URLSearchParams(location.search).has("embed"); if (EMBED) document.body.classList.add("embed");
+  let seen = EMBED; try { seen = seen || localStorage.getItem("split_intro_seen") === "1" || localStorage.getItem(C.storageKey) === "1"; } catch { /* private mode */ }
   if (!seen && !location.hash) openIntro();
 }

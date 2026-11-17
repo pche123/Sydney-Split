@@ -36,8 +36,9 @@
     </div>
     <p id="tagline"></p>
     <button class="helpbtn" id="helpbtn" aria-label="What is this?">What is this?</button>
-    <a class="cmplink" href="compare.html" title="Which cities can be compared, and how definitions differ">⇄ <span class="long">Compare cities</span></a>
-    <a class="cmplink" href="world.html" title="New: Europe, Canada, food lines and 30 years of change">✦ <span class="long">Europe, Canada &amp; change</span></a>
+    <a class="cmplink" href="compare.html" title="Which cities can be compared, and how definitions differ">⇄ <span class="long">Compare cities</span><span class="short">Compare</span></a>
+    <a class="cmplink" id="pairlink" href="pair.html" title="Two maps side by side: two lines in one city, or one line in two cities">◫ <span class="long">Side by side</span><span class="short">Side by side</span></a>
+    <a class="cmplink" href="world.html" title="New: Europe, Canada, food lines and 30 years of change">✦ <span class="long">Europe, Canada &amp; change</span><span class="short">New results</span></a>
     <details class="dlmenu" id="dlmenu" hidden><summary>⬇ <span class="long">Download data</span></summary><div class="dlpanel" id="dlpanel"></div></details>
     <div class="find">
       <label for="suburb" id="suburbLabel"></label>
@@ -66,7 +67,7 @@
       <div class="yb-ticks" id="yearticks"></div>
     </div>
     <div class="smoothbox" id="smoothbox">
-      <label for="smooth"><b id="smoothlabel">Smooth the line</b> <span class="small" id="smoothinfo">Drag to see the overall shape. Display only: it doesn't change any test.</span></label>
+      <label for="smooth"><b id="smoothlabel">Smooth the line</b> <span class="small" id="smoothinfo">Islands are real: pockets of one side surrounded by the other. Drag to see the overall split. Display only: it doesn't change any test.</span></label>
       <input type="range" id="smooth" min="0" max="20" step="1" value="0">
     </div>
     </div>

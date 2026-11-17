@@ -21,6 +21,15 @@ i.d { display:inline-block; width:12px; height:12px; border-radius:50%; vertical
 .d-line { background:var(--line); } .d-gentle { background:var(--gentle); opacity:.75; width:10px!important; height:10px!important; }
 .d-chance { border:2px solid var(--chance); width:8px!important; height:8px!important; } .d-todo { border:1.5px dashed var(--muted); width:8px!important; height:8px!important; opacity:.7; }
 .key span { margin-right:16px; white-space:nowrap; } ol li { margin:6px 0; } .small { font-size:13px; color:var(--muted); }
+
+/* phone-friendly table: sticky row names, a visible 'more this way' edge, and a tip bar instead of hover tooltips */
+.wrap { position:relative; border-radius:12px 0 0 12px; border-right:none;
+  background: linear-gradient(to left, var(--panel) 30%, rgba(255,255,255,0)) right / 40px 100% no-repeat local,
+              radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,.22), rgba(0,0,0,0)) right / 16px 100% no-repeat scroll, var(--panel); }
+table.m tr > th:first-child, table.m tr > td:first-child { position:sticky; left:0; background:var(--panel); z-index:2; box-shadow: 2px 0 0 var(--rule); }
+.scrollhint { display:none; font-size:13px; color:var(--muted); margin:4px 0; }
+@media (max-width: 1000px) { .scrollhint { display:block; } }
+#tipbar { position:fixed; left:10px; right:10px; bottom:10px; max-width:640px; margin:0 auto; background:var(--ink); color:var(--paper); border-radius:10px; padding:10px 14px; font-size:14px; display:none; z-index:20; }
 </style></head><body><main>
 <p class="small"><a href="index.html">← Back to the maps</a></p>
 <h1>Which cities can be compared?</h1>
@@ -44,4 +53,11 @@ i.d { display:inline-block; width:12px; height:12px; border-radius:50%; vertical
 <div class="wrap"><table><thead><tr><th>Country</th><th>Small areas</th><th>Fit</th><th>What could be compared</th></tr></thead><tbody><tr><th>USA</th><td>Census tracts (ACS 5-year)</td><td>Excellent</td><td>Work, degrees, commuting incl. cycling and working from home, birthplace, ancestry, rent. A survey estimate with margins of error, not a full count.</td></tr><tr><th>New Zealand</th><td>SA2 (2023 Census)</td><td>Excellent</td><td>Very close to Australia: most lines can be compared directly.</td></tr><tr><th>Singapore</th><td>Subzones (2020 Census)</td><td>Good</td><td>Housing type (public flats vs condos), education, transport mode; a city-state, so no suburbs beyond the border.</td></tr><tr><th>France</th><td>IRIS (about 2,000 people)</td><td>Very good</td><td>Managers vs manual workers, diplomas, cycling, immigrants, renting.</td></tr><tr><th>Spain</th><td>Census sections</td><td>Good</td><td>INE indicator files and boundaries for census sections, plus a 1 km grid.</td></tr><tr><th>Italy</th><td>Census sections</td><td>OK</td><td>2021 section data exist for every municipality, but fewer topics than older censuses.</td></tr><tr><th>Germany</th><td>100 m grid (Zensus 2022)</td><td>Thinner</td><td>Grid squares, not neighbourhoods; population, age, housing and rent, little on jobs or degrees.</td></tr></tbody></table></div>
 <p class="small">Fit = how many of the lines above the country's small-area census can support with a similar definition.</p>
 <p class="small" style="margin-top:30px">Please cite: Cheema, P. (2026). Is that line real? Calibrated tests for informal urban divides. https://pche123.github.io/Sydney-Split/</p>
-</main></body></html>
+</main><div id="tipbar" role="status"></div>
+<script>
+for (const w of document.querySelectorAll('.wrap')) { const h = document.createElement('p'); h.className = 'scrollhint'; h.textContent = 'Swipe sideways to see every city →'; w.before(h); }
+const bar = document.getElementById('tipbar'); let t;
+for (const el of document.querySelectorAll('.wrap [title]')) { el.dataset.tip = el.title; el.removeAttribute('title'); }
+function show(e) { const el = e.target.closest('[data-tip]'); if (!el) return; bar.textContent = el.dataset.tip; bar.style.display = 'block'; clearTimeout(t); t = setTimeout(() => bar.style.display = 'none', 4000); }
+document.addEventListener('mouseover', show); document.addEventListener('touchstart', show, {passive: true});
+</script></body></html>
