@@ -156,3 +156,7 @@ Delta rates: fast-food side 22.2 per 1,000 (about 1 resident in 45), café side 
 
 Deviation: the pre-registration said Omicron runs "to the end of the series"; the case-level PCR table ends on 7 Feb 2022, and the aggregated table that runs to 2023 adds rapid antigen tests from January 2022, so Omicron uses the case-level table only. The 2020 first wave had 3,105 study-area cases (≥ 1,000), so it is reported. Reading: these are confirmed cases by home postcode; they mix infection with testing, and the orders followed the cases, so none of this separates cause and effect.
 Share of the study area's Delta cases: 75% on the fast-food side of the Latte Line (which holds 50% of residents), 82% in the councils of concern.
+
+## Aarhus Grey Line, calibrated (R = 200)
+
+`experiments/aarhus_calibrated.py` → `results/phase3/aarhus_grey_calibrated.json`: quick p 0.005, calibrated p 0.005, size of the quick test on refit maps 2.5%. Holm within Aarhus (two lines) 0.01. The one Phase 3 line that passed stands.
