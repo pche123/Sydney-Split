@@ -178,3 +178,18 @@ Share of the study area's Delta cases: 75% on the fast-food side of the Latte Li
 | Timmies | Toronto | 0.040 | 0.080 (Toronto, Calgary) |
 
 Latte pooled over the ten European cities (calibrated where available): Stouffer Z = 2.67, p = 0.004 (was 2.20, 0.014 with R = 40). Canada: Z = 0.25, p = 0.40. Croissant and Bread now pass after Holm; Paella and Timmies do not.
+
+## Korea: Seoul and Busan (pre-registered 18 Nov 2026, commit d075499)
+
+`experiments/korea_build.py`, `experiments/korea_analysis.py` → `results/phase3/{seoul,busan}_cells.csv.gz, korea.json, sisters_two_slopes.csv`. SGIS 2024 1 km grid (data.go.kr, 국가데이터처). Seoul box: 716 cells, 11.95 million residents (Seoul plus the inner Gyeonggi suburbs in the box); Busan: 238 cells, 2.89 million. Quick test, 199 draws, Holm within city (3 lines).
+
+| City | Line | p | Holm | Slope with distance |
+|---|---|---|---|---|
+| Seoul | Grey (65+) | 0.63 | 0.88 | +0.01 |
+| Seoul | Living Alone | 0.44 | 0.88 | −0.30 |
+| Seoul | Apartment | 0.21 | 0.63 | +0.23 |
+| Busan | Grey | 0.16 | 0.48 | +0.06 |
+| Busan | Living Alone | 0.51 | 1.0 | −0.06 |
+| Busan | Apartment | 0.71 | 1.0 | +0.16 |
+
+K1 (no line) holds. K2 (living alone falls outward) holds, strongly in Seoul, weakly in Busan. K3 (over-65s rise outward) holds on sign only: both slopes are close to zero, so age is spread almost evenly. K4 (Seoul's sister is Japanese) fails: on the two slopes every city has (Grey, Living Alone), Seoul's nearest city is Ottawa (distance 0.04), then Montreal and Kobe; Busan's is Yokohama, then Kobe. On these two slopes alone, the nearest sister shares a country for 20% of 40 cities (permutation p = 0.10), weaker than the 59% on three slopes. Phase 1 cities enter with their app Living Alone field (living alone minus families), not the plain share.

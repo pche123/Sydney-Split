@@ -1,0 +1,99 @@
+{
+ "tests": [
+  {
+   "city": "seoul",
+   "line": "grey",
+   "cells": 716,
+   "missing": 0.0,
+   "p": 0.63,
+   "ell_km": 1.3567484121290563,
+   "slope": 0.014464201561277366,
+   "p_holm": 0.88
+  },
+  {
+   "city": "seoul",
+   "line": "alone",
+   "cells": 716,
+   "missing": 0.0,
+   "p": 0.44,
+   "ell_km": 1.1863181887019059,
+   "slope": -0.3010372064064124,
+   "p_holm": 0.88
+  },
+  {
+   "city": "seoul",
+   "line": "apartment",
+   "cells": 716,
+   "missing": 0.03351955307262566,
+   "p": 0.21,
+   "ell_km": 1.2497614408415403,
+   "slope": 0.22810124493886821,
+   "p_holm": 0.63
+  },
+  {
+   "city": "busan",
+   "line": "grey",
+   "cells": 238,
+   "missing": 0.004201680672268893,
+   "p": 0.16,
+   "ell_km": 0.723850664928468,
+   "slope": 0.06185962906939219,
+   "p_holm": 0.48
+  },
+  {
+   "city": "busan",
+   "line": "alone",
+   "cells": 238,
+   "missing": 0.004201680672268893,
+   "p": 0.505,
+   "ell_km": 1.2523141638107909,
+   "slope": -0.06416104309134081,
+   "p_holm": 1.0
+  },
+  {
+   "city": "busan",
+   "line": "apartment",
+   "cells": 238,
+   "missing": 0.01680672268907568,
+   "p": 0.71,
+   "ell_km": 1.479131022617032,
+   "slope": 0.15980865725425586,
+   "p_holm": 1.0
+  }
+ ],
+ "slopes": {
+  "seoul_grey": 0.014464201561277366,
+  "seoul_alone": -0.3010372064064124,
+  "seoul_apartment": 0.22810124493886821,
+  "busan_grey": 0.06185962906939219,
+  "busan_alone": -0.06416104309134081,
+  "busan_apartment": 0.15980865725425586
+ },
+ "sisters": {
+  "seoul": {
+   "sister": "ottawa",
+   "country": "Canada",
+   "distance": 0.04037764082474746,
+   "next3": [
+    "ottawa",
+    "montreal",
+    "kobe"
+   ]
+  },
+  "busan": {
+   "sister": "yokohama",
+   "country": "Japan",
+   "distance": 0.11226362830716508,
+   "next3": [
+    "yokohama",
+    "kobe",
+    "losangeles"
+   ]
+  }
+ },
+ "same_country_two_slopes": {
+  "share": 0.2,
+  "n": 40,
+  "p": 0.1033
+ }
+}
