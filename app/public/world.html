@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Split: Europe, Canada and thirty years of change</title>
+<title>Split: Europe, Canada, São Paulo and thirty years of change</title>
 <style>
 :root { --paper:#f3f4f1; --panel:#fff; --ink:#1c2126; --muted:#5d6870; --rule:#dfe2dc; --line:#2f8f5b; --gentle:#3a78a8; --chance:#a8862c; --no:#9aa4ab; }
 @media (prefers-color-scheme: dark) { :root { --paper:#14181b; --panel:#1c2125; --ink:#e8ebe7; --muted:#9aa4ab; --rule:#2e353a; --line:#4fbf87; --gentle:#7fb6dc; --chance:#d2b25a; --no:#6b757c; } }
@@ -17,9 +17,10 @@ th, td { padding:7px 9px; border-bottom:1px solid var(--rule); text-align:left; 
 .v { font-weight:600; white-space:nowrap; } .yes { color:var(--line); } .maybe { color:var(--chance); } .no { color:var(--no); }
 .bar { height:10px; border-radius:5px; background:var(--gentle); display:inline-block; vertical-align:middle; }
 .small { font-size:13px; color:var(--muted); }
+img.fig { width:100%; max-width:860px; background:#fff; border:1px solid var(--rule); border-radius:12px; padding:6px; box-sizing:border-box; }
 </style></head><body><main>
 <p class="small"><a href="index.html">← Back to the maps</a></p>
-<h1>Europe, Canada and thirty years of change</h1>
+<h1>Europe, Canada, São Paulo and thirty years of change</h1>
 <p class="lead">We took the same tests to ten European cities and six Canadian ones, tried some food lines for fun, and followed 13 cities through their censuses since 1990 to see which lines moved. The predictions were written down before we looked at any of the data.</p>
 
 <h2>The headlines</h2>
@@ -72,8 +73,26 @@ th, td { padding:7px 9px; border-bottom:1px solid var(--rule); text-align:left; 
 </tbody></table></div>
 <p class="small">Every one of the 13 cities moved in the same direction. The change is clear enough to rule out chance in Milan, Washington, Los Angeles, Berlin and Hamburg on their own; German figures cover a shorter span (11 years). The likely reason: people who bought suburban homes decades ago have grown old in them, while younger people move into the centre.</p>
 
+
+<h2>Older residents are moving outward, in almost every city</h2>
+<p>We now have <b>21 cities</b> with two or more censuses. In <b>18 of them</b> people over 65 have moved from the centre towards the suburbs. The new Dutch cities and São Paulo follow the same pattern. The odds of 18 out of 21 by chance are about 1 in 700.</p>
+<p><b>Sweden is the exception.</b> In Stockholm, Gothenburg and Malmö older residents moved slightly <i>towards</i> the centre between 2015 and 2025. That's a shorter stretch of time, and we report it as it is.</p>
+<img class="fig" src="img/fig_age_front.png" alt="Arrows showing how far older residents moved from centre to edge in each city">
+<p class="small">Each arrow runs from the first census to the last. Arrows pointing right (red) mean older people moved outward; left (blue) means inward.</p>
+<img class="fig" src="img/fig_age_maps.png" alt="Maps of Amsterdam and São Paulo showing where older residents live, then and now">
+<p class="small">Red squares have more older residents, blue fewer. Between the two censuses, the red spreads from the core towards the edge.</p>
+
+<h2>Sister cities</h2>
+<p>We gave every city a "fingerprint": how age, living alone and renting change from its centre to its edge. Cities with similar fingerprints are sisters. Most cities' closest sister is in the <b>same country</b>, which is far more often than chance. Each country's housing and planning leaves its mark.</p>
+<p>The surprises are the cross-border sisters: <b>Amsterdam and Washington</b>, <b>Hamburg and Seattle</b>, <b>Madrid and Calgary</b>, <b>Barcelona and Edmonton</b>, <b>Austin and Toronto</b>.</p>
+<img class="fig" src="img/fig_sisters.png" alt="Network of sister cities, coloured by country">
+<p class="small">Each city is joined to the two cities most like it. Colours show the country.</p>
+
+<h2>Coming soon: more meme lines</h2>
+<p>São Paulo's <b>Coffee vs Churrasco Line</b>, Amsterdam's <b>Snackbar vs Koffiebar Line</b> and Sweden's <b>Fika Line</b> are written down and waiting for the shop and café maps.</p>
+
 <h2>New cities</h2>
-<p>Europe: Paris, Lyon, Marseille, Berlin, Munich, Hamburg, Madrid, Barcelona, Rome, Milan. Canada: Toronto, Ottawa, Montreal, Calgary, Edmonton, Gatineau. Over time: eight US cities (1990–2020), Rome and Milan (1991–2021), Berlin, Munich and Hamburg (2011–2022).</p>
-<p class="small">Data: Eurostat 2021 census grid; national censuses of Germany (2011, 2022), Spain (2021), Italy (1991–2021) and Canada (2021); IPUMS NHGIS US census tracts 1990–2020; OpenStreetMap. The full method, numbers and code are in the paper and on <a href="https://github.com/pche123/Sydney-Split">GitHub</a>.</p>
+<p>Europe: Paris, Lyon, Marseille, Berlin, Munich, Hamburg, Madrid, Barcelona, Rome, Milan. Canada: Toronto, Ottawa, Montreal, Calgary, Edmonton, Gatineau. Phase 3: Amsterdam, Rotterdam, The Hague, Utrecht, Stockholm, Gothenburg, Malmö, Copenhagen, Aarhus and São Paulo. Over time: eight US cities (1990–2020), Rome and Milan (1991–2021), Berlin, Munich and Hamburg (2011–2022), the Dutch cities (2011–2023), the Swedish cities (2015–2025) and São Paulo (2010–2022).</p>
+<p class="small">Data: Eurostat 2021 census grid; CBS (Netherlands) and SCB (Sweden) grid statistics; IBGE (Brazil) census sectors; national censuses of Germany (2011, 2022), Spain (2021), Italy (1991–2021) and Canada (2021); IPUMS NHGIS US census tracts 1990–2020; OpenStreetMap. The full method, numbers and code are in the paper and on <a href="https://github.com/pche123/Sydney-Split">GitHub</a>.</p>
 <p class="small" style="margin-top:30px">Please cite: Cheema, P. (2026). Is that line real? Calibrated tests for informal urban divides. https://pche123.github.io/Sydney-Split/</p>
 </main></body></html>
