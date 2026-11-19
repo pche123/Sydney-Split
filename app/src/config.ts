@@ -59,12 +59,12 @@ export const CITY_LIST: { id: string; name: string; country: string }[] = [
   { id: "kobe", name: "Kobe-Hanshin", country: "Japan" }, { id: "fukuoka", name: "Fukuoka", country: "Japan" }, { id: "sapporo", name: "Sapporo", country: "Japan" },
   { id: "london", name: "London", country: "UK" }, { id: "manchester", name: "Manchester", country: "UK" },
   { id: "birmingham", name: "Birmingham", country: "UK" }, { id: "liverpool", name: "Liverpool", country: "UK" }, { id: "brighton", name: "Brighton", country: "UK" },
-  { id: "newyork", name: "New York", country: "US (test cities)" }, { id: "losangeles", name: "Los Angeles", country: "US (test cities)" },
-  { id: "chicago", name: "Chicago", country: "US (test cities)" }, { id: "sanfrancisco", name: "San Francisco–Oakland", country: "US (test cities)" },
-  { id: "washington", name: "Washington", country: "US (test cities)" }, { id: "austin", name: "Austin", country: "US (test cities)" },
-  { id: "seattle", name: "Seattle", country: "US (test cities)" }, { id: "miami", name: "Miami", country: "US (test cities)" },
-  { id: "auckland", name: "Auckland", country: "New Zealand (test cities)" }, { id: "christchurch", name: "Christchurch", country: "New Zealand (test cities)" },
-  { id: "singapore", name: "Singapore", country: "Singapore (test city)" },
+  { id: "newyork", name: "New York", country: "US" }, { id: "losangeles", name: "Los Angeles", country: "US" },
+  { id: "chicago", name: "Chicago", country: "US" }, { id: "sanfrancisco", name: "San Francisco–Oakland", country: "US" },
+  { id: "washington", name: "Washington", country: "US" }, { id: "austin", name: "Austin", country: "US" },
+  { id: "seattle", name: "Seattle", country: "US" }, { id: "miami", name: "Miami", country: "US" },
+  { id: "auckland", name: "Auckland", country: "New Zealand" }, { id: "christchurch", name: "Christchurch", country: "New Zealand" },
+  { id: "singapore", name: "Singapore", country: "Singapore" },
 ];
 const LINKS = CITY_LIST.map((c) => ({ id: c.id, name: c.name, href: c.id === "sydney" ? "./index.html" : `./${c.id}.html` }));
 
@@ -239,7 +239,7 @@ function generic(id: string, name: string, country: Country): CityConfig {
       : country === "nz" ? ["New World", "Pak'nSave"] : country === "sg" ? ["Cold Storage", "FairPrice"] : ["Greggs", "Pret"],
     chainOffset: country === "jp" ? 50 : 200, chainDraws: 99,
     footer: {
-      lines: (d) => `${d.meta.sources}. ${isNew ? `A test city: we wrote down what we expected to find here before looking at its data, then checked (see HYPOTHESES.md on GitHub). ` : ""}Covers ${d.meta.areas} ${name} ${places}. Shop and café locations come from OpenStreetMap, which volunteers map, so some are missing. A ${place}'s side describes the area, not the people in it. ${d.meta.calibrated ? "Every line was double-checked the same way as Sydney and Tokyo's (random landscapes, with the check itself calibrated)." : "This city's lines were checked with one round of random landscapes; the extra double-check used for Sydney and Tokyo is still to come."}`,
+      lines: (d) => `${d.meta.sources}. ${isNew ? `We wrote down what we expected to find here before looking at its data, then checked (see HYPOTHESES.md on GitHub). ` : ""}Covers ${d.meta.areas} ${name} ${places}. Shop and café locations come from OpenStreetMap, which volunteers map, so some are missing. A ${place}'s side describes the area, not the people in it. ${d.meta.calibrated ? "Every line was double-checked the same way as Sydney and Tokyo's (random landscapes, with the check itself calibrated)." : "This city's lines were checked with one round of random landscapes; the extra double-check used for Sydney and Tokyo is still to come."}`,
       timelineLines: country === "au" ? "ABS Census 2011–2021 (Time Series Profile), all years on today's suburbs. Each year the line splits the city's suburbs in half, so it shows who is relatively high or low that year."
         : "Japan Census 2000–2020 (e-Stat small areas), each year shared onto today's neighbourhoods by area. Each year the line splits the city in half, so it shows who is relatively high or low that year. The Census changed its job categories in 2010; comparing within each year keeps the job lines fair.",
       timelineGroups: country === "au" ? "ABS Census 2011–2021 (Time Series Profile, country of birth), all years on today's suburbs. A place's colour describes the area, not anyone in it." : "",

@@ -11,8 +11,8 @@ OUT = os.path.join(ROOT, "app", "public", "compare.html")
 ORDER = [("Australia", ["sydney", "melbourne", "brisbane", "perth", "adelaide"]),
          ("Japan", ["tokyo", "osaka", "kyoto", "nagoya", "yokohama", "kobe", "fukuoka", "sapporo"]),
          ("England", ["london", "manchester", "birmingham", "liverpool", "brighton"]),
-         ("US (test cities)", ["newyork", "losangeles", "chicago", "sanfrancisco", "washington", "austin", "seattle", "miami"]),
-         ("New Zealand (test cities)", ["auckland", "christchurch"]), ("Singapore (test city)", ["singapore"])]
+         ("US", ["newyork", "losangeles", "chicago", "sanfrancisco", "washington", "austin", "seattle", "miami"]),
+         ("New Zealand", ["auckland", "christchurch"]), ("Singapore", ["singapore"])]
 NAME = {"yokohama": "Yokohama–Kawasaki", "kobe": "Kobe–Hanshin", "newyork": "New York", "losangeles": "Los Angeles",
         "sanfrancisco": "San Francisco–Oakland"}
 PAGE = lambda c: "index.html" if c == "sydney" else f"{c}.html"
