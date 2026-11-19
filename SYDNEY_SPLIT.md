@@ -1,6 +1,6 @@
 # Sydney Split: the invisible lines that divide cities
 
-*Prasad Cheema · November 2026 · [interactive maps](https://pche123.github.io/Sydney-Split/) · [full research paper](PAPER.md)*
+*Prasad Cheema · November 2026 · [interactive maps](https://pche123.github.io/Sydney-Split/) · [full research paper with proofs and background](PAPER.md)*
 
 Sydney has a joke called the **Latte Line**: cafés to the north-east, fast food to the south-west. It ended up on Wikipedia. I wanted to know which of these "lines" are real, so I tested them properly. The test asks: if Sydney were random, but just as smooth as the real city, how often would it draw a border this clean? Then I took the same test to 41 cities in 12 countries.
 
@@ -94,11 +94,19 @@ All written down before looking, so no cherry-picking:
 
 In 18 of 21 cities with census data over time (the US since 1990, Italy since 1991, Germany, the Netherlands, Sweden and São Paulo), over-65s have shifted from the centre towards the edge. People who bought suburban houses decades ago have grown old in them. Where people rent or live alone has barely moved: those follow the buildings.
 
+## Do cities have a grammar? No, and that's a result
+
+Give every suburb a four-letter "word": which side it sits on for work, inner city, age and nightlife. Do neighbouring suburbs' words follow rules, like a language? Against random cities that copy each line on its own, 19 of 26 cities seem to have a grammar. But once the random cities also keep the big gradients the lines share (the inner city is the same inner city for every line), only 1 of 26 does (Auckland), about what chance alone would give. The "grammar" was one big map underneath, read four ways.
+
+The same goes for rules like "where over-65s are few and houses are few, people walk to work". Most such rules follow from the correlation table alone. About 12% beat that, against 5% by chance, and they travel badly between countries (Australian rules hold in only 23% of English cases and 32% of Japanese ones).
+
+Why it matters: any AI or "symbolic" model that claims to learn the rules of cities has to beat this baseline first. Ours shows how easy it is to be fooled.
+
 ## Sister cities
 
 ![Sister cities](results/phase3/fig_sisters.png)
 
-Give every city a fingerprint (how age, living alone and renting change from centre to edge) and most cities' closest sister is in the same country. The surprises: Amsterdam's sister is Washington, Hamburg's is Seattle, and Seoul's is Ottawa.
+Give every city a fingerprint (how age, living alone and renting change from centre to edge) and a city's closest sister is in its own country 59% of the time, far more than chance (p = 0.001). Each country's housing leaves its mark. The surprises: Amsterdam's sister is Washington, Hamburg's is Seattle, Madrid's is Calgary, and Seoul's (on the two measures Korea has) is Ottawa.
 
 On the [interactive maps](https://pche123.github.io/Sydney-Split/), tap any suburb to find its **twin suburbs abroad**: Surry Hills' twins include Tenjin in Fukuoka and Barons Court in London.
 

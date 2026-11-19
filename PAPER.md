@@ -47,6 +47,24 @@ One warning belongs at the start. The test is built not to cry wolf, and the pri
 8. **The Latte Line on trial.** Eleven claims from Wikipedia and the press, each tested against random cities just as smooth (Section 9.5).
 9. **Lines beyond the city.** Country-level lines, the Money Line, apparent grammars, and the smallest step the test can see (Section 10.8).
 
+### 1.1 Background: what is already known about lines in cities
+
+**Urban ecology: rings, wedges and dimensions.** The question of how cities sort themselves is a century old. Burgess (1925) described Chicago as concentric rings, from the business district out through a zone in transition to commuter suburbs. Hoyt (1939) found that rents instead formed wedges, sectors that run outward along transport lines and keep their character as the city grows. Harris and Ullman (1945) added multiple nuclei, several centres each pulling uses around itself. Social area analysis (Shevky and Bell, 1955) and factorial ecology (Berry and Rees, 1969) then reduced dozens of census variables to a few dimensions that recur across cities: social rank (occupation and education), familism (household type and age), and ethnicity, with social rank tending to form sectors and familism tending to form rings. Our line families (Section 10.4) rediscover the first two: the work-and-class family is social rank, and the inner-city and age families are familism. We do not test the third, by design.
+
+**Intuition:** a ring is a slope from centre to edge, which our test calls a gentle pattern. A sector is closer to a line: it can have a sharp side. Sydney's Hi-Vis Line, which runs as a wedge from the south-west, fits Hoyt better than Burgess.
+
+**Segregation and sorting.** Schelling (1971) showed that mild individual preferences can produce sharp collective borders, so sharp lines do not need sharp intentions. Massey and Denton (1988) separated segregation into evenness, exposure, concentration, centralisation and clustering. Our border statistic is a clustering measure in their sense; our slope (centre-to-edge Spearman correlation) is a centralisation measure. Neighbourhood-effects research (Sampson, Morenoff and Gannon-Rowley, 2002) asks whether such sorting changes outcomes. We stop short of that question, except for the descriptive COVID-19 study of Section 9.7.
+
+**Spatial statistics.** Tobler's (1970) first law (near things are more related than distant things) is the reason the problem is hard. Moran's I (Moran, 1950), Geary's c (Geary, 1954) and join counts (Cliff and Ord, 1981) measure autocorrelation but assume a null of no spatial structure, which every census map rejects trivially. The useful null is a map that is just as smooth but has no line. That is the problem of constrained randomisation, solved for regular grids by phase randomisation and for irregular areas by Moran spectral randomisation (Wagner and Dray, 2015), the method we show fails (Section 4). Boundary detection has its own literature: wombling looks for steep gradients (Womble, 1951; Lu and Carlin, 2005), spatial scan statistics look for unusual clusters (Kulldorff, 1997), and geographic regression discontinuity designs use known borders as natural experiments (Keele and Titiunik, 2015). Our edge test (Section 7) is a wombling statistic with a smooth-landscape null.
+
+**The same problem in brain imaging.** Neuroscience met the same failure first. Correlating two cortical maps against randomly permuted maps grossly overstates significance, because both maps are smooth. The response was the spin test (Alexander-Bloch et al., 2018) and generative nulls that match the map's variogram (Burt et al., 2020), and a benchmark that found naive nulls inflate false positives severely (Markello and Misic, 2021). Our landscape null is the urban counterpart: area-averaged, multi-scale, and replayed from records when the map comes from counts.
+
+**Monte Carlo testing and calibration.** Comparing a statistic with simulated maps is a Monte Carlo test (Barnard, 1963; Hope, 1968; Besag and Clifford, 1989), exact when the simulated maps are exchangeable with the real one (Appendix C.1). They are not exactly exchangeable here, because the null's parameters are estimated from the same map. The double bootstrap (Beran, 1988; Davison and Hinkley, 1997) corrects for that estimation (Appendix A.5). Multiple testing uses Holm (1979) within families and Stouffer et al. (1949) for pooling across cities, with the pooled null checked against empty maps because Stouffer's method is sensitive to small biases (Appendix C.4).
+
+**Pre-registration.** Every prediction from Phase 1 on was written down before the data were opened, following the case for pre-registration in Nosek et al. (2018). The record is in `HYPOTHESES.md`, with each deviation listed next to the result it affected.
+
+**Food environments and the Latte Line.** Cafés, small bars and independent bakeries are a standard visible signature of gentrification (the term is due to Glass, 1964), and fast-food density is a standard marker in food-environment studies. We treat venue mixes only as maps to test, not as measures of diet or class. For COVID-19, mobility-network models (Chang et al., 2021) showed that infection risk in 2020 depended on whether people's work and errands required physical presence; Section 9.7 is consistent with that mechanism, though it cannot test it.
+
 ## 2 Data
 
 Every city is studied as a set of areas that share borders, with one number per area for each line. Sydney and Tokyo, where the method was built, are described here; the other 27 cities follow the same recipe and are summarised below the table.
@@ -212,7 +230,7 @@ Everywhere else the line is a slope along its whole length. The app draws sharp 
 
 We judge each test on two things: how often it says "line" when there is none (should be 5%), and how often it notices a real step. The simulated maps are realistic random landscapes over Sydney's suburbs, with a step of chosen size added along a realistic border.
 
-[embedded content: Simulations on the Sydney graph: random landscapes mixing 2, 8 and 25 km scales plus noise, with a step of the given size along a realistic border (median split of another landscape); 60 maps per point, 199 null draws each\]
+*Interactive chart in the online version: Simulations on the Sydney graph: random landscapes mixing 2, 8 and 25 km scales plus noise, with a step of the given size along a realistic border (median split of another landscape); 60 maps per point, 199 null draws each*
 
 With no step, the old test calls two maps in three a line, so its verdicts carry no information. The landscape line test never exceeds its 5% budget by much, but it rarely notices steps: smooth landscapes already draw short borders, so a step changes the border length only a little. The edge test is the one to use for sharpness. It stays quiet with no step and catches 43% of 1 SD steps and 98% of 1.5 SD steps.
 
@@ -327,8 +345,6 @@ Claims from the Wikipedia article "Latte Line" and the sources it cites. Tests: 
 
 **What holds.** The Latte Line is probably where people say it is. Its café side lines up with a north-east to south-west split through Parramatta better than random Sydneys do, and degrees fall the same way, though neither survives a correction across all six claims we tested (p = 0.08 and 0.07). It is not a figure of speech: counting cafés against fast-food places draws it from the data. But it is a slope, not a wall (Section 9.2): Sydney changes from café to fast food over several kilometres.
 
-[image: Sydney's Latte Line drawn as a slope\]
-
 ![Figure 1](results/figures/fig1_latte_slope.png)
 
 *Figure 1. The Latte Line as a slope. Each suburb is coloured by its café-versus-fast-food score, in seven equal-sized groups; the dashed line marks only the halfway point. Grey: areas left out (few residents).*
@@ -401,8 +417,6 @@ The Hi-Vis Line gets the same test against 999 landscapes fitted to its own map,
 
 The divide was not fixed. In 2020 the café side had more cases (ratio 0.74), seeded by returning travellers. During Delta the fast-food side had three times the rate. Under Omicron, which reached everywhere, the gap nearly closed (1.17). Figure 8 shows the weekly series.
 
-[image: Weekly COVID-19 cases on each side of the Latte Line\]
-
 ![Figure 8](results/covid/fig_covid_sides.png)
 
 *Figure 8. Weekly confirmed COVID-19 cases per 1,000 residents on each side of Sydney's Latte Line, March 2020 to February 2022 (log scale). NSW Health cases by postcode of residence, shared to suburbs by the ABS correspondence.*
@@ -443,7 +457,7 @@ The double-check matters. Before it, Melbourne's Hi-Vis and Degree lines and Osa
 
 Work lines are fixed features of a city; the Grey Line is fixed in Australia but not in Japan. The test (A.10) asks what share of areas sit on the same side of a line at the first and last census, against random lines of the same smoothness, which keep 52–57%.
 
-[embedded content: Pipeline output (build\_app.py timeline step), 15 Nov 2026 · ABS Time Series Profile 2011–2021; e-Stat small areas 2000–2020 shared onto 2020 areas · permutation p ≤ 0.003 for every Hi-Vis row\]
+*Interactive chart in the online version: Pipeline output (build\_app.py timeline step), 15 Nov 2026 · ABS Time Series Profile 2011–2021; e-Stat small areas 2000–2020 shared onto 2020 areas · permutation p ≤ 0.003 for every Hi-Vis row*
 
 The Hi-Vis Line keeps 83–95% of areas on the same side in all 11 cities (p ≤ 0.003 each). The Living Alone and Tower lines in Japan behave the same way (83–93%). The Grey Line keeps 77–83% in Australia, but in Japan it ranges from 52% in Kyoto (p = 0.75) and 54% in Sapporo (p = 0.36) to 64% in Yokohama–Kawasaki. Tokyo's "Grey Flip" (section 9.4) is therefore a Japanese pattern, not a Tokyo one. In Australia the Grey Line is still the least stable line in every city: Factory, Degree, Living Alone and Flats vs Houses keep 87–99% of suburbs on their side over 2011–2021, against 77–83% for Grey. Age is the one thing that moves fastest everywhere; Japan is the case where it moves all the way to chance.
 
@@ -468,7 +482,7 @@ Chains are the one finding that reverses with size. A chain's stores follow its 
 
 A city with 20 lines does not have 20 divides; it has about four. Correlating every pair of line scores within each city and averaging over cities, the lines cluster into four families: work and class, the inner city, age, and the night out.
 
-[embedded content: Pipeline output, 15 Nov 2026 · Pearson correlation of rank-normal line scores, averaged over the 16 cities that have them (Sydney and Tokyo use a different line set) · boxes = average-linkage clusters on 1 − |r|\]
+*Interactive chart in the online version: Pipeline output, 15 Nov 2026 · Pearson correlation of rank-normal line scores, averaged over the 16 cities that have them (Sydney and Tokyo use a different line set) · boxes = average-linkage clusters on 1 − |r|*
 
 The families are stable from city to city. The Hi-Vis and Degree lines are near mirror images everywhere (r between −0.78 and −0.97 in all 16 cities), as are No Car and Renters (0.74 to 0.92). Two links vary and are worth reading city by city. The Latte Line ties to Degree at 0.70 in some cities and 0.19 in others, so it is a class line in some places and a going-out line in others. The Grey Line runs against renting strongly in England (−0.87 in Manchester) but weakly elsewhere. For planners, the practical reading is to pick one line per family before comparing cities, because two lines from the same family are largely the same evidence counted twice.
 
@@ -544,8 +558,6 @@ Of 60 predictions, 29 held, 15 failed, 6 partly held and 10 could not be tested 
 
 False-alarm rate (%) at the 5% level; 200 maps per cell in Seattle, 100 in Chicago.
 
-[image: False alarms on maps with no line\]
-
 ![Figure 3](results/figures/fig3_false_alarms.png)
 
 *Figure 3. False alarms on simulated maps with no line, in the shapes of Seattle (100 areas) and Chicago (401): smooth landscapes, centre-to-edge gradients, and landscapes whose smoothness varies across the city. MSR averaged over its singleton, pair and triplet forms. Diamond: the calibrated test, run as every verdict is (72 maps).*
@@ -559,8 +571,6 @@ Why does the quick test drift above 5% at all? Because one map cannot pin down l
 **Few lines are real, and they are slopes.** 11 of the 167 lines tested pass (7%), and 132 of 140 lines with a sharp-stretch test have no sharp stretch at all. The same four families of lines reappear: 11 of 13 lines fall into the family they belonged to in the first 18 cities.
 
 **Which lines exist does not transfer.** Pooled over the first 18 cities, four lines looked real in general: the Factory, Laptop vs Hard Hat, Degree and Bicycle Lines (Z = 3.2–5.4). Pooled over the new cities they are not (Z = 1.2–2.0; none survives correction across lines). The one line that holds up is the Latte Line (Z = 3.6 over 11 cities). Pooling needs its own check: even with no line anywhere, our calibrated p-values lean slightly low (on the 72 empty Chicago maps their average z is +0.15 rather than 0), and Stouffer's method adds such leans up, so pooling 11 such cities would give 14% false alarms at the 5% level. We therefore compare each pooled Z with two million pools of p-values from those empty maps. The Latte Line keeps p = 0.001 by that yardstick, 0.02 after correction across the 14 lines pooled; nothing else passes. We did not predict this in writing; it is exploratory until Phase 2, where it is prediction P7. The Hi-Vis Line points the same way (Z = 2.2, p = 0.014 alone, 0.17 after correction) and passes outright in New York.
-
-[image: Held-out replication\]
 
 ![Figure 2](results/figures/fig2_replication.png)
 
@@ -579,8 +589,6 @@ Why does the quick test drift above 5% at all? Because one map cannot pin down l
 **Cities have no grammar beyond their gradients.** Give each area a four-letter word: its side of the median on work and class, inner city, age, and nightlife. Do neighbouring areas' words go together more than chance allows? Against simulated cities that only copy each line's smoothness and the lines' correlations, 19 of 26 cities have a grammar (p ≤ 0.05). But when the simulations also keep the broad gradients that the lines share, so that the inner city is the same inner city for every line, 1 of 26 does (Auckland, p = 0.03; 1.3 expected by chance). The apparent grammar is the shared gradients: there is one big map underneath, and the four letters read it four ways. The leftover word-pair patterns are slightly more alike within a country than across countries (correlation 0.23 vs 0.13).
 
 **Only big steps are visible.** How large must a real step be for our test to see it? In Los Angeles (401 areas) a step of 2 standard deviations across a border is detected 10–12% of the time, and a 3 SD step 36–46%. In Seattle (100 areas), 8–9% and 17–21%. A city can have a real step of 2 SD that no census-scale test will find. A failed test therefore means "no step large enough to see", not "no step". The same simulations confirm the pitfall of Section 8.2: ranking the data first cuts the edge test's power at a 3 SD step from 54% to 8% in Los Angeles, and from 12% to 1% in Seattle.
-
-[image: Power curves\]
 
 ![Figure 4](results/figures/fig4_power.png)
 
@@ -672,13 +680,9 @@ Phase 3 adds ten cities with long or new series: Amsterdam, Rotterdam, The Hague
 
 **Q1, the age front.** Pooling the 13 Phase 2 cities with the eight new ones that have two or more censuses, the over-65 slope (60+ in São Paulo, the only band in both censuses) rose in 18 of 21 cities, sign test p = 0.0015. The four Dutch cities all moved outward (The Hague +0.29, Holm-corrected p = 0.01; Utrecht +0.39; Rotterdam +0.20; Amsterdam +0.04), as did São Paulo (+0.11, Holm 0.01). The three Swedish cities moved the other way between 2015 and 2025 (Stockholm −0.11, p = 0.02 alone, 0.33 after Holm; Gothenburg −0.20; Malmö −0.10). Sweden has the shortest series; we report it as the one clear exception rather than explain it away.
 
-[image: Where older residents live, first census to last\]
-
 ![Figure 5](results/phase3/fig_age_front.png)
 
 *Figure 5. Centre-to-edge slope of the over-65 share (Spearman correlation with distance from the population-weighted centre), first census (arrow tail) to last (arrow head). Red: moved outward; blue: moved inward.*
-
-[image: Amsterdam and São Paulo, older residents then and now\]
 
 ![Figure 6](results/phase3/fig_age_maps.png)
 
@@ -689,8 +693,6 @@ Phase 3 adds ten cities with long or new series: Amsterdam, Rotterdam, The Hague
 **Intuition:** the buildings fix where renters and people living alone are, so those maps barely change in a decade. People are not fixed: the generation that bought suburban houses has grown old in them, so the age map drifts outward while the housing map stands still.
 
 **Q5, sister cities.** Each city gets a profile: its centre-to-edge slopes for age, living alone and renting in its latest census. Two cities are sisters when their profiles are close. For 13 of 22 cities the closest sister is in the same country (59%; a permutation of country labels gives p = 0.001), so national housing systems leave a fingerprint. The cross-border pairs are the interesting ones: Amsterdam's nearest sister is Washington, Hamburg's is Seattle, Madrid's is Calgary, Barcelona's is Edmonton, Austin's is Toronto.
-
-[image: Sister cities\]
 
 ![Figure 7](results/phase3/fig_sisters.png)
 
@@ -782,6 +784,8 @@ Most informal lines are real patterns but not real lines. With a calibrated test
 
 The line also mattered beyond coffee. In 2021 the councils placed under the strictest lockdown lay mostly on its fast-food side, and Delta's confirmed cases were three times as common there as on the café side, more sharply than in 997 of 999 random Sydneys. The jobs line, which marks where work cannot be done from home, fits both better still. A divide that began as a joke also marked, in 2021, where both the strictest rules and most of the confirmed cases fell; the data cannot say why, but it says clearly where.
 
+Two structural results matter as much as any single line. First, cities have no grammar beyond their gradients: neighbouring areas' four-letter words (work, inner city, age, nightlife) look rule-bound in 19 of 26 cities against nulls that copy each line alone, but in only 1 of 26 once the nulls keep the gradients the lines share (Section 10.8), and most "if A and B then C" rules are the correlation table seen from another angle (Section 10.5). A symbolic description of a city is only as informative as the null it is judged against. Second, cities do have family resemblances: a city's nearest sister, by how age, living alone and renting change from centre to edge, is in its own country 59% of the time (p = 0.001; Section 12), so national housing systems leave a fingerprint, while surprises such as Amsterdam–Washington, Hamburg–Seattle and (on the two slopes Korea has) Seoul–Ottawa show that the fingerprint is not the whole story.
+
 The tests are a small Python library (`linetests/`) that needs only area polygons and either a map or its records. The app at pche123.github.io/Sydney-Split maps every line in all 29 cities, draws gentle patterns as slopes, and puts the Latte Line's claims next to the evidence. Ten European cities are next, against predictions already on record.
 
 ## References
@@ -804,6 +808,33 @@ To verify before submission (details from memory).
 - Wagner, H. H., Dray, S. (2015). Generating spatially constrained null models for irregularly spaced data using Moran spectral randomization methods. *Methods in Ecology and Evolution* 6, 1169–1178.
 - Westfall, P. H., Young, S. S. (1993). *Resampling-Based Multiple Testing*. Wiley.
 - Womble, W. H. (1951). Differential systematics. *Science* 114, 315–322.
+
+Background and theory (Section 1.1 and Appendix C):
+
+- Adler, R. J., Taylor, J. E. (2007). *Random Fields and Geometry*. Springer.
+- Alexander-Bloch, A. F., Shou, H., Liu, S., et al. (2018). On testing for spatial correspondence between maps of human brain structure and function. *NeuroImage* 178, 540–551.
+- Barnard, G. A. (1963). Discussion of Bartlett, "The spectral analysis of point processes". *Journal of the Royal Statistical Society B* 25, 294.
+- Berry, B. J. L., Rees, P. H. (1969). The factorial ecology of Calcutta. *American Journal of Sociology* 74, 445–491.
+- Besag, J., Clifford, P. (1989). Generalized Monte Carlo significance tests. *Biometrika* 76, 633–642.
+- Burgess, E. W. (1925). The growth of the city. In Park, R. E., Burgess, E. W., McKenzie, R. D., *The City*. University of Chicago Press.
+- Chang, S., Pierson, E., Koh, P. W., et al. (2021). Mobility network models of COVID-19 explain inequities and inform reopening. *Nature* 589, 82–87.
+- Cliff, A. D., Ord, J. K. (1981). *Spatial Processes: Models and Applications*. Pion.
+- Frisch, R., Waugh, F. V. (1933). Partial time regressions as compared with individual trends. *Econometrica* 1, 387–401.
+- Geary, R. C. (1954). The contiguity ratio and statistical mapping. *The Incorporated Statistician* 5, 115–145.
+- Glass, R. (1964). Introduction. In Centre for Urban Studies (ed.), *London: Aspects of Change*. MacGibbon and Kee.
+- Harris, C. D., Ullman, E. L. (1945). The nature of cities. *Annals of the American Academy of Political and Social Science* 242, 7–17.
+- Hope, A. C. A. (1968). A simplified Monte Carlo significance test procedure. *Journal of the Royal Statistical Society B* 30, 582–598.
+- Hoyt, H. (1939). *The Structure and Growth of Residential Neighborhoods in American Cities*. Federal Housing Administration.
+- Kulldorff, M. (1997). A spatial scan statistic. *Communications in Statistics: Theory and Methods* 26, 1481–1496.
+- Lovell, M. C. (1963). Seasonal adjustment of economic time series and multiple regression analysis. *Journal of the American Statistical Association* 58, 993–1010.
+- Massey, D. S., Denton, N. A. (1988). The dimensions of residential segregation. *Social Forces* 67, 281–315.
+- Moran, P. A. P. (1950). Notes on continuous stochastic phenomena. *Biometrika* 37, 17–23.
+- Nosek, B. A., Ebersole, C. R., DeHaven, A. C., Mellor, D. T. (2018). The preregistration revolution. *Proceedings of the National Academy of Sciences* 115, 2600–2606.
+- Sampson, R. J., Morenoff, J. D., Gannon-Rowley, T. (2002). Assessing "neighborhood effects": social processes and new directions in research. *Annual Review of Sociology* 28, 443–478.
+- Schelling, T. C. (1971). Dynamic models of segregation. *Journal of Mathematical Sociology* 1, 143–186.
+- Shevky, E., Bell, W. (1955). *Social Area Analysis*. Stanford University Press.
+- Stouffer, S. A., Suchman, E. A., DeVinney, L. C., Star, S. A., Williams, R. M. (1949). *The American Soldier*, Vol. 1. Princeton University Press.
+- Tobler, W. R. (1970). A computer movie simulating urban growth in the Detroit region. *Economic Geography* 46, 234–240.
 
 ## Appendix A: Technical details
 
@@ -1008,3 +1039,109 @@ Old p: the original MSR test (search-wide for Sydney census lines, uncorrected f
 | Tokyo | Konbini Wars: 7-Eleven vs FamilyMart | records | 0.522 | Could be chance | 0.721 | 0.502 | 1 | Could be chance |
 | Tokyo | Ramen vs Soba | records | 0.172 | Could be chance | 1 | 0.334 | 0.091 | Could be chance |
 | Tokyo | The Late-Night Line | records | 0.404 | Could be chance | 1 | 0.584 | 0.091 | Could be chance |
+
+## Appendix C: Proofs
+
+This appendix collects the results the tests rely on. Each is standard; we state them in the form used in the paper and prove them so the paper can be read on its own.
+
+### C.1 Monte Carlo p-values are valid
+
+Let T₀ be the statistic on the real map and T₁, …, T\_B the statistic on B simulated maps. Define
+
+```latex
+p = \frac{1 + \#\{b \ge 1 : T_b \ge T_0\}}{B + 1}.
+```
+
+**Proposition C.1** (Barnard, 1963; Besag and Clifford, 1989). If, under the null, (T₀, T₁, …, T\_B) is exchangeable and ties occur with probability zero, then P(p ≤ k/(B+1)) = k/(B+1) for k = 1, …, B+1. In particular P(p ≤ α) ≤ α for every α.
+
+*Proof.* Let R be the rank of T₀ among the B+1 values, counted from the largest, so R = 1 + #{b : T\_b > T₀} and p = R/(B+1) when there are no ties. Exchangeability means every ordering of the B+1 values is equally likely, so R is uniform on {1, …, B+1}. Hence P(p ≤ k/(B+1)) = P(R ≤ k) = k/(B+1). For general α, take k = ⌊α(B+1)⌋. □
+
+**Intuition:** if the real city is just one more draw from the same machine that made the random cities, it is equally likely to land anywhere in the ranking, so it lands in the top 5% only 5% of the time. The +1 in numerator and denominator counts the real city as one of the draws; without it a p-value of exactly 0 would be possible, which no finite simulation can justify. The test is exact only when the real city really is exchangeable with the simulated ones; when the simulator is fitted to the real map, that fails slightly, which is what the calibration of Appendix A.5 repairs.
+
+### C.2 Why two unrelated maps agree on more than half the areas
+
+Let s and z be the median splits of two maps (s\_i, z\_i ∈ {0, 1}), and S = (1/n) Σᵢ 1{s\_i = z\_i} the share of areas on matching sides.
+
+**Proposition C.2.** If the second map's field is symmetric under sign change (f and −f have the same distribution) and independent of the first, then E\[S\] = 1/2, but E\[max(S, 1 − S)\] = 1/2 + E|S − 1/2|, which grows with the variance of S. Spatial autocorrelation in both maps increases Var(S).
+
+*Proof.* Flipping the sign of the second field swaps its two sides, so z → 1 − z and S → 1 − S. Sign symmetry and independence give S and 1 − S the same distribution, so E\[S\] = 1/2. The identity max(S, 1 − S) = 1/2 + |S − 1/2| is immediate. For the variance, write S − 1/2 = (1/n) Σᵢ εᵢ with εᵢ = 1{s\_i = z\_i} − 1/2. Then Var(S) = (1/n²) Σᵢ Σⱼ Cov(εᵢ, εⱼ). With no spatial structure only the n diagonal terms survive, giving Var(S) = 1/(4n). When both maps are smooth, neighbouring εᵢ are positively correlated, the off-diagonal terms add, and Var(S) behaves like 1/(4n\_eff) with an effective number of independent areas n\_eff much smaller than n. □
+
+**Intuition:** two unrelated maps agree on half the suburbs on average, but each map is made of a few big blobs, not 300 independent coin flips. Matching a few blobs by chance easily puts 55–60% of suburbs on the same side. That is why the app says "two unrelated maps of the city would still agree on roughly 55–60%" and why every agreement claim in Section 9.5 is judged against random cities, not against 50%.
+
+### C.3 Holm's procedure controls the family-wise error
+
+Order the m p-values p₍₁₎ ≤ … ≤ p₍ₘ₎ and reject H₍₁₎, …, H₍ₖ₎ for the largest k such that p₍ⱼ₎ ≤ α/(m − j + 1) for all j ≤ k. The adjusted p-values reported in the paper are max over j ≤ i of min(1, (m − j + 1) p₍ⱼ₎).
+
+**Proposition C.3** (Holm, 1979). For any dependence between the p-values, the probability of rejecting at least one true null hypothesis is at most α.
+
+*Proof.* Let I be the set of true nulls, m₀ = |I| ≥ 1, and let j\* be the position, in the sorted order, of the first true null to appear. At most m − m₀ false nulls come before it, so j\* ≤ m − m₀ + 1 and m − j\* + 1 ≥ m₀. Any false rejection requires the procedure to reach position j\*, which requires p₍ⱼ\*₎ ≤ α/(m − j\* + 1) ≤ α/m₀, so some true null has p ≤ α/m₀. By the union bound over the m₀ true nulls and the validity of each p-value, this has probability at most m₀ · α/m₀ = α. □
+
+**Intuition:** testing six claims gives six chances to be fooled. Holm makes the most impressive result clear a bar six times as high, the next five times as high, and so on, which keeps the chance of any false alarm at 5% without assuming the claims are unrelated. That is why the lockdown claim (p = 0.005) survives correction across the six Latte Line claims (0.03) and the route claim (p = 0.03) does not (0.08).
+
+### C.4 Stouffer pooling, and why small biases add up
+
+For k cities with one-sided p-values p₁, …, p\_k, Stouffer's statistic is
+
+```latex
+Z = \frac{1}{\sqrt{k}} \sum_{c=1}^{k} \Phi^{-1}(1 - p_c).
+```
+
+**Proposition C.4.** (a) If the p\_c are independent and uniform, Z \~ N(0, 1) exactly. (b) If instead each z\_c = Φ⁻¹(1 − p\_c) is N(δ, 1) with a small bias δ > 0, then Z \~ N(δ√k, 1), and a nominal 5% one-sided test rejects with probability 1 − Φ(1.645 − δ√k).
+
+*Proof.* If p is uniform, Φ⁻¹(1 − p) is standard normal (probability integral transform). A sum of k independent N(δ, 1) variables is N(kδ, k); dividing by √k gives N(δ√k, 1). Part (a) is the case δ = 0. □
+
+**Intuition:** a bias too small to notice in one city grows with the square root of the number of cities. On the 72 empty Chicago maps the calibrated p-values leaned low by δ ≈ 0.15. With k = 11 the formula gives 1 − Φ(1.645 − 0.15√11) ≈ 12.6% false alarms at the 5% level, close to the 14% seen when pooling the empty maps directly (Section 10.7). That is why every pooled result is compared with pools of p-values from maps with no line, not with N(0, 1).
+
+### C.5 Partial rank correlation as a correlation of residuals
+
+The "cafés or jobs" analysis of Section 9.7 ranks the Delta rate y, the Latte field x and the Hi-Vis field z, removes from the ranks of y and x their least-squares fit on (1, rank z), and correlates the residuals.
+
+**Proposition C.5** (Frisch–Waugh–Lovell). In the least-squares regression of y on (1, z, x), the coefficient on x equals the coefficient from regressing the residual of y on (1, z) on the residual of x on (1, z). The correlation of the two residuals is the partial correlation of y and x given z.
+
+*Proof.* Let P = Z(ZᵀZ)⁻¹Zᵀ project onto the columns Z = (1, z), and M = I − P. Write y = Zγ + xβ + e with e orthogonal to Z and x. Multiplying by M kills Zγ, so My = (Mx)β + Me, and Me = e because e is orthogonal to Z. Since e is also orthogonal to x, and Mx = x − Px with Px in the span of Z, e is orthogonal to Mx. Hence β is the least-squares coefficient of My on Mx. The partial correlation is the cosine of the angle between My and Mx by definition. □
+
+**Intuition:** "holding jobs fixed" means comparing suburbs that differ in cafés but have the same mix of jobs. The residuals do exactly that: they are what is left of cafés, and of cases, once jobs have explained all they can. If cafés still predicted cases after that, cafés would carry their own information. They don't (r = −0.11, p = 0.30); jobs do (r = +0.52, p = 0.003).
+
+### C.6 Why the median split has a smoothest-possible border
+
+The border statistic of Section 3.1 is the length of the boundary between the two halves of the median split, relative to random maps. One might ask whether a different threshold could draw a shorter border and so bias the test.
+
+**Proposition C.6.** Among all splits of a map into two sides by a threshold on the field, every split draws a border only along edges where the field crosses the threshold, and the expected border length of a stationary Gaussian field cut at level u is proportional to exp(−u²/2), maximised at u = 0 (the median).
+
+*Proof sketch.* For a stationary, mean-square differentiable Gaussian field, the expected length of the level set {f = u} per unit area is given by the Rice formula (Adler and Taylor, 2007, Ch. 6) as c · √λ · exp(−u²/2), where λ is the second spectral moment and c a constant. The factor exp(−u²/2) is largest at u = 0. On a graph of areas the border is the sum of shared edges whose endpoints straddle u, a discretisation of the same quantity. □
+
+**Intuition:** cutting a landscape at sea level gives the longest coastline; cutting near the peaks or the valleys gives a few small islands. The median split is the hardest place to look clean, so a line that looks clean there is clean for real. It also makes both sides the same size, which the app's colours need.
+
+**Intuition for the whole appendix:** C.1 says why comparing with random cities works at all; A.5 repairs what C.1 needs when the random cities are fitted to the real one; C.2 says why 50% is the wrong yardstick for agreement; C.3 and C.4 keep many tests honest; C.5 separates two lines that travel together; C.6 says the test is looking at the hardest cut.
+
+## Appendix D: A gallery of lines
+
+The maps below are drawn from the app's own data (`experiments/fun_figures.py`; every number in the captions is in `results/fun/numbers.json`). Orange and blue are the two sides of each line's median split; the thick black line is the border. They describe areas, not the people in them.
+
+![Figure D1](results/fun/sydney_six_lines.png)
+
+*Figure D1. Six ways to cut Sydney in two. The Hi-Vis Line is the one real line; the Latte, Red Rooster and Small Bar Lines are real patterns but slopes; bubble tea and pokies could be chance.*
+
+![Figure D2](results/fun/sydney_line_family.png)
+
+*Figure D2. Share of Sydney's 300 suburbs on the same side of two lines (50 = unrelated; Appendix C.2 explains why unrelated smooth maps still drift from 50). Cafés and factory jobs are near-mirror images (11%); Red Rooster and hi-vis jobs agree on 81%; bubble tea sits near 50 against every other line.*
+
+![Figure D3](results/fun/sydney_cafes_x_jobs.png)
+
+*Figure D3. Crossing the Latte Line with the Hi-Vis Line gives four kinds of suburb: 118 café-and-office, 118 fast-food-and-hi-vis, and 32 of each mixed kind. The mixed café-and-hi-vis suburbs cluster in the Sutherland Shire and around Botany Bay; the mixed fast-food-and-office suburbs cluster in the Hills and the inner west.*
+
+![Figure D4](results/fun/sydney_fun_correlations.png)
+
+*Figure D4. Spearman correlations across Sydney's 300 suburbs: cafés and university graduates (ρ = 0.75), hi-vis jobs and Delta cases (0.74), late-night venues and residents aged 20–34 (0.44), bubble tea and university students (0.29), small bars and one-person households (0.23), pokies and residents over 65 (0.06). None of these is a test against random cities; they are descriptive.*
+
+![Figure D5](results/fun/sydney_delta_map.png)
+
+*Figure D5. Confirmed COVID-19 cases per 1,000 residents in the Delta wave (16 June to 15 December 2021), in five equal-count groups, with the Latte Line's border (Section 9.7).*
+
+![Figure D6](results/fun/latte_around_the_world.png)
+
+*Figure D6. The Latte Line in six cities. It is a real line in Los Angeles and a gentle slope in the other five.*
+
+![Figure D7](results/fun/hivis_around_the_world.png)
+
+*Figure D7. The Hi-Vis Line in six cities. Of the 28 cities that have it, it is a real line only in Sydney and New York.*
