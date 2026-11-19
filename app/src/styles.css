@@ -236,6 +236,13 @@ footer { font-size: 12px; color: var(--muted); }
 .mapctl { position: absolute; left: 14px; top: 14px; width: 310px; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
 .mapctl > * { position: static !important; width: auto !important; pointer-events: auto; }
 .smoothbox .small { font-size: 11.5px; }
+.ctlfold { pointer-events: auto; align-self: flex-start; }
+.ctlfold > summary { list-style: none; cursor: pointer; display: inline-block; background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: 7px 11px; font-weight: 600; font-size: 14px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+.ctlfold > summary::-webkit-details-marker { display: none; }
+.ctlfold[open] > summary { margin-bottom: 6px; }
+.ctlfold > div { position: static !important; width: auto !important; margin-bottom: 8px; }
+.ctlfold[open] { width: 310px; }
+@media (max-width: 760px) { .ctlfold[open] { width: auto; } }
 @media (max-width: 760px) {
   .mapctl { left: 8px; right: 90px; top: 8px; width: auto; gap: 6px; }
 }
