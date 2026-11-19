@@ -266,8 +266,19 @@ export function start(DATA: CityData, C: CityConfig) {
     if (view.moved) return;
     showTip(e as MouseEvent, true);
     const iS = (e.target as HTMLElement).dataset?.i;
-    if (iS !== undefined && mode === "lines") pick(+iS);
+    if (iS !== undefined && mode === "lines") {
+      pick(+iS);
+      if (isPhone()) {                                  // the passport is below the map on a phone: offer a jump to it
+        const chip = $("#pickchip") as HTMLButtonElement;
+        chip.textContent = `${DATA.areas[+iS].short}: see its line passport ↓`; chip.classList.add("on");
+      }
+    }
   });
+  ($("#pickchip") as HTMLButtonElement).onclick = () => {
+    ($("#pickchip") as HTMLElement).classList.remove("on");
+    ($("#passport") as HTMLElement).scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  setTimeout(() => { const h = document.getElementById("maphint"); if (h) h.style.opacity = "0"; }, 4000);
 
   // ---------- render a line
   function agreement(x: Line, y: Line) { let s = 0; x.side.forEach((v, i) => (s += Number(v === y.side[i]))); s /= x.side.length; return Math.max(s, 1 - s); }
