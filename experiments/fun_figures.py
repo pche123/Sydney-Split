@@ -3,7 +3,7 @@
     python experiments/fun_figures.py <Sydney signals_sa2.csv>
 
 Reads the app's city files (app/data/*.json: area outlines, each line's side and border) and results/covid/suburbs.csv.
-Writes results/fun/*.png and results/fun/numbers.json (every number quoted in FOR_FRIENDS.md).
+Writes results/fun/*.png and results/fun/numbers.json (every number quoted in SYDNEY_SPLIT.md).
 """
 import json, os, re, sys
 import numpy as np, pandas as pd, matplotlib
