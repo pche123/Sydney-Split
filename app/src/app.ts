@@ -77,7 +77,7 @@ export function start(DATA: CityData, C: CityConfig) {
 
   // ---------- modes and lists
   const her = DATA.heritage;
-  let SHOW: "auto" | "line" | "slope" = "auto";   // draw a line as a sharp split or as a slope
+  let SHOW: "auto" | "line" | "slope" = "line";   // draw a line as a sharp split or as a slope
   let SM = 0;   // smoothing slider position, shared by every view
   const SMOOTH_HINT = "Islands are real: pockets of one side surrounded by the other. Drag to see the overall split. Display only: it doesn't change any test.";
   let mode = "lines", herKind = C.herKinds[0][0], curHer = her.find((h) => h.kind === herKind) || her[0], ovLine = ref;
