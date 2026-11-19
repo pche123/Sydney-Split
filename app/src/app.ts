@@ -727,7 +727,34 @@ export function start(DATA: CityData, C: CityConfig) {
       li.querySelector("b")!.textContent = l.name.replace(/^The /, "");
       li.querySelector("span span")!.textContent = on ? l.a : l.b;
       ul.appendChild(li);
+    }    renderTwins(box, picked);
+  }
+
+  // ---------- twin suburbs abroad (precomputed: experiments/suburb_twins.py)
+  let TWINS: Record<string, [string, number, number, number][]> | null = null, twinsLoading = false;
+  const cityName = (id: string) => (CITY_LIST.find((c) => c.id === id) || { name: id }).name;
+  const cityFile = (id: string) => (id === "sydney" ? "index.html" : `${id}.html`);
+  function renderTwins(box: HTMLElement, i: number) {
+    if (!TWINS) {
+      if (!twinsLoading) {
+        twinsLoading = true;
+        fetch(`twins/${__CITY__}.json`).then((r) => r.json()).then((j) => { TWINS = j; if (picked !== null) renderPassport(); }).catch(() => { TWINS = {}; });
+      }
+      return;
     }
+    const tw = TWINS[String(i)]; if (!tw || !tw.length) return;
+    const sec = document.createElement("div"); sec.className = "twins";
+    sec.innerHTML = `<h3 style="margin-top:14px">Twin ${place}s abroad</h3><p class="small" style="margin:0 0 6px">Places that sit in the same spot within their own city on work, degrees, age, living alone, housing, renting, commuting and cafés. Tap one to visit it.</p><ul></ul>`;
+    const ul = sec.querySelector("ul")!;
+    for (const [c, j, same, k] of tw) {
+      const li = document.createElement("li"), a = document.createElement("a");
+      a.href = `${cityFile(c)}?area=${j}`; a.textContent = `${cityName(c)}`;
+      const b = document.createElement("b"); b.textContent = "…"; b.dataset.city = c; b.dataset.idx = String(j);
+      li.appendChild(b); li.append(" in "); li.appendChild(a); li.append(` · same side on ${same} of ${k} lines`);
+      ul.appendChild(li);
+      fetch(`twins/names/${c}.json`).then((r) => r.json()).then((n: string[]) => { b.textContent = n[j] || "an area"; }).catch(() => { b.textContent = "an area"; });
+    }
+    box.appendChild(sec);
   }
   function pick(i: number) { picked = i; $("#suburb").value = DATA.areas[i].short; render(); }
 
@@ -759,6 +786,9 @@ export function start(DATA: CityData, C: CityConfig) {
   window.addEventListener("hashchange", route);
   current = ref;
   view.fit(); view.apply(); setMode("lines"); route();
+  { const qa = Number(new URLSearchParams(location.search).get("area"));   // arriving from a twin link
+    if (Number.isInteger(qa) && qa >= 0 && qa < DATA.areas.length && new URLSearchParams(location.search).has("area")) {
+      pick(qa); const a = DATA.areas[qa]; view.focus(a.cx, a.cy, DATA.w / 3.5); } }
 
   // ---------- intro
   const intro = $("#intro") as HTMLElement;

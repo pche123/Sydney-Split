@@ -10,5 +10,6 @@ for (const c of cities) {
 }
 if (existsSync("public/downloads")) cpSync("public/downloads", "site/downloads", { recursive: true });
 if (existsSync("public/img")) cpSync("public/img", "site/img", { recursive: true });
+if (existsSync("public/twins")) cpSync("public/twins", "site/twins", { recursive: true });
 for (const f of ["compare.html", "world.html", "pair.html", "sisters.json"]) if (existsSync(`public/${f}`)) copyFileSync(`public/${f}`, `site/${f}`);
 console.log(`site/ ready: ${cities.length} cities`);

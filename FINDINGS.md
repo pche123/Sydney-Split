@@ -193,3 +193,18 @@ Latte pooled over the ten European cities (calibrated where available): Stouffer
 | Busan | Apartment | 0.71 | 1.0 | +0.16 |
 
 K1 (no line) holds. K2 (living alone falls outward) holds, strongly in Seoul, weakly in Busan. K3 (over-65s rise outward) holds on sign only: both slopes are close to zero, so age is spread almost evenly. K4 (Seoul's sister is Japanese) fails: on the two slopes every city has (Grey, Living Alone), Seoul's nearest city is Ottawa (distance 0.04), then Montreal and Kobe; Busan's is Yokohama, then Kobe. On these two slopes alone, the nearest sister shares a country for 20% of 40 cities (permutation p = 0.10), weaker than the 59% on three slopes. Phase 1 cities enter with their app Living Alone field (living alone minus families), not the plain share.
+
+## COVID-19: is the Latte Line just the jobs line? (exploratory, 19 Nov 2026)
+
+`experiments/covid_partial.py` → `results/covid/partial.json`. Partial Spearman of the Delta case rate on one line with the other held fixed (rank residuals). The two lines correlate at ρ = −0.79 across the 300 suburbs.
+
+| Partial | r | 999-map null, 95% range | one-sided p |
+|---|---|---|---|
+| Latte, holding Hi-Vis fixed | −0.11 | −0.35 to 0.35 | 0.30 |
+| Hi-Vis, holding Latte fixed | +0.52 | −0.40 to 0.42 | 0.003 |
+
+Once the jobs divide is known, the café divide adds nothing about where Delta cases fell; the jobs divide still adds a lot once the café divide is known. In this sense the Latte Line's COVID result is the jobs line seen through coffee. Not pre-registered.
+
+## Suburb twins (app feature, 19 Nov 2026)
+
+`experiments/suburb_twins.py` → `app/public/twins/`. Every area in 28 cities (Singapore lacks the census lines) gets its three nearest areas in other cities, one per city, on eight within-city normal scores (Hi-Vis, Degree, Grey, Living Alone, Flats vs Houses, Renters, Train vs Car, Latte), needing ≥ 6 shared lines. Twins sit on the same side of their city's middle on 91% of shared lines on average (median 100%, 5th percentile 75%; Sydney, London, Tokyo). Examples: Surry Hills ↔ Tenjin (Fukuoka), Barons Court (London); Mount Druitt ↔ Farnworth North (Manchester); Bondi Beach ↔ Daita (Tokyo).
