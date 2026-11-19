@@ -174,7 +174,6 @@ export function start(DATA: CityData, C: CityConfig) {
   const cmp = $("#cmp") as HTMLSelectElement;
   function buildCompareBox() {
     $(".compare label").textContent = mode === "overlay" ? "2. Pick a line to draw on top" : "Compare with another line";
-    { const f = document.getElementById("ctlfold") as HTMLDetailsElement | null; if (f && mode === "overlay") f.open = true; }   // overlay needs the picker
     cmp.innerHTML = mode === "overlay" ? "" : '<option value="">None</option>';
     for (const l of lines) { const o = document.createElement("option"); o.value = l.id; o.textContent = l.name; cmp.appendChild(o); }
     cmp.value = mode === "overlay" ? ovLine.id : compare ? compare.id : "";
