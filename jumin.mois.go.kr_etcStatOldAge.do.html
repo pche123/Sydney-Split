@@ -1,0 +1,2297 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+
+<title>행정동별 지역별 고령 인구현황</title>
+
+<script type="text/javascript" src="js/jquery-3.5.0.min.js"></script>
+<script type="text/javascript" src="js/re_style.js"></script>
+		
+<script type="text/javascript" src="js/DataTables/datatables.js" ></script>
+<script type="text/javascript" src="js/DataTables/Scroller-2.0.0/js/dataTables.scroller.js" ></script>
+<script type="text/javascript" src="js/DataTables/Select-1.3.0/js/dataTables.select.js" ></script>
+<script type="text/javascript" src="js/DataTables/FixedHeader-3.1.4/js/dataTables.fixedHeader.js" ></script>
+<script type="text/javascript" src="js/DataTables/FixedColumns-3.2.5/js/dataTables.fixedColumns.js" ></script>
+<script type="text/javascript" src="js/DataTables/RowReorder-1.2.4/js/dataTables.rowReorder.js" ></script>
+
+
+<link rel="stylesheet" type="text/css" href="css/rcps_style.css" />
+<link rel="stylesheet" type="text/css" href="css/re_style.css" />
+<link rel="stylesheet" type="text/css" href="css/DataTables/datatables.css" />
+<link rel="stylesheet" type="text/css" href="css/DataTables/Scroller-2.0.0/css/scroller.jqueryui.css" />
+<link rel="stylesheet" type="text/css" href="css/DataTables/Select-1.3.0/css/select.jqueryui.css" />
+<link rel="stylesheet" type="text/css" href="css/DataTables/FixedHeader-3.1.4/css/fixedHeader.jqueryui.css" />
+<link rel="stylesheet" type="text/css" href="css/DataTables/FixedColumns-3.2.5/css/fixedColumns.jqueryui.css" />
+
+<style type="text/css">
+body{width:1px;min-width:100%}
+</style>
+<script type="text/javascript">
+
+$(function(){
+	var tableChart = 'T';
+	var hicheck = '';
+	var searchYearMonth = $(':radio[name="searchYearMonth"]:checked').val();
+//	$(".ye_month").hide();
+
+	
+		//.xls 다운로드
+		var checkStatExcel;
+		$("#csvDown").click(function(){
+		   checkStatExcel = $(':radio[name="state"]:checked').val();
+		   if(!chkExcel("1")){
+			   return false;
+		   }
+		   alert('통계자료의 양에 따라 소요시간이 10~30초 소요됩니다.\n\n엑셀 파일 [저장] 후 [파일열기]를 권장합니다.');
+		   if(checkStatExcel == "1"){
+		    $("#formXlsDown").attr("action", "downloadCsvEtc4.do?searchYearMonth="+searchYearMonth+"&xlsStats=1").submit();
+		   }else if(checkStatExcel == "2"){
+			   $("#formXlsDown").attr("action", "downloadCsvEtc4.do?searchYearMonth="+searchYearMonth+"&xlsStats=2").submit();
+		   }else if(checkStatExcel == "3"){
+			   $("#formXlsDown").attr("action", "downloadCsvEtc4.do?searchYearMonth="+searchYearMonth+"&xlsStats=3").submit();
+		   }
+
+		  });
+
+		  $("#xlsDown").click(function(){
+		   checkStatExcel = $(':radio[name="state"]:checked').val();
+		   if(!chkExcel("1")){
+			   return false;
+		   }
+		   alert('통계자료의 양에 따라 소요시간이 10~30초 소요됩니다.\n\n엑셀 파일 [저장] 후 [파일열기]를 권장합니다.');
+		   if(checkStatExcel == "1"){
+		    $("#formXlsDown").attr("action", "downloadExcelEtc5.do?searchYearMonth="+searchYearMonth+"&xlsStats=1").submit();
+		   }else if(checkStatExcel == "2"){
+			   $("#formXlsDown").attr("action", "downloadExcelEtc5.do?searchYearMonth="+searchYearMonth+"&xlsStats=2").submit();
+		   }else if(checkStatExcel == "3"){
+			   $("#formXlsDown").attr("action", "downloadExcelEtc5.do?searchYearMonth="+searchYearMonth+"&xlsStats=3").submit();
+		   }
+
+		  });
+
+		  $("#xlsxDown").click(function(){
+			  checkStatExcel = $(':radio[name="state"]:checked').val();
+			   if(!chkExcel("1")){
+				   return false;
+			   }
+			   alert('통계자료의 양에 따라 소요시간이 10~30초 소요됩니다.\n\n엑셀 파일 [저장] 후 [파일열기]를 권장합니다.');
+			   if(checkStatExcel == "1"){
+			    $("#formXlsDown").attr("action", "downloadExcelEtc6.do?searchYearMonth="+searchYearMonth+"&xlsStats=1").submit();
+			   }else if(checkStatExcel == "2"){
+				   $("#formXlsDown").attr("action", "downloadExcelEtc6.do?searchYearMonth="+searchYearMonth+"&xlsStats=2").submit();
+			   }else if(checkStatExcel == "3"){
+				   $("#formXlsDown").attr("action", "downloadExcelEtc6.do?searchYearMonth="+searchYearMonth+"&xlsStats=3").submit();
+			   }
+		  });
+
+		var checkStatExcelMobile;
+		  $("#xlsDownMobile").click(function(){
+		   checkStatExcelMobile = $('select[name=stateMobile]').val();
+		   if(!chkExcel("2")){
+			   return false;
+		   }
+		   alert('통계자료의 양에 따라 소요시간이 10~30초 소요됩니다.\n\n엑셀 파일 [저장] 후 [파일열기]를 권장합니다.');
+		   if(checkStatExcelMobile == "1"){
+		    $("#formXlsDown").attr("action", "downloadExcelEtc6.do?searchYearMonth="+searchYearMonth+"&xlsStats=1").submit();
+		   }else if(checkStatExcelMobile == "2"){
+			   $("#formXlsDown").attr("action", "downloadExcelEtc6.do?searchYearMonth="+searchYearMonth+"&xlsStats=2").submit();
+		   }else if(checkStatExcelMobile == "3"){
+			   $("#formXlsDown").attr("action", "downloadExcelEtc6.do?searchYearMonth="+searchYearMonth+"&xlsStats=3").submit();
+		   }
+		  });	
+		  
+	    //2025.01.14  기능개선 추가
+		$("input[name=searchYearMonth]").change(function(){
+			var rdoValue=$(this).val();
+			var nowYear=$("#nowYear").val();
+			
+			if (rdoValue=="month"){
+				$("#searchMonthStart").attr("disabled",false);
+				$("#searchMonthEnd").attr("disabled",false);
+				if($("#searchYearStart option:eq(0)").val() != nowYear){
+					$("#searchYearStart").prepend("<option value='"+nowYear+"'>"+nowYear+"년</option>");	  				
+	  				$("#searchYearEnd").prepend("<option value='"+nowYear+"'>"+nowYear+"년</option>");	  				
+				}
+			}else{
+				$("#searchMonthStart").attr("disabled",true);
+				$("#searchMonthEnd").attr("disabled",true);
+				$("#searchMonthStart").val(12);
+				$("#searchMonthEnd").val(12);
+				$("#searchYearStart option:first").remove();
+				$("#searchYearEnd option:first").remove();
+				$("#searchYearStart option:eq(0)").attr("selected","selected");
+				$("#searchYearEnd option:eq(0)").attr("selected","selected");
+			}
+		});
+});
+
+//엑셀 출력 제한 체크
+function chkExcel(mobileGbn){
+	var yearDB = '2026';
+	var monthDB = '10';
+
+	if ('1' == '3'){ //예하 읍면동 검색일때
+		document.formXlsDown.category.value = 'OldAgeDetail';
+	}else{ //전국, 시도, 시군구일때
+		document.formXlsDown.category.value = 'OldAge';
+	}
+	
+	if(yearDB == 0001 && monthDB == 01){
+		alert("해당 데이터가 없습니다.");
+		return false;
+	}
+
+	//var startDate = new Date($("select[name=searchYearStart]").val(),$("select[name=searchMonthStart]").val());
+	//var endDate = new Date($("select[name=searchYearEnd]").val(),$("select[name=searchMonthEnd]").val());
+	var startDate = new Date(2026,10);
+	var endDate = new Date(2026,10);
+	var interval = endDate -startDate
+	var month = 24*60*60*1000 * 30;
+	var diffMonth=parseInt(interval/month);
+	//2018.03.22. 전체읍면동일 경우 검색 기간을 12개월로 제한 yoopower
+	var radioState = $("input[type='radio'][name='state']:checked").val();
+	var radioMobileState = $("select[name=stateMobile]").val();	
+	
+	//alert("mobileGbn : "+ mobileGbn +" radioState : "+radioState+" radioMobileState : "+radioMobileState);
+	//return false;
+	
+	if (mobileGbn == "1" && radioState == "3"){//pc버전이고 전체읍면동현황일경우		
+		if (diffMonth>="12"){
+			alert("주민등록인구통계 시스템의 원활한 서비스 제공을 위해 \n전체읍면동현황 일 경우 \n검색기간을 12개월과 같이 제한합니다. \n기간 조정 후 다시 검색하여 주시기 바랍니다.");
+			return false;
+		}
+	
+	}
+	
+	if (mobileGbn == "2" && radioMobileState == "3"){//mobile 버전이고 전체읍면동현황일경우		
+		if (diffMonth>="12"){
+			alert("주민등록인구통계 시스템의 원활한 서비스 제공을 위해 \n전체읍면동현황 일 경우 \n검색기간을 12개월과 같이 제한합니다. \n기간 조정 후 다시 검색하여 주시기 바랍니다.");
+			return false;
+		}
+	}
+	if (diffMonth>="36"){
+		alert("주민등록인구통계 시스템의 원활한 서비스 제공을 위해 \n검색기간을 36개월과 같이 제한합니다. \n기간 조정 후 다시 검색하여 주시기 바랍니다.");
+		return false;
+	}
+
+	return true;
+
+}
+
+//엑셀 출력 제한 체크
+function chkExcel2(){
+	var yearDB = '';
+	var monthDB = '10';
+
+	if(yearDB == 0001 && monthDB == 01){
+		alert("해당 데이터가 없습니다.");
+		return false;
+	}
+
+	var startDate = new Date($("select[name=searchYearStart]").val(),$("select[name=searchMonthStart]").val());
+	var endDate = new Date($("select[name=searchYearEnd]").val(),$("select[name=searchMonthEnd]").val());
+	var interval = endDate -startDate
+	var month = 24*60*60*1000 * 30;
+	var diffMonth=parseInt(interval/month);
+	if (diffMonth>="12"){
+		alert("주민등록인구통계 시스템의 원활한 서비스 제공을 위해 \n검색기간을 12개월과 같이 제한합니다. \n12개월 이상은 xlsx를 이용해 주시기 바랍니다.");
+		return false;
+	}
+
+	return true;
+}
+
+//도움말 토글
+function toggle(){
+	$(".info_box").toggle();
+}
+
+//시도 시군구 선택시 ajax로 지역가져오는 곳
+function selectSidonm(){
+	
+	$.ajax({
+		type: "post",
+		url : "selectHangkikcdListAjax.do",
+		dataType:"json",
+		contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+		success : function(data) {
+			loadSidonm($("#sltOrgLvl1"), data.locations);
+		    // 2025.01.14 개능개선 추가
+		    changeSearchYearMonth();
+
+		}
+	});
+}
+
+function loadSidonm(target, data) {
+	var dataArr = [];
+	var inx = 0;
+	target.empty();
+
+	$(data).each( function() {
+		if(this.levels == 1){
+			if("A" == this.hangkikcd){
+				
+				dataArr[inx++] = "<option value='" + this.hangkikcd + "' selected >" + this.sidonm + "</option> ";
+				
+			}else{
+				
+				dataArr[inx++] = "<option value='" + this.hangkikcd + "' >" + this.sidonm + "</option> ";
+			}
+		}
+	});
+	target.append("<option value='A' >"+"전국"+"</option>");
+	target.append(dataArr);
+	
+
+	selectSikunkunm();
+	
+
+}
+
+function selectSikunkunm(){
+	$.ajax({
+		type: "post",
+		url : "selectHangkikcdListAjax.do",
+		dataType:"json",
+		contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+		success : function(data) {
+			loadSikunkunm($("#sltOrgLvl2"), data.locations);
+		}
+	});
+}
+
+
+function loadSikunkunm(target, data) {
+	var dataArr = [];
+	var inx = 0;
+	target.empty();
+	$(data).each( function() {
+		if(this.levels == 2){
+
+			if(this.sidonm == $("#sltOrgLvl1 option:selected").text()){ //상위 시군 값으로 구를 찾아온다.
+
+				if("" == this.hangkikcd){
+					dataArr[inx++] = "<option value=" + this.hangkikcd + " selected>" + this.sikunkunm + "</option> ";
+				} else {
+					dataArr[inx++] = "<option value=" + this.hangkikcd + " >" + this.sikunkunm + "</option> ";
+					
+				}
+			}
+		}
+	});
+	target.append("<option value='A' selected='selected'>"+"시·군·구"+"</option>");
+	target.append(dataArr);
+}
+
+/* <!-- 차트관련   --> */
+function selectSidoG(){
+	$.ajax({
+		type: "post",
+		url : "selectHangkikcdListAjax.do",
+		dataType:"json",
+		contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+		success : function(data) {
+			loadSidoG($("#sltOrgLvl1G"), data.locations);
+
+			if($("#sltOrgTypeG").val() != undefined){
+				if($("#sltOrgTypeG").val()=="2"){
+					document.frmSido.sltOrgLvl2G.style.display = "block";
+				} else {
+					document.frmSido.sltOrgLvl2G.style.display = "none";
+				}
+			}
+		}
+	});
+	
+}
+
+function loadSidoG(target, data) {
+	var dataArr = [];
+	var inx = 0;
+	target.empty();
+
+	$(data).each( function() {
+		if(this.levels == 1){
+			if("" == this.hangkikcd){
+
+				dataArr[inx++] = "<option value='" + this.hangkikcd + "' selected >" + this.sidonm + "</option> ";
+
+			}else{
+
+				dataArr[inx++] = "<option value='" + this.hangkikcd + "' >" + this.sidonm + "</option> ";
+
+			}
+		}
+	});
+	target.append("<option value='A' >"+"전국"+"</option>");
+	target.append(dataArr);
+
+	selectSikunkuG();
+
+}
+
+function selectSikunkuG(){
+	$.ajax({
+		type: "post",
+		url : "selectHangkikcdListAjax.do",
+		dataType:"json",
+		contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+		success : function(data) {
+			loadSikunkuG($("#sltOrgLvl2G"), data.locations);
+		}
+	});
+}
+
+function loadSikunkuG(target, data) {
+	var dataArr = [];
+	var inx = 0;
+	target.empty();
+	$(data).each( function() {
+		if(this.levels == 2){
+
+			if(this.sidonm == $("#sltOrgLvl1G option:selected").text()){ //상위 시군 값으로 구를 찾아온다.
+
+				if("" == this.hangkikcd){
+					dataArr[inx++] = "<option value=" + this.hangkikcd + " selected>" + this.sikunkunm + "</option> ";
+				} else {
+					dataArr[inx++] = "<option value=" + this.hangkikcd + " >" + this.sikunkunm + "</option> ";
+				}
+			}
+		}
+	});
+	target.append("<option value='A' selected='selected'>"+"시·군·구"+"</option>");
+	target.append(dataArr);
+}
+
+/* //차트 기간 선택시 form submit()
+function getSelectYearMonth(){
+	document.frmYearMonth.submit();
+} */
+
+//데이타 없을때 차트 클릭시 누르기 전으로
+function noData(){
+	alert("해당 기간에는 데이터가 없습니다. 다시검색해주세요");
+	history.go(0);
+}
+
+//20161213 추가 테이블 클릭시 검색버튼 클릭한 기능
+function searchClick(){
+	document.search.submit();
+}
+
+//검색시 유효성 검사
+function goSearch(){
+	var frm = document.search;
+		
+	/* 
+	sltOrgType = '1' 시도 선택
+	sltOrgType = '2' 시군구 선택 */
+		
+	if(frm.sltOrgLvl1.value == 'A'){
+		frm.sltOrgType.value = '1';
+	}else if(frm.sltOrgLvl1.value != 'A'){
+
+		frm.sltOrgType.value = '2';
+	}
+
+	if (frm.searchYearStart.value > frm.searchYearEnd.value) {
+		alert('조회 기간이 잘못 되었습니다.');
+		frm.searchYearStart.focus();
+		return false;
+	}
+
+	if(frm.searchYearStart.value == frm.searchYearEnd.value){
+		if (frm.searchMonthStart.value > frm.searchMonthEnd.value) {
+			alert('조회 기간이 잘못 되었습니다.');
+			frm.searchMonthStart.focus();
+			return false;
+		}
+	}
+
+	if (frm.sltOrgType.value == '2' && frm.sltOrgLvl1.value == 'A') {
+		alert("해당 시군구를 먼저 선택 하시기 바랍니다.");
+		frm.sltOrgLvl1.focus();
+		return false;
+	}
+
+	var startDate = new Date($("select[name=searchYearStart]").val(),$("select[name=searchMonthStart]").val());
+	var endDate = new Date($("select[name=searchYearEnd]").val(),$("select[name=searchMonthEnd]").val());
+	var interval = endDate -startDate
+	var month = 24*60*60*1000 * 30;
+	var diffMonth=parseInt(interval/month);
+	if (diffMonth>="36"){
+		alert("주민등록인구통계 시스템의 원활한 서비스 제공을 위해 \n검색기간을 36개월과 같이 제한합니다. \n기간 조정 후 다시 검색하여 주시기 바랍니다.");
+		return false;
+	}
+
+}
+
+
+/* 20161124 추가  */
+//행정기관별 차트 검색시
+function goSearch2(){
+	if (document.frmSido.sltOrgTypeG.value == '2' && document.frmSido.sltOrgLvl1G.value == 'A') {
+		alert("해당 시군구를 먼저 선택 하시기 바랍니다.");
+		document.frmSido.sltOrgLvl1G.focus();
+		return false;
+	}
+}
+
+//초기화 버튼 클릭시
+function goReset(){
+	location.href = 'etcStatOldAge.do';
+}
+
+//연간 월간 라디오버튼 선택에 따른 이벤트
+function changeSearchYearMonth(){
+	var nowYear=$("#nowYear").val();	
+	if($("input:radio[name=searchYearMonth]:checked").val() == "year") {
+		$("#searchMonthStart").attr("disabled",true);
+		$("#searchMonthEnd").attr("disabled",true);
+		$("#searchYearStart option:first").remove();
+		$("#searchYearEnd option:first").remove();
+	}else if($("input:radio[name=searchYearMonth]:checked").val() == "month") {
+		$("#searchMonthStart").attr("disabled",false);
+		$("#searchMonthEnd").attr("disabled",false);	  			
+		if($("#searchYearStart option:eq(0)").val() != nowYear){
+			$("#searchYearStart").prepend("<option value='"+nowYear+"'>"+nowYear+"년</option>");
+  			$("#searchYearEnd").prepend("<option value='"+nowYear+"'>"+nowYear+"년</option>");
+		}	  			
+	}
+}
+
+
+
+
+</script>
+
+
+</head>
+<!-- <body onload="selectSidonm(); selectSidoG();"> -->
+<body onload="selectSidonm();">
+<!-- content_wrap -->
+<div id="content_wrap">
+	<div id="location">
+		<ul>
+			<li class="icon_home"><span>HOME</span></li>
+			<li><span>업무안내</span></li>
+			<li><span>창조정부조직실</span></li>
+			<li class="current"><span>행정제도 개선</span></li>
+		</ul>
+	</div>
+
+	<!-- content_main -->
+	<div id="content_main">		
+		<div class="content_top">
+			<h4>행정동별 지역별 고령 인구현황</h4>
+			<!-- <div class="btn_top">
+				<a href="#" class="btn_rss">RSS주소</a>
+				<a href="#" class="btn_print" target="_blank" title="본문컨텐츠 프린트하기, 새창에서 열림">인쇄하기</a>
+			</div> -->
+		</div>
+
+		<div class="content">
+			<!-- 월간현황, 연간현황 tab -->
+			<!-- <div class="tab_menu ty2">
+				<ul>
+					<li class="on"><a href="etcStatBirth.do">111주민등록기준 <br>지역별 출생자수</a></li>
+					<li><a href="etcStatDeath.do">주민등록기준  <br>지역별 사망자수</a></li>
+					<li><a href="etcStatHouseholds.do">지역별 <br>세대원수별 세대수</a></li>
+					<li><a href="etcStatAvgAge.do">지역별<br> 평균연령</a></li>
+					<li><a href="etcStatUpDown.do">지역별<br>인구증감</a></li>
+					<li><a href="etcStatSingleAge.do">단독 세대별<br>연령</a></li>
+				</ul>
+				<select title="주민등록 인구 기타현황 분류" id="selectPage">
+					<option value="1" selected>222주민등록기준 지역별 출생자수</option>
+					<option value="2" >주민등록기준 지역별 사망자수</option>
+					<option value="3" >지역별 세대원수별 세대수</option>
+					<option value="4" >지역별 평균연령</option>
+					<option value="5" >지역별 인구증감</option>
+					<option value="6" >단독 세대별 연령</option>
+				</select>
+			</div> -->
+			<!-- //월간현황, 연간현황 tab -->
+			<!-- 통계표, 그래프 tab -->
+				<div class="tab_menu">
+					<!-- 전성현 2023.10.11 그래프 통계표 위치 수정 START -->
+					<ul>
+						<li class="on"><a href="etcStatOldAge.do">통계표</a></li>
+						<li><a href="etcStatOldAgeGraph.do">그래프</a></li>
+					</ul>
+					<!-- 전성현 2023.10.11 그래프 통계표 위치 수정 END -->
+				</div>
+			<!-- tab_content -->
+			<div class="tab_content">
+				<!-- 검색조건 table -->
+				<div class="section1">
+					<form action="etcStatOldAge.do" name="search" method="post">
+					<input type="hidden" value="T" name="tableChart">
+					<input type="hidden" value="1" name="sltOrgType">
+						<fieldset>
+							<legend>주민등록기준 읍면동 출생등록</legend>
+							<div class="tbl_form_box">
+								<div class="dl_group">
+									<dl>
+										<dt>
+											<label for="organ1">행정구역</label>
+											<!-- 행정구역 tooltip mobile -->
+														<span class="popover-btn"><span class="hide">행정구역</span></span>
+	                                                    <div class="popover-layer">
+	                                                        <p class="pHeader">행정구역</p>
+	                                                        <p class="pContent">
+	                                                            <span>
+																		조회결과는 선택한 행정구역의 산하 행정구역들이 조회됩니다. <br>
+																		(예를들어, 서울특별시 선택시 종로구, 중구, 용산구등 해당 구 자료가 조회됩니다)
+																	</span>
+																	<span>
+																		아래 5개의 면은 인구가 없는 지역이므로 통계현황에서 제외됩니다.<br>
+																		(강원도 철원군 근동면, 원동면, 원남면, 임남면, 고성군 수동면)
+																	</span>			
+																	<span style="position: inherit;">※ 2021년 6월까지, 경기도 파주시 장단면, 진서면은 인구가 없는 지역으로 통계에서 제외됩니다.(경기도 파주시 장단출장소 인구는 경기도 파주시 군내면 인구를 의미합니다.)</span>
+																	<!-- 설명자료 추가 - 20220531-윤성진 -->
+	                                                        </p>
+	                                                        <p class="pFooter"><span>닫기</span></p>
+	                                                    </div>
+										</dt>
+										
+										<!-- <dd class="td3"> -->
+										<dd class="td2">
+											<select name="sltOrgLvl1" id="sltOrgLvl1" onchange="selectSikunkunm();">
+											</select>
+										</dd>
+										<!-- <dd class="td4"> -->
+										<dd class="td2">
+											<select name="sltOrgLvl2" id="sltOrgLvl2" >
+											</select>
+										</dd>
+										<!-- 행정기관 tooltip PC -->
+										<dd class="td_popover">
+											<div class="popoverWrap">
+												<span><span class="hide">행정구역</span></span>
+												<div class="popoverBox pop1">
+													<p class="pHeader">
+														행정구역
+														<span class="close"><img src="images/btn_close.png" alt="닫기"></span>
+													</p>
+													<p class="pContent">
+														<span>
+															조회결과는 선택한 행정구역의 산하 행정구역들이 조회됩니다. <br>
+															(예를들어, 서울특별시 선택시 종로구, 중구, 용산구등 해당 구 자료가 조회됩니다)
+														</span>
+														<span>
+															아래 5개의 면은 인구가 없는 지역이므로 통계현황에서 제외됩니다.<br>
+															(강원도 철원군 근동면, 원동면, 원남면, 임남면, 고성군 수동면)
+														</span>
+														<span style="position: inherit;">※ 2021년 6월까지, 경기도 파주시 장단면, 진서면은 인구가 없는 지역으로 통계에서 제외됩니다.(경기도 파주시 장단출장소 인구는 경기도 파주시 군내면 인구를 의미합니다.)</span>
+														<!-- 설명자료 추가 - 20220531-윤성진 -->
+													</p>
+												</div>
+											</div>
+										</dd>
+									</dl>									
+								</div>
+								<div class="dl_group">
+								
+											
+								<!-- 2025.01.14 기능개선 추가 연간 나타내기 START -->														
+								<input type="hidden" value="2026" id="nowYear" name="nowYear">
+								<!-- 2025.01.14 기능개선 추가 연간 나타내기 END -->					
+									<dl>
+										<dt>
+											<label for="year1">조회기간</label>
+											<!-- 조회기간 tooltip mobile -->
+														<span class="popover-btn"><span class="hide">조회기간</span></span>
+	                                                    <div class="popover-layer">
+	                                                        <p class="pHeader">조회기간</p>
+	                                                        <p class="pContent">
+	                                                            <span>
+																			주민등록 인구통계는 2008년부터 시스템으로 집계하여 공표하고 있습니다.
+																		</span>
+																		<span>
+																			2008년 이전 자료는 통계청 자료(www.kosis.kr)를 이용하시기 바랍니다.
+																		</span>
+																		<span>
+																			작성기준 : 매월 말일 /공표일시 : 매월 1일 12시 이후(공표일이 주말, 공휴일인 경우에는 다음 평일에 공표)
+																		</span>
+	                                                        </p>
+	                                                        <p class="pFooter"><span>닫기</span></p>
+	                                                    </div>
+										</dt>										
+										<!-- <dd class="td1_1"> -->
+										<!-- 2025.01.14 기능개선 수정 start -->
+					                    <dd class="td_period">
+											<div>
+												<input class="i_radio"  type="radio" value="month"  id="searchYearMonth" name="searchYearMonth" checked  >
+												<label for="period_select1">월간</label>
+											</div>
+											<div>
+												<input class="i_radio"  type="radio" value="year"  id="searchYearMonth" name="searchYearMonth"  >
+												<label for="period_select2">연간</label>
+											</div>
+										</dd>
+					                    <dd class="td1_2">
+											<select name="searchYearStart" id="searchYearStart">
+											
+												<option value="2026" selected>2026년</option>
+											
+												<option value="2025" >2025년</option>
+											
+												<option value="2024" >2024년</option>
+											
+												<option value="2023" >2023년</option>
+											
+												<option value="2022" >2022년</option>
+											
+												<option value="2021" >2021년</option>
+											
+												<option value="2020" >2020년</option>
+											
+												<option value="2019" >2019년</option>
+											
+												<option value="2018" >2018년</option>
+											
+												<option value="2017" >2017년</option>
+											
+												<option value="2016" >2016년</option>
+											
+												<option value="2015" >2015년</option>
+											
+												<option value="2014" >2014년</option>
+											
+												<option value="2013" >2013년</option>
+											
+												<option value="2012" >2012년</option>
+											
+												<option value="2011" >2011년</option>
+											
+												<option value="2010" >2010년</option>
+											
+												<option value="2009" >2009년</option>
+											
+												<option value="2008" >2008년</option>
+											
+							           		</select>
+							           		<select name="searchMonthStart" id="searchMonthStart">
+							           			<option value="12" >12월</option>
+							           			<option value="11" >11월</option>
+							           			<option value="10" selected>10월</option>
+							           			<option value="09" >09월</option>
+							           			<option value="08" >08월</option>
+							           			<option value="07" >07월</option>
+							           			<option value="06" >06월</option>
+							           			<option value="05" >05월</option>
+							           			<option value="04" >04월</option>
+							           			<option value="03" >03월</option>
+							           			<option value="02" >02월</option>
+							           			<option value="01" >01월</option>
+							           		</select>											
+										</dd>
+										<dd><span class="dash">~</span></dd>
+										<!-- <dd class="td1_2"> -->
+										<dd class="td1_2">
+											<select name="searchYearEnd" id="searchYearEnd">
+											
+												<option value="2026" selected>2026년</option>
+											
+												<option value="2025" >2025년</option>
+											
+												<option value="2024" >2024년</option>
+											
+												<option value="2023" >2023년</option>
+											
+												<option value="2022" >2022년</option>
+											
+												<option value="2021" >2021년</option>
+											
+												<option value="2020" >2020년</option>
+											
+												<option value="2019" >2019년</option>
+											
+												<option value="2018" >2018년</option>
+											
+												<option value="2017" >2017년</option>
+											
+												<option value="2016" >2016년</option>
+											
+												<option value="2015" >2015년</option>
+											
+												<option value="2014" >2014년</option>
+											
+												<option value="2013" >2013년</option>
+											
+												<option value="2012" >2012년</option>
+											
+												<option value="2011" >2011년</option>
+											
+												<option value="2010" >2010년</option>
+											
+												<option value="2009" >2009년</option>
+											
+												<option value="2008" >2008년</option>
+											
+						            		</select>
+						            		<select name="searchMonthEnd" id="searchMonthEnd">
+						            			<option value="12" >12월</option>
+						            			<option value="11" >11월</option>
+						            			<option value="10" selected>10월</option>
+						            			<option value="09" >09월</option>
+						            			<option value="08" >08월</option>
+						            			<option value="07" >07월</option>
+						            			<option value="06" >06월</option>
+						            			<option value="05" >05월</option>
+						            			<option value="04" >04월</option>
+						            			<option value="03" >03월</option>
+						            			<option value="02" >02월</option>
+						            			<option value="01" >01월</option>
+						            		</select>
+										</dd>
+										<!-- 2025.01.14 기능개선 수정 end -->
+										<!-- 조회기간 tooltip pc -->
+										<dd class="td_popover">
+											<div class="popoverWrap">
+												<span><span class="hide">조회기간</span></span>
+												<div class="popoverBox pop3">
+													<p class="pHeader">
+														조회기간
+														<span class="close"><img src="images/btn_close.png" alt="닫기"></span>
+													</p>
+													<!-- <p class="pContent">2008년 이전의 통계는 통계청 국가통계포털 KOSIS(www.kosis.kr)을 이용하시기 바랍니다. </p> -->
+													<p class="pContent"> 
+														<span>
+															주민등록 인구통계는 2008년부터 시스템으로 집계하여 공표하고 있습니다.
+														</span>
+														<span>
+															2008년 이전 자료는 통계청 자료(www.kosis.kr)를 이용하시기 바랍니다.
+														</span>
+														<span>
+															작성기준 : 매월 말일 /공표일시 : 매월 1일 12시 이후(공표일이 주말, 공휴일인 경우에는 다음 평일에 공표)
+														</span>
+													</p>
+												</div>
+											</div>
+										</dd>
+										<dd>
+										<p class="searchMsg">※ 매월 말일 작성 / 공표일시 : 매월 1일 12시 이후(공표일이 주말, 공휴일인 경우에는 다음 평일에 공표)</p>
+										</dd>
+									</dl>
+									<!-- <dl>
+										<dt><label for="range">정렬순서</label></dt>
+										<dd class="td2">
+											<select name="sltOrderType" id="sltOrderType" title="행정기관코드">
+												<option value="1">행정기관코드</option>
+											</select>
+										</dd>
+										<dd class="td2">
+											<select name="sltOrderValue" id="sltOrderValue">
+												<option value="ASC" selected>오름차순</option>
+												<option value="DESC" >내림차순</option>
+											</select>
+										</dd>
+									</dl> -->
+								</div>
+							</div>
+							<div class="btn_box">
+								<input type="submit" value="검색" class="btn_search" onclick="return goSearch();"/>
+         						<input type="reset" value="초기화" class="btn_reset" onclick="return goReset();"/>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+				<!-- //검색조건 table -->
+
+				<!-- 설명 section -->
+				
+				<!-- //설명 section -->
+
+				<form name="formXlsDown" id="formXlsDown" method="post">
+				<div class="down_group">
+				     <input type="hidden" value="1" name="sltOrgType">
+				     <input type="hidden" value="A" name="sltOrgLvl1">
+				     <input type="hidden" value="" name="sltOrgLvl2">
+				     <input type="hidden" value="2026" name="searchYearStart">
+				     <input type="hidden" value="10" name="searchMonthStart">
+				     <input type="hidden" value="2026" name="searchYearEnd">
+				     <input type="hidden" value="10" name="searchMonthEnd">
+				     <input type="hidden" value="1" name="sltOrderType">
+				     <input type="hidden" value="ASC" name="sltOrderValue">
+				     <input type="hidden" value="ChYouth" name="category">
+						<fieldset>
+							<legend>주민등록기준 출생등록</legend>
+							<div class="down_group_radio">
+								<input class="i_radio" id="down1" type="radio" value="1" name="state" checked/><label for="down1">현재화면</label>
+								<input class="i_radio" id="down2" type="radio" value="2" name="state" /><label for="down2">전체시군구현황</label>
+								<input class="i_radio" id="down3" type="radio" value="3" name="state" /><label for="down3">전체읍면동현황</label>
+							</div>
+
+							<div class="down_group_btn">
+								<a href="#none" class="btn_down cdown" name="csvDown" id="csvDown">csv 파일 다운로드</a>
+<!-- 								<a href="#none" class="btn_down" name="xlsDown" id="xlsDown">xls 파일 다운로드</a> -->
+								<a href="#none" class="btn_down" name="xlsxDown" id="xlsxDown">xlsx 파일 다운로드</a>
+							</div>
+						</fieldset>
+				</div>
+
+				<div class="mobie_down_group">
+					<div class="down_group_btn">
+						<select name="stateMobile" title="조회 연도 선택">
+							<option value="1">현재화면</option>
+							<option value="2">전체시군구현황</option>
+							<option value="3">전체읍면동현황</option>
+						</select>
+						<a href="#" class="btn_file" name="xlsDownMobile" id="xlsDownMobile">파일 다운로드</a>
+					</div>
+				</div>
+				</form>
+
+				<!-- 주민등록 현황 -->
+				<div class="section3">
+					<div class="current_title">
+						<strong><span>행정동별 지역별 고령 인구현황</span></strong>
+						
+					</div>
+
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+						<!-- 행정기관 dupleCnt -->
+
+					
+					
+
+<!-- table -->
+<div class="tab_section current_table" id="tab1">
+	<h5 class="hide">테이블</h5>
+	<table class="tbl_type1" id="contextTable">
+		<caption>해당 연도와 월의 행정기관별로  인구수를 확인 할 수 있는 주민등록기준 지역별 출생등록</caption>
+		<thead>
+			<tr><!-- th부분에 넓이 부분을 위한 class="th1"추가  -->
+				<th rowspan="3" style="display:none;">행정기관코드</th>
+				<th rowspan="3" scope="col" class="th1">행정기관</th>
+				
+				<!-- 경우에 따라 테이블의 컬럼명과 갯수를 조정한다. -->
+				
+					
+					
+					
+						
+					
+
+					
+					    
+					    <th colspan="6">2026년 10월</th>
+					    
+
+					    
+				    
+			    
+
+			</tr>
+			
+			<tr>
+			<!-- 경우에따라 여러달을 표시한다 -->
+			
+				<th rowspan="2" scope="col" class="th1">전체</th>
+				<th rowspan="2" scope="col" class="th1">남자</th>
+				<th rowspan="2" scope="col" class="th1">여자</th>
+				<th colspan="3">65세이상</th>
+<!-- 				<th colspan="3">70세이상</th> -->
+				
+			
+			</tr>
+			
+			
+			
+			<tr>
+			<!-- 경우에따라 여러달을 표시한다 -->
+			
+				<th scope="col"  class="th1">전체</th>
+				<th scope="col"  class="th1">남자</th>
+				<th scope="col"  class="th1">여자</th>
+<!-- 				<th scope="col"  class="th1">전체</th> -->
+<!-- 				<th scope="col"  class="th1">남자</th> -->
+<!-- 				<th scope="col"  class="th1">여자</th> -->
+			
+			</tr>
+		</thead>
+		<tbody>
+			<!-- 행정기관을 중복없이 나열한다. -->
+			<!-- forEach Level_00 Start -->
+			<tr>
+			<!-- break -->
+
+				<!-- 컬럼명과 갯수에 따라 데이터내용을 조정한다. -->
+				<!-- forEach Level_01 Start -->
+				<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+					
+					<td style="display:none;">0</td>
+
+					<!-- 레벨값에 따라서 시도인지 시군구인지 구별  -->
+					
+				 		<td class="td_admin th1">
+				 		
+				 		
+				 		전국</td>
+				 		
+				 	
+				 	
+					 	
+					
+					
+
+					<!-- 리스트 데이터 가로로 여러달 출력을 위한 구문 -->
+					<td>51,075,282</td> <!-- 총인구수 -->
+					<td>25,405,129</td> <!-- 남자수 -->
+					<td>25,670,153</td> <!-- 여자수 -->
+					<td>11,350,255</td> <!-- 65세이상전체수 -->
+					<td>5,080,808</td> <!-- 65세이상남자수 -->
+					<td>6,269,447</td> <!-- 65세이상여자수 -->
+
+
+
+
+			
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 End -->
+			
+
+			</tr>
+
+		<!-- forEach Level_00 Start -->
+			<tr>
+			<!-- break -->
+
+				<!-- 컬럼명과 갯수에 따라 데이터내용을 조정한다. -->
+				<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+					
+					<td style="display:none;">1</td>
+
+					<!-- 레벨값에 따라서 시도인지 시군구인지 구별  -->
+					
+				 		<td class="td_admin th1">
+				 		
+				 		
+				 		서울특별시</td>
+				 		
+				 	
+				 	
+					 	
+					
+					
+
+					<!-- 리스트 데이터 가로로 여러달 출력을 위한 구문 -->
+					<td>9,274,392</td> <!-- 총인구수 -->
+					<td>4,461,444</td> <!-- 남자수 -->
+					<td>4,812,948</td> <!-- 여자수 -->
+					<td>1,970,768</td> <!-- 65세이상전체수 -->
+					<td>871,402</td> <!-- 65세이상남자수 -->
+					<td>1,099,366</td> <!-- 65세이상여자수 -->
+
+
+
+
+			
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 End -->
+			
+
+			</tr>
+
+		<!-- forEach Level_00 Start -->
+			<tr>
+			<!-- break -->
+
+				<!-- 컬럼명과 갯수에 따라 데이터내용을 조정한다. -->
+				<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+					
+					<td style="display:none;">2</td>
+
+					<!-- 레벨값에 따라서 시도인지 시군구인지 구별  -->
+					
+				 		<td class="td_admin th1">
+				 		
+				 		
+				 		전남광주통합특별시</td>
+				 		
+				 	
+				 	
+					 	
+					
+					
+
+					<!-- 리스트 데이터 가로로 여러달 출력을 위한 구문 -->
+					<td>3,152,970</td> <!-- 총인구수 -->
+					<td>1,576,767</td> <!-- 남자수 -->
+					<td>1,576,203</td> <!-- 여자수 -->
+					<td>794,334</td> <!-- 65세이상전체수 -->
+					<td>349,590</td> <!-- 65세이상남자수 -->
+					<td>444,744</td> <!-- 65세이상여자수 -->
+
+
+
+
+			
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 End -->
+			
+
+			</tr>
+
+		<!-- forEach Level_00 Start -->
+			<tr>
+			<!-- break -->
+
+				<!-- 컬럼명과 갯수에 따라 데이터내용을 조정한다. -->
+				<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+					
+					<td style="display:none;">3</td>
+
+					<!-- 레벨값에 따라서 시도인지 시군구인지 구별  -->
+					
+				 		<td class="td_admin th1">
+				 		
+				 		
+				 		부산광역시</td>
+				 		
+				 	
+				 	
+					 	
+					
+					
+
+					<!-- 리스트 데이터 가로로 여러달 출력을 위한 구문 -->
+					<td>3,226,446</td> <!-- 총인구수 -->
+					<td>1,566,363</td> <!-- 남자수 -->
+					<td>1,660,083</td> <!-- 여자수 -->
+					<td>850,369</td> <!-- 65세이상전체수 -->
+					<td>371,443</td> <!-- 65세이상남자수 -->
+					<td>478,926</td> <!-- 65세이상여자수 -->
+
+
+
+
+			
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 End -->
+			
+
+			</tr>
+
+		<!-- forEach Level_00 Start -->
+			<tr>
+			<!-- break -->
+
+				<!-- 컬럼명과 갯수에 따라 데이터내용을 조정한다. -->
+				<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+					
+					<td style="display:none;">4</td>
+
+					<!-- 레벨값에 따라서 시도인지 시군구인지 구별  -->
+					
+				 		<td class="td_admin th1">
+				 		
+				 		
+				 		대구광역시</td>
+				 		
+				 	
+				 	
+					 	
+					
+					
+
+					<!-- 리스트 데이터 가로로 여러달 출력을 위한 구문 -->
+					<td>2,345,185</td> <!-- 총인구수 -->
+					<td>1,147,450</td> <!-- 남자수 -->
+					<td>1,197,735</td> <!-- 여자수 -->
+					<td>543,845</td> <!-- 65세이상전체수 -->
+					<td>235,897</td> <!-- 65세이상남자수 -->
+					<td>307,948</td> <!-- 65세이상여자수 -->
+
+
+
+
+			
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 End -->
+			
+
+			</tr>
+
+		<!-- forEach Level_00 Start -->
+			<tr>
+			<!-- break -->
+
+				<!-- 컬럼명과 갯수에 따라 데이터내용을 조정한다. -->
+				<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+					
+					<td style="display:none;">5</td>
+
+					<!-- 레벨값에 따라서 시도인지 시군구인지 구별  -->
+					
+				 		<td class="td_admin th1">
+				 		
+				 		
+				 		인천광역시</td>
+				 		
+				 	
+				 	
+					 	
+					
+					
+
+					<!-- 리스트 데이터 가로로 여러달 출력을 위한 구문 -->
+					<td>3,070,203</td> <!-- 총인구수 -->
+					<td>1,532,232</td> <!-- 남자수 -->
+					<td>1,537,971</td> <!-- 여자수 -->
+					<td>611,250</td> <!-- 65세이상전체수 -->
+					<td>276,268</td> <!-- 65세이상남자수 -->
+					<td>334,982</td> <!-- 65세이상여자수 -->
+
+
+
+
+			
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 End -->
+			
+
+			</tr>
+
+		<!-- forEach Level_00 Start -->
+			<tr>
+			<!-- break -->
+
+				<!-- 컬럼명과 갯수에 따라 데이터내용을 조정한다. -->
+				<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+					
+					<td style="display:none;">6</td>
+
+					<!-- 레벨값에 따라서 시도인지 시군구인지 구별  -->
+					
+				 		<td class="td_admin th1">
+				 		
+				 		
+				 		대전광역시</td>
+				 		
+				 	
+				 	
+					 	
+					
+					
+
+					<!-- 리스트 데이터 가로로 여러달 출력을 위한 구문 -->
+					<td>1,443,171</td> <!-- 총인구수 -->
+					<td>718,403</td> <!-- 남자수 -->
+					<td>724,768</td> <!-- 여자수 -->
+					<td>289,619</td> <!-- 65세이상전체수 -->
+					<td>129,294</td> <!-- 65세이상남자수 -->
+					<td>160,325</td> <!-- 65세이상여자수 -->
+
+
+
+
+			
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 End -->
+			
+
+			</tr>
+
+		<!-- forEach Level_00 Start -->
+			<tr>
+			<!-- break -->
+
+				<!-- 컬럼명과 갯수에 따라 데이터내용을 조정한다. -->
+				<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+					
+					<td style="display:none;">7</td>
+
+					<!-- 레벨값에 따라서 시도인지 시군구인지 구별  -->
+					
+				 		<td class="td_admin th1">
+				 		
+				 		
+				 		울산광역시</td>
+				 		
+				 	
+				 	
+					 	
+					
+					
+
+					<!-- 리스트 데이터 가로로 여러달 출력을 위한 구문 -->
+					<td>1,085,888</td> <!-- 총인구수 -->
+					<td>559,773</td> <!-- 남자수 -->
+					<td>526,115</td> <!-- 여자수 -->
+					<td>215,712</td> <!-- 65세이상전체수 -->
+					<td>101,000</td> <!-- 65세이상남자수 -->
+					<td>114,712</td> <!-- 65세이상여자수 -->
+
+
+
+
+			
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 End -->
+			
+
+			</tr>
+
+		<!-- forEach Level_00 Start -->
+			<tr>
+			<!-- break -->
+
+				<!-- 컬럼명과 갯수에 따라 데이터내용을 조정한다. -->
+				<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+					
+					<td style="display:none;">8</td>
+
+					<!-- 레벨값에 따라서 시도인지 시군구인지 구별  -->
+					
+				 		<td class="td_admin th1">
+				 		
+				 		
+				 		세종특별자치시</td>
+				 		
+				 	
+				 	
+					 	
+					
+					
+
+					<!-- 리스트 데이터 가로로 여러달 출력을 위한 구문 -->
+					<td>390,618</td> <!-- 총인구수 -->
+					<td>194,565</td> <!-- 남자수 -->
+					<td>196,053</td> <!-- 여자수 -->
+					<td>50,656</td> <!-- 65세이상전체수 -->
+					<td>23,234</td> <!-- 65세이상남자수 -->
+					<td>27,422</td> <!-- 65세이상여자수 -->
+
+
+
+
+			
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 End -->
+			
+
+			</tr>
+
+		<!-- forEach Level_00 Start -->
+			<tr>
+			<!-- break -->
+
+				<!-- 컬럼명과 갯수에 따라 데이터내용을 조정한다. -->
+				<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+					
+					<td style="display:none;">9</td>
+
+					<!-- 레벨값에 따라서 시도인지 시군구인지 구별  -->
+					
+				 		<td class="td_admin th1">
+				 		
+				 		
+				 		경기도</td>
+				 		
+				 	
+				 	
+					 	
+					
+					
+
+					<!-- 리스트 데이터 가로로 여러달 출력을 위한 구문 -->
+					<td>13,780,735</td> <!-- 총인구수 -->
+					<td>6,917,181</td> <!-- 남자수 -->
+					<td>6,863,554</td> <!-- 여자수 -->
+					<td>2,578,873</td> <!-- 65세이상전체수 -->
+					<td>1,176,155</td> <!-- 65세이상남자수 -->
+					<td>1,402,718</td> <!-- 65세이상여자수 -->
+
+
+
+
+			
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 End -->
+			
+
+			</tr>
+
+		<!-- forEach Level_00 Start -->
+			<tr>
+			<!-- break -->
+
+				<!-- 컬럼명과 갯수에 따라 데이터내용을 조정한다. -->
+				<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+					
+					<td style="display:none;">10</td>
+
+					<!-- 레벨값에 따라서 시도인지 시군구인지 구별  -->
+					
+				 		<td class="td_admin th1">
+				 		
+				 		
+				 		강원특별자치도</td>
+				 		
+				 	
+				 	
+					 	
+					
+					
+
+					<!-- 리스트 데이터 가로로 여러달 출력을 위한 구문 -->
+					<td>1,506,690</td> <!-- 총인구수 -->
+					<td>758,013</td> <!-- 남자수 -->
+					<td>748,677</td> <!-- 여자수 -->
+					<td>422,943</td> <!-- 65세이상전체수 -->
+					<td>191,426</td> <!-- 65세이상남자수 -->
+					<td>231,517</td> <!-- 65세이상여자수 -->
+
+
+
+
+			
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 End -->
+			
+
+			</tr>
+
+		<!-- forEach Level_00 Start -->
+			<tr>
+			<!-- break -->
+
+				<!-- 컬럼명과 갯수에 따라 데이터내용을 조정한다. -->
+				<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+					
+					<td style="display:none;">11</td>
+
+					<!-- 레벨값에 따라서 시도인지 시군구인지 구별  -->
+					
+				 		<td class="td_admin th1">
+				 		
+				 		
+				 		충청북도</td>
+				 		
+				 	
+				 	
+					 	
+					
+					
+
+					<!-- 리스트 데이터 가로로 여러달 출력을 위한 구문 -->
+					<td>1,602,382</td> <!-- 총인구수 -->
+					<td>817,299</td> <!-- 남자수 -->
+					<td>785,083</td> <!-- 여자수 -->
+					<td>387,520</td> <!-- 65세이상전체수 -->
+					<td>176,527</td> <!-- 65세이상남자수 -->
+					<td>210,993</td> <!-- 65세이상여자수 -->
+
+
+
+
+			
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 End -->
+			
+
+			</tr>
+
+		<!-- forEach Level_00 Start -->
+			<tr>
+			<!-- break -->
+
+				<!-- 컬럼명과 갯수에 따라 데이터내용을 조정한다. -->
+				<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+					
+					<td style="display:none;">12</td>
+
+					<!-- 레벨값에 따라서 시도인지 시군구인지 구별  -->
+					
+				 		<td class="td_admin th1">
+				 		
+				 		
+				 		충청남도</td>
+				 		
+				 	
+				 	
+					 	
+					
+					
+
+					<!-- 리스트 데이터 가로로 여러달 출력을 위한 구문 -->
+					<td>2,140,278</td> <!-- 총인구수 -->
+					<td>1,099,661</td> <!-- 남자수 -->
+					<td>1,040,617</td> <!-- 여자수 -->
+					<td>523,744</td> <!-- 65세이상전체수 -->
+					<td>237,612</td> <!-- 65세이상남자수 -->
+					<td>286,132</td> <!-- 65세이상여자수 -->
+
+
+
+
+			
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 End -->
+			
+
+			</tr>
+
+		<!-- forEach Level_00 Start -->
+			<tr>
+			<!-- break -->
+
+				<!-- 컬럼명과 갯수에 따라 데이터내용을 조정한다. -->
+				<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+					
+					<td style="display:none;">13</td>
+
+					<!-- 레벨값에 따라서 시도인지 시군구인지 구별  -->
+					
+				 		<td class="td_admin th1">
+				 		
+				 		
+				 		전북특별자치도</td>
+				 		
+				 	
+				 	
+					 	
+					
+					
+
+					<!-- 리스트 데이터 가로로 여러달 출력을 위한 구문 -->
+					<td>1,715,109</td> <!-- 총인구수 -->
+					<td>854,872</td> <!-- 남자수 -->
+					<td>860,237</td> <!-- 여자수 -->
+					<td>475,139</td> <!-- 65세이상전체수 -->
+					<td>209,808</td> <!-- 65세이상남자수 -->
+					<td>265,331</td> <!-- 65세이상여자수 -->
+
+
+
+
+			
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 End -->
+			
+
+			</tr>
+
+		<!-- forEach Level_00 Start -->
+			<tr>
+			<!-- break -->
+
+				<!-- 컬럼명과 갯수에 따라 데이터내용을 조정한다. -->
+				<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+					
+					<td style="display:none;">14</td>
+
+					<!-- 레벨값에 따라서 시도인지 시군구인지 구별  -->
+					
+				 		<td class="td_admin th1">
+				 		
+				 		
+				 		경상북도</td>
+				 		
+				 	
+				 	
+					 	
+					
+					
+
+					<!-- 리스트 데이터 가로로 여러달 출력을 위한 구문 -->
+					<td>2,489,894</td> <!-- 총인구수 -->
+					<td>1,261,410</td> <!-- 남자수 -->
+					<td>1,228,484</td> <!-- 여자수 -->
+					<td>715,682</td> <!-- 65세이상전체수 -->
+					<td>319,790</td> <!-- 65세이상남자수 -->
+					<td>395,892</td> <!-- 65세이상여자수 -->
+
+
+
+
+			
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 End -->
+			
+
+			</tr>
+
+		<!-- forEach Level_00 Start -->
+			<tr>
+			<!-- break -->
+
+				<!-- 컬럼명과 갯수에 따라 데이터내용을 조정한다. -->
+				<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+					
+					<td style="display:none;">15</td>
+
+					<!-- 레벨값에 따라서 시도인지 시군구인지 구별  -->
+					
+				 		<td class="td_admin th1">
+				 		
+				 		
+				 		경상남도</td>
+				 		
+				 	
+				 	
+					 	
+					
+					
+
+					<!-- 리스트 데이터 가로로 여러달 출력을 위한 구문 -->
+					<td>3,189,204</td> <!-- 총인구수 -->
+					<td>1,608,848</td> <!-- 남자수 -->
+					<td>1,580,356</td> <!-- 여자수 -->
+					<td>780,918</td> <!-- 65세이상전체수 -->
+					<td>349,501</td> <!-- 65세이상남자수 -->
+					<td>431,417</td> <!-- 65세이상여자수 -->
+
+
+
+
+			
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 End -->
+			
+
+			</tr>
+
+		<!-- forEach Level_00 Start -->
+			<tr>
+			<!-- break -->
+
+				<!-- 컬럼명과 갯수에 따라 데이터내용을 조정한다. -->
+				<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				
+			<!-- forEach Level_01 Start -->
+				<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+					
+					<td style="display:none;">16</td>
+
+					<!-- 레벨값에 따라서 시도인지 시군구인지 구별  -->
+					
+				 		<td class="td_admin th1">
+				 		
+				 		
+				 		제주특별자치도</td>
+				 		
+				 	
+				 	
+					 	
+					
+					
+
+					<!-- 리스트 데이터 가로로 여러달 출력을 위한 구문 -->
+					<td>662,117</td> <!-- 총인구수 -->
+					<td>330,848</td> <!-- 남자수 -->
+					<td>331,269</td> <!-- 여자수 -->
+					<td>138,883</td> <!-- 65세이상전체수 -->
+					<td>61,861</td> <!-- 65세이상남자수 -->
+					<td>77,022</td> <!-- 65세이상여자수 -->
+
+
+
+
+			
+			<!-- forEach Level_01 End -->
+			
+
+			</tr>
+
+		<!-- forEach Level_00 End -->
+
+		</tbody>
+	</table>
+	
+</div>
+<!-- //table -->
+
+				</div>
+				<!-- //주민등록 현황 -->
+			</div>
+			<!-- tab_content -->
+		</div>
+	</div>
+	<!-- //content_main -->
+	<!-- 행정동·법정동 변경내역 레이어 팝업 -->
+	<div id="admdLgdnChngPopup" style="display:none; position:fixed; overflow:auto; width: calc(100% - 135px); max-height: 400px; background:white; border:whtie; border:1px solid #ccc; z-index:1000;"></div>
+	<div id="popupDimmed" style="display:none; position:fixed; top:0; left:0; width:100%; background:rgba(0,0,0,0.5); z-index:999;"></div>
+	<!-- 행정동·법정동 변경내역 레이어 팝업 -->
+</div>
+<!-- //content_wrap -->
+<input type="hidden" value="20261001" id="startOrtnDe" name="startOrtnDe">
+<input type="hidden" value="20261031" id="endOrtnDe" name="endOrtnDe">
+</body>
+<script type="text/javascript">
+var nowTable=null;
+function tableResize(){
+	$("#contextTable").css('background-color', 'white');
+	$("#contextTable thead").css('display', 'none');
+	$(".DTFC_LeftBodyLiner").css('height', '490px').css('max-height', '490px');
+}
+
+$(document).ready(function (){
+	var options = {
+			info:false
+			,deferRender:true
+			,scroller:true
+			,scrollY:500
+			,scrollX:true
+			,scrollCollapse:true
+			,lengthChange:false
+			,searching:false
+			,serverside:false
+			,fixedHeader:true
+			,select:{
+				style:'single'
+			}
+			,autoWidth:true
+			,initComplete:function(settings, json) {
+			}
+	};
+	var startDate = new Date($("select[name=searchYearStart]").val(),$("select[name=searchMonthStart]").val());
+	var endDate = new Date($("select[name=searchYearEnd]").val(),$("select[name=searchMonthEnd]").val());
+	var interval = endDate -startDate
+	var month = 24*60*60*1000*30;
+	var diffMonth=parseInt(interval/month);
+	
+	
+	if(diffMonth==0){ // 1month or default
+		options['columnDefs']=[{'width':'100px', targets:0},{'width':'163px', targets:1},
+		                       {'width':'81px', targets:2},{'width':'81px', targets:3},{'width':'81px', targets:4},{'width':'80px', targets:5},{'width':'80px', targets:6},{'width':'80px', targets:7}]
+	}
+	else if(diffMonth==1){ // 2month
+		options['columnDefs']=[{'width':'100px', targets:0},{'width':'169px', targets:1},
+		                       {'width':'80px', targets:2},{'width':'80px', targets:3},{'width':'80px', targets:4}]
+	}
+
+	
+	nowTable = $("#contextTable").DataTable(options);
+	new $.fn.dataTable.FixedColumns(nowTable, {leftColumns:2});
+	tableResize();
+	nowTable.columns.adjust().draw();
+
+	// 윈도우 사이즈 변경 시 통계표 사이즈 변경
+	$(window).resize(function(){
+		var offsetWidth= document.body.offsetWidth;
+		if(offsetWidth < 221){ // 0~220
+			$(".dataTables_scrollBody").css('max-height', "350px");
+			$(".dataTables_scrollBody").css('height', "350px");
+		}
+		else if(offsetWidth>220 && offsetWidth<782 ){ //221~781
+			$(".dataTables_scrollBody").css('max-height', "450px");
+			$(".dataTables_scrollBody").css('height', "450px");
+		}
+		else if (offsetWidth>781){ //782~
+			$(".dataTables_scrollBody").css('max-height', "500px");
+			$(".dataTables_scrollBody").css('height', "500px");
+		}
+	});
+	$("#contextTable tbody tr").click(function (e){
+		$("#contextTable tbody tr").removeClass('selected');
+		$(this).toggleClass('selected');
+	});
+	$(".DTFC_LeftWrapper table thead tr:first-child th:nth-child(2)").click(function (e){
+		$("div.dataTables_scrollHead table thead tr:first-child th:first-child").trigger('click');
+		tableResize();
+		nowTable.columns.adjust().draw();
+		e.preventDefault();
+	});
+	$(".dataTables_scrollHeadInner table thead tr th").click(function (e){
+		tableResize();
+		nowTable.columns.adjust().draw();
+	});
+});
+
+function fnAdmdLgdnChng(e, searcHangkikCd){
+	
+	var y = e.clientY;
+	
+	var startOrtnDe = document.getElementById("startOrtnDe").value;
+	var endOrtnDe = document.getElementById("endOrtnDe").value;
+	
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", "/admdLgdnChngPopup.do", true);
+	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhr.onreadystatechange = function(){
+		if(xhr.readyState === 4 && xhr.status === 200){
+			var popup = document.getElementById("admdLgdnChngPopup");
+			var reps = xhr.responseText || "";
+			popup.innerHTML = "";
+			popup.insertAdjacentHTML('beforeend', reps);
+			document.getElementById("admdLgdnChngPopup").style.display = "block";
+			document.getElementById("popupDimmed").style.display = "block";
+			document.getElementById("admdLgdnChngPopup").style.left = "65px"; 
+			document.getElementById("admdLgdnChngPopup").style.top = (y-210) + "px";
+		}
+	}
+	xhr.send("searcHangkikCd="+searcHangkikCd + "&startOrtnDe="+startOrtnDe+ "&endOrtnDe="+endOrtnDe+ "&cn=admd");
+	
+}
+
+function closePopup(){
+	document.getElementById("admdLgdnChngPopup").style.display = "none";
+	document.getElementById("popupDimmed").style.display = "none";
+}
+</script>
+<style>
+.DTFC_LeftBodyLiner {height:490px; max-height:490px;}
+</style>
+</html>

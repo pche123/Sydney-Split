@@ -1,0 +1,1987 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>법정동별 세대원수별 세대수</title>
+
+<!-- JS -->
+<script type="text/javascript" src="js/jquery-3.5.0.min.js"></script>
+<script type="text/javascript" src="js/re_style.js"></script>
+
+<script type="text/javascript" src="js/DataTables/datatables.js" ></script>
+<script type="text/javascript" src="js/DataTables/Scroller-2.0.0/js/dataTables.scroller.js" ></script>
+<script type="text/javascript" src="js/DataTables/Select-1.3.0/js/dataTables.select.js" ></script>
+<script type="text/javascript" src="js/DataTables/FixedHeader-3.1.4/js/dataTables.fixedHeader.js" ></script>
+<script type="text/javascript" src="js/DataTables/FixedColumns-3.2.5/js/dataTables.fixedColumns.js" ></script>
+<script type="text/javascript" src="js/DataTables/RowReorder-1.2.4/js/dataTables.rowReorder.js" ></script>
+
+<link rel="stylesheet" type="text/css" href="css/DataTables/datatables.css" />
+<link rel="stylesheet" type="text/css" href="css/DataTables/Scroller-2.0.0/css/scroller.jqueryui.css" />
+<link rel="stylesheet" type="text/css" href="css/DataTables/Select-1.3.0/css/select.jqueryui.css" />
+<link rel="stylesheet" type="text/css" href="css/DataTables/FixedHeader-3.1.4/css/fixedHeader.jqueryui.css" />
+<link rel="stylesheet" type="text/css" href="css/DataTables/FixedColumns-3.2.5/css/fixedColumns.jqueryui.css" />
+
+<!-- CSS -->
+<link rel="stylesheet" href="css/rcps_style.css"/>		
+<link rel="stylesheet" type="text/css" href="css/re_style.css" />		
+
+<style type="text/css">
+body{width:1px;min-width:100%}
+</style>
+	
+</head>
+<body>
+	<!-- content_wrap -->
+	<div id="content_wrap">
+		<div id="location">
+			<ul>
+				<li class="icon_home"><span>HOME</span></li>
+				<li><span>업무안내</span></li>
+				<li><span>창조정부조직실</span></li>
+				<li class="current"><span>행정제도 개선</span></li>
+			</ul>
+		</div>
+
+		<!-- content_main -->
+		<div id="content_main">
+			<div class="content_top">					
+				<h4>법정동별 세대원수별 세대수</h4>
+			</div>
+
+			<div class="content">
+				<!-- 월간현황, 연간현황 tab -->
+				<div class="tab_menu">
+					<!-- 전성현 2023.10.11 그래프 통계표 위치 수정 START -->
+					<ul>
+						<li class="on"><a href="javascript:void(0);" onclick="fnSelTab('table');">통계표</a></li>
+						<li><a href="javascript:void(0);" onclick="fnSelTab('graph');">그래프</a></li>
+					</ul>
+					<!-- 전성현 2023.10.11 그래프 통계표 위치 수정 END -->
+				</div>
+				<!-- //월간현황, 연간현황 tab -->
+
+				<!-- tab_content -->
+				<div class="tab_content">
+					<div class="section1">
+						<form action="hsmbHshd.do" name="searchForm" id="searchForm" method="post">
+						<input type="hidden" value="1" name="sltOrgType">
+							<fieldset>
+								<legend>월간현황</legend>
+								<div class="tbl_form_box">
+										<div class="dl_group">
+											<dl>
+												<dt>
+													<label for="organ1">법정동</label>
+													<!-- 행정구역 tooltip mobile -->
+													<span class="popover-btn"><span class="hide">법정동</span></span>
+                                                    <div class="popover-layer">
+                                                        <p class="pHeader">법정동</p>
+                                                        <p class="pContent">
+                                                            <span>
+																	조회결과는 선택한 법정동의 산하 법정동들이 조회됩니다. <br>
+																	(예를들어, 서울특별시 종로구 선택시 창성동, 통의동, 적선동 등 해당 구 자료가 조회됩니다)
+																</span>
+																<span>
+																	아래 5개의 면은 인구가 없는 지역이므로 통계현황에서 제외됩니다.<br>
+																	(강원도 철원군 근동면, 원동면, 원남면, 임남면, 고성군 수동면)
+																</span>			
+																<!-- <span style="position: inherit;">※ 2021년 6월까지, 경기도 파주시 장단면, 진서면은 인구가 없는 지역으로 통계에서 제외됩니다.(경기도 파주시 장단출장소 인구는 경기도 파주시 군내면 인구를 의미합니다.)</span> -->
+																<!-- 설명자료 추가 - 20220531-윤성진 -->
+												            	<span style="position: inherit;">※ 법정동별 인구통계는 2022년 10월부터 공공데이터포털(www.data.go.kr)에서 조회가능합니다.</span>
+                                                        </p>
+                                                        <p class="pFooter"><span>닫기</span></p>
+                                                    </div>
+												</dt>
+												<dd class="td3">
+													<select name="sltOrgLvl1" id="sltOrgLvl1" onchange="selectSikunkunm();"> <!-- id="organ2" -->
+													</select>
+												</dd>										
+												<dd class="td3">
+													<select name="sltOrgLvl2" id="sltOrgLvl2" > <!-- id="organ3" -->
+													</select>
+												</dd>
+												
+												<!-- 행정기관 tooltip PC -->
+												<dd class="td_popover">
+													<div class="popoverWrap">
+														<span><span class="hide">법정동</span></span>
+														<div class="popoverBox pop1">
+															<p class="pHeader">
+																법정동 
+																<span class="close"><img src="images/btn_close.png" alt="닫기"></span>
+															</p>
+															<p class="pContent">
+																<span>
+																	조회결과는 선택한 법정동의 산하 법정동들이 조회됩니다. <br>
+																	(예를들어, 서울특별시 종로구 선택시 창성동, 통의동, 적선동 등 해당 구 자료가 조회됩니다)
+																</span>
+																<span>
+																	아래 5개의 면은 인구가 없는 지역이므로 통계현황에서 제외됩니다.<br>
+																	(강원도 철원군 근동면, 원동면, 원남면, 임남면, 고성군 수동면)
+																</span>			
+																<!-- <span style="position: inherit;">※ 2021년 6월까지, 경기도 파주시 장단면, 진서면은 인구가 없는 지역으로 통계에서 제외됩니다.(경기도 파주시 장단출장소 인구는 경기도 파주시 군내면 인구를 의미합니다.)</span> -->
+																<!-- 설명자료 추가 - 20220531-윤성진 -->
+												            	<span style="position: inherit;">※ 법정동별 인구통계는 2022년 10월부터 공공데이터포털(www.data.go.kr)에서 조회가능합니다.</span>
+															</p>
+														</div>
+													</div>
+												</dd>
+											</dl>
+											<dl>
+										</dl>
+										</div>
+										<div class="dl_group">
+																					
+										
+										<input type="hidden" value="2026" id="nowYear" name="nowYear">											
+											<dl>
+												<dt>
+													<label for="year1">조회기간</label>
+													<!-- 조회기간 tooltip mobile -->
+													<span class="popover-btn"><span class="hide">조회기간</span></span>
+                                                    <div class="popover-layer">
+                                                        <p class="pHeader">조회기간</p>
+                                                        <p class="pContent">
+                                                            <!-- <span>
+																법정동별 세대원수별 세대수는 2022년 10월부터 시스템으로 집계하여 공표하고 있습니다.
+															</span> -->
+															<span>
+																작성기준 : 매월 말일 /공표일시 : 매월 1일 12시 이후(공표일이 주말, 공휴일인 경우에는 다음 평일에 공표)
+															</span>
+                                                        </p>
+                                                        <p class="pFooter"><span>닫기</span></p>
+                                                    </div>
+												</dt>
+												<dd class="td_period">
+													<div>
+														<input class="i_radio"  type="radio" value="month"  id="searchYearMonth" name="searchYearMonth" checked onchange="fnYearMonthChg('month')" >
+														<label for="period_select1">월간</label>
+													</div>
+													<div>
+														<input class="i_radio"  type="radio" value="year"  id="searchYearMonth" name="searchYearMonth"  onchange="fnYearMonthChg('year')" >
+														<label for="period_select2">연간</label>
+													</div>
+												</dd>
+												<dd class="td1_2">
+													<select name="searchYearStart" id="searchYearStart">
+														
+														
+			                                                <option value="2026" selected>2026년</option>
+			                                            
+			                                                <option value="2025" >2025년</option>
+			                                            
+			                                                <option value="2024" >2024년</option>
+			                                            
+			                                                <option value="2023" >2023년</option>
+			                                            
+								            		</select>
+								            		<select name="searchMonthStart" id="searchMonthStart" >
+								            			
+			                                              
+			                                              <option value="12" 
+			                                              
+			                                              
+			                                              
+			                                              >12월</option>
+			                                            
+			                                              
+			                                              <option value="11" 
+			                                              
+			                                              
+			                                              
+			                                              >11월</option>
+			                                            
+			                                              
+			                                              <option value="10" 
+			                                              
+			                                              selected
+			                                              
+			                                              >10월</option>
+			                                            
+			                                              
+			                                              <option value="09" 
+			                                              
+			                                              
+			                                              
+			                                              >09월</option>
+			                                            
+			                                              
+			                                              <option value="08" 
+			                                              
+			                                              
+			                                              
+			                                              >08월</option>
+			                                            
+			                                              
+			                                              <option value="07" 
+			                                              
+			                                              
+			                                              
+			                                              >07월</option>
+			                                            
+			                                              
+			                                              <option value="06" 
+			                                              
+			                                              
+			                                              
+			                                              >06월</option>
+			                                            
+			                                              
+			                                              <option value="05" 
+			                                              
+			                                              
+			                                              
+			                                              >05월</option>
+			                                            
+			                                              
+			                                              <option value="04" 
+			                                              
+			                                              
+			                                              
+			                                              >04월</option>
+			                                            
+			                                              
+			                                              <option value="03" 
+			                                              
+			                                              
+			                                              
+			                                              >03월</option>
+			                                            
+			                                              
+			                                              <option value="02" 
+			                                              
+			                                              
+			                                              
+			                                              >02월</option>
+			                                            
+			                                              
+			                                              <option value="01" 
+			                                              
+			                                              
+			                                              
+			                                              >01월</option>
+			                                            
+								            		</select>																	
+												</dd>
+												<span class="dash">~</span>
+												<dd class="td1_2">
+													<select name="searchYearEnd" id="searchYearEnd">
+														
+			                                                <option value="2026" selected>2026년</option>
+			                                            
+			                                                <option value="2025" >2025년</option>
+			                                            
+			                                                <option value="2024" >2024년</option>
+			                                            
+			                                                <option value="2023" >2023년</option>
+			                                            
+								            		</select>
+								            		<select name="searchMonthEnd" id="searchMonthEnd" >
+								            			
+			                                              
+			                                              <option value="12" 
+			                                              
+			                                              
+			                                              
+			                                              >12월</option>
+			                                            
+			                                              
+			                                              <option value="11" 
+			                                              
+			                                              
+			                                              
+			                                              >11월</option>
+			                                            
+			                                              
+			                                              <option value="10" 
+			                                              
+			                                              selected
+			                                              
+			                                              >10월</option>
+			                                            
+			                                              
+			                                              <option value="09" 
+			                                              
+			                                              
+			                                              
+			                                              >09월</option>
+			                                            
+			                                              
+			                                              <option value="08" 
+			                                              
+			                                              
+			                                              
+			                                              >08월</option>
+			                                            
+			                                              
+			                                              <option value="07" 
+			                                              
+			                                              
+			                                              
+			                                              >07월</option>
+			                                            
+			                                              
+			                                              <option value="06" 
+			                                              
+			                                              
+			                                              
+			                                              >06월</option>
+			                                            
+			                                              
+			                                              <option value="05" 
+			                                              
+			                                              
+			                                              
+			                                              >05월</option>
+			                                            
+			                                              
+			                                              <option value="04" 
+			                                              
+			                                              
+			                                              
+			                                              >04월</option>
+			                                            
+			                                              
+			                                              <option value="03" 
+			                                              
+			                                              
+			                                              
+			                                              >03월</option>
+			                                            
+			                                              
+			                                              <option value="02" 
+			                                              
+			                                              
+			                                              
+			                                              >02월</option>
+			                                            
+			                                              
+			                                              <option value="01" 
+			                                              
+			                                              
+			                                              
+			                                              >01월</option>
+			                                            
+								            		</select>
+												</dd>
+												<!-- 조회기간 tooltip pc -->
+												<dd class="td_popover">
+													<div class="popoverWrap">
+														<span><span class="hide">조회기간</span></span>
+														<div class="popoverBox pop3">
+															<p class="pHeader">
+																조회기간
+																<span class="close"><img src="images/btn_close.png" alt="닫기"></span>
+															</p>
+															<!-- <p class="pContent">2008년 이전의 통계는 통계청 국가통계포털 KOSIS(www.kosis.kr)을 이용하시기 바랍니다. </p> -->
+															<p class="pContent"> 
+																<!-- <span>
+																	법정동별 세대원수별 세대수는 2022년 10월부터 시스템으로 집계하여 공표하고 있습니다.
+																</span> -->
+																<span>
+																	작성기준 : 매월 말일 /공표일시 : 매월 1일 12시 이후(공표일이 주말, 공휴일인 경우에는 다음 평일에 공표)
+																</span>
+															</p>
+														</div>
+													</div>
+												</dd>
+												<dd>
+												<p class="searchMsg">※ 매월 말일 작성 / 공표일시 : 매월 1일 12시 이후(공표일이 주말, 공휴일인 경우에는 다음 평일에 공표)</p>
+												</dd>
+											</dl>
+										</div>
+									</div>
+									<div class="btn_box">
+										<input type="submit" value="검색" class="btn_search" onclick="return goSearch();">
+		         						<input type="reset" value="초기화" class="btn_reset" onclick="return goReset();">
+									</div>
+									
+							</fieldset>
+						</form>
+					</div>
+					
+
+					<!-- download -->
+					<form name="formXlsDown" id="formXlsDown" method="post">
+						<div class="down_group">
+					     <input type="hidden" value="" name="sltOrgType">
+					     <input type="hidden" value="A" name="sltOrgLvl1">
+					     <input type="hidden" value="" name="sltOrgLvl2">
+					     <input type="hidden" value="" name="sltUndefType">
+					     <input type="hidden" value="2026" name="searchYearStart">
+					     <input type="hidden" value="10" name="searchMonthStart">
+					     <input type="hidden" value="2026" name="searchYearEnd">
+					     <input type="hidden" value="10" name="searchMonthEnd">
+					     <input type="hidden" value="month" name="category">
+							<fieldset>
+								<legend>월간현황</legend>
+								<div class="down_group_radio">
+									<input class="i_radio" id="down1" type="radio" value="1" name="state" checked/><label for="down1">현재화면</label>
+									<input class="i_radio" id="down2" type="radio" value="2" name="state" /><label for="down2">전체시군구현황</label>
+									<input class="i_radio" id="down3" type="radio" value="3" name="state" /><label for="down3">전체읍면동현황</label>
+								</div>
+	
+								<div class="down_group_btn">
+									<a href="#none" class="btn_down cdown" name="csvDown" id="csvDown" onclick="fnFileDown('Csv')">csv 파일 다운로드</a>
+									<a href="#none" class="btn_down" name="xlsxDown" id="xlsxDown" onclick="fnFileDown('Xlsx')">xlsx 파일 다운로드</a>
+								</div>
+							</fieldset>
+					</div>
+
+						<div class="mobie_down_group">
+							<div class="down_group_btn">
+								<select name="stateMobile" title="조회 연도 선택">
+									<option value="1">현재화면</option>
+									<option value="2">전체시군구현황</option>
+									<option value="3">전체읍면동현황</option>
+								</select>
+								<a href="#" class="btn_file" name="xlsDownMobile" id="xlsDownMobile" onclick="fnMobileDown('Xlsx')" >파일 다운로드</a>
+							</div>
+						</div>
+					</form>
+					<!-- //download -->
+					
+					<!-- 주민등록 현황 -->
+					<div class="section3" style="">
+						<div class="current_title">
+							<strong><span>법정동별 세대원수별 세대수</span></strong>
+							
+						</div>
+						<!-- table -->
+						<div class="tab_section current_table">
+							<table class="tbl_type1" cellspacing="0" id="contextTable">
+								<caption>주민등록 인구 기타 현황</caption>
+								<colgroup>
+									<col width="15%"><col width="25%" span="11">
+								</colgroup>
+								<thead>
+									<tr>
+										
+											
+											
+												<th rowspan="2" style="display:none;"></th>
+												<th rowspan="2" scope="col" class="th1">법정동</th>
+												
+												
+													
+												
+												
+													
+														
+															<th colspan="11">2026년 10월</th>
+															
+														
+														
+													
+												
+											
+										
+									</tr>
+									<tr>
+										
+											
+											
+												
+											
+										
+										
+											
+											
+												
+													<th scope="col" class="th1">전체세대</th>
+													<th scope="col" class="th1">1인세대</th>
+													<th scope="col" class="th1">2인세대</th>
+													<th scope="col" class="th1">3인세대</th>
+													<th scope="col" class="th1">4인세대</th>
+													<th scope="col" class="th1">5인세대</th>
+													<th scope="col" class="th1">6인세대</th>
+													<th scope="col" class="th1">7인세대</th>
+													<th scope="col" class="th1">8인세대</th>
+													<th scope="col" class="th1">9인세대</th>
+													<th scope="col" class="th1">10인이상세대</th>
+												
+											
+										
+									</tr>
+								</thead>
+								<tbody>
+									
+										<tr>
+											
+												<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+													
+														<td class="td_admin th1" style="display:none;">0</td>
+														<td class="td_admin th1">
+															
+																
+																	전국
+																
+																
+																
+															
+														</td>
+					 									
+													
+													<td class="td_admin th1">24,521,753</td>
+													<td class="td_admin th1">10,470,820</td>
+													<td class="td_admin th1">6,277,727</td>
+													<td class="td_admin th1">4,099,314</td>
+													<td class="td_admin th1">2,875,322</td>
+													<td class="td_admin th1">637,743</td>
+													<td class="td_admin th1">121,528</td>
+													<td class="td_admin th1">27,462</td>
+													<td class="td_admin th1">7,289</td>
+													<td class="td_admin th1">2,274</td>
+													<td class="td_admin th1">2,274</td>
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+										</tr>
+									
+										<tr>
+											
+												
+											
+												<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+													
+														<td class="td_admin th1" style="display:none;">1</td>
+														<td class="td_admin th1">
+															
+																
+																	서울특별시
+																
+																
+																
+															
+														</td>
+					 									
+													
+													<td class="td_admin th1">4,523,647</td>
+													<td class="td_admin th1">2,051,261</td>
+													<td class="td_admin th1">1,051,022</td>
+													<td class="td_admin th1">754,522</td>
+													<td class="td_admin th1">525,971</td>
+													<td class="td_admin th1">109,194</td>
+													<td class="td_admin th1">23,409</td>
+													<td class="td_admin th1">5,734</td>
+													<td class="td_admin th1">1,635</td>
+													<td class="td_admin th1">519</td>
+													<td class="td_admin th1">380</td>
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+										</tr>
+									
+										<tr>
+											
+												
+											
+												
+											
+												<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+													
+														<td class="td_admin th1" style="display:none;">2</td>
+														<td class="td_admin th1">
+															
+																
+																	전남광주통합특별시
+																
+																
+																
+															
+														</td>
+					 									
+													
+													<td class="td_admin th1">1,579,341</td>
+													<td class="td_admin th1">723,329</td>
+													<td class="td_admin th1">416,323</td>
+													<td class="td_admin th1">230,020</td>
+													<td class="td_admin th1">158,857</td>
+													<td class="td_admin th1">40,779</td>
+													<td class="td_admin th1">7,515</td>
+													<td class="td_admin th1">1,723</td>
+													<td class="td_admin th1">469</td>
+													<td class="td_admin th1">137</td>
+													<td class="td_admin th1">189</td>
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+										</tr>
+									
+										<tr>
+											
+												
+											
+												
+											
+												
+											
+												<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+													
+														<td class="td_admin th1" style="display:none;">3</td>
+														<td class="td_admin th1">
+															
+																
+																	부산광역시
+																
+																
+																
+															
+														</td>
+					 									
+													
+													<td class="td_admin th1">1,583,068</td>
+													<td class="td_admin th1">682,159</td>
+													<td class="td_admin th1">426,564</td>
+													<td class="td_admin th1">263,125</td>
+													<td class="td_admin th1">167,971</td>
+													<td class="td_admin th1">34,777</td>
+													<td class="td_admin th1">6,427</td>
+													<td class="td_admin th1">1,455</td>
+													<td class="td_admin th1">337</td>
+													<td class="td_admin th1">122</td>
+													<td class="td_admin th1">131</td>
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+										</tr>
+									
+										<tr>
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+													
+														<td class="td_admin th1" style="display:none;">4</td>
+														<td class="td_admin th1">
+															
+																
+																	대구광역시
+																
+																
+																
+															
+														</td>
+					 									
+													
+													<td class="td_admin th1">1,123,981</td>
+													<td class="td_admin th1">464,623</td>
+													<td class="td_admin th1">300,561</td>
+													<td class="td_admin th1">196,270</td>
+													<td class="td_admin th1">131,394</td>
+													<td class="td_admin th1">25,848</td>
+													<td class="td_admin th1">4,160</td>
+													<td class="td_admin th1">819</td>
+													<td class="td_admin th1">171</td>
+													<td class="td_admin th1">55</td>
+													<td class="td_admin th1">80</td>
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+										</tr>
+									
+										<tr>
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+													
+														<td class="td_admin th1" style="display:none;">5</td>
+														<td class="td_admin th1">
+															
+																
+																	인천광역시
+																
+																
+																
+															
+														</td>
+					 									
+													
+													<td class="td_admin th1">1,421,486</td>
+													<td class="td_admin th1">562,186</td>
+													<td class="td_admin th1">365,351</td>
+													<td class="td_admin th1">261,538</td>
+													<td class="td_admin th1">182,979</td>
+													<td class="td_admin th1">40,040</td>
+													<td class="td_admin th1">7,202</td>
+													<td class="td_admin th1">1,566</td>
+													<td class="td_admin th1">375</td>
+													<td class="td_admin th1">148</td>
+													<td class="td_admin th1">101</td>
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+										</tr>
+									
+										<tr>
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+													
+														<td class="td_admin th1" style="display:none;">6</td>
+														<td class="td_admin th1">
+															
+																
+																	대전광역시
+																
+																
+																
+															
+														</td>
+					 									
+													
+													<td class="td_admin th1">707,197</td>
+													<td class="td_admin th1">316,121</td>
+													<td class="td_admin th1">175,882</td>
+													<td class="td_admin th1">113,560</td>
+													<td class="td_admin th1">79,979</td>
+													<td class="td_admin th1">17,573</td>
+													<td class="td_admin th1">3,165</td>
+													<td class="td_admin th1">656</td>
+													<td class="td_admin th1">151</td>
+													<td class="td_admin th1">40</td>
+													<td class="td_admin th1">70</td>
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+										</tr>
+									
+										<tr>
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+													
+														<td class="td_admin th1" style="display:none;">7</td>
+														<td class="td_admin th1">
+															
+																
+																	울산광역시
+																
+																
+																
+															
+														</td>
+					 									
+													
+													<td class="td_admin th1">502,780</td>
+													<td class="td_admin th1">193,113</td>
+													<td class="td_admin th1">135,702</td>
+													<td class="td_admin th1">93,376</td>
+													<td class="td_admin th1">65,555</td>
+													<td class="td_admin th1">12,443</td>
+													<td class="td_admin th1">2,041</td>
+													<td class="td_admin th1">387</td>
+													<td class="td_admin th1">105</td>
+													<td class="td_admin th1">26</td>
+													<td class="td_admin th1">32</td>
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+										</tr>
+									
+										<tr>
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+													
+														<td class="td_admin th1" style="display:none;">8</td>
+														<td class="td_admin th1">
+															
+																
+																	세종특별자치시
+																
+																
+																
+															
+														</td>
+					 									
+													
+													<td class="td_admin th1">165,934</td>
+													<td class="td_admin th1">57,794</td>
+													<td class="td_admin th1">38,059</td>
+													<td class="td_admin th1">32,958</td>
+													<td class="td_admin th1">29,448</td>
+													<td class="td_admin th1">6,420</td>
+													<td class="td_admin th1">998</td>
+													<td class="td_admin th1">192</td>
+													<td class="td_admin th1">46</td>
+													<td class="td_admin th1">10</td>
+													<td class="td_admin th1">9</td>
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+										</tr>
+									
+										<tr>
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+													
+														<td class="td_admin th1" style="display:none;">9</td>
+														<td class="td_admin th1">
+															
+																
+																	경기도
+																
+																
+																
+															
+														</td>
+					 									
+													
+													<td class="td_admin th1">6,196,934</td>
+													<td class="td_admin th1">2,351,469</td>
+													<td class="td_admin th1">1,546,536</td>
+													<td class="td_admin th1">1,173,721</td>
+													<td class="td_admin th1">883,921</td>
+													<td class="td_admin th1">192,642</td>
+													<td class="td_admin th1">36,695</td>
+													<td class="td_admin th1">8,393</td>
+													<td class="td_admin th1">2,320</td>
+													<td class="td_admin th1">732</td>
+													<td class="td_admin th1">505</td>
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+										</tr>
+									
+										<tr>
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+													
+														<td class="td_admin th1" style="display:none;">10</td>
+														<td class="td_admin th1">
+															
+																
+																	강원특별자치도
+																
+																
+																
+															
+														</td>
+					 									
+													
+													<td class="td_admin th1">777,053</td>
+													<td class="td_admin th1">363,688</td>
+													<td class="td_admin th1">215,420</td>
+													<td class="td_admin th1">108,468</td>
+													<td class="td_admin th1">68,089</td>
+													<td class="td_admin th1">16,854</td>
+													<td class="td_admin th1">3,469</td>
+													<td class="td_admin th1">763</td>
+													<td class="td_admin th1">188</td>
+													<td class="td_admin th1">53</td>
+													<td class="td_admin th1">61</td>
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+										</tr>
+									
+										<tr>
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+													
+														<td class="td_admin th1" style="display:none;">11</td>
+														<td class="td_admin th1">
+															
+																
+																	충청북도
+																
+																
+																
+															
+														</td>
+					 									
+													
+													<td class="td_admin th1">809,871</td>
+													<td class="td_admin th1">373,676</td>
+													<td class="td_admin th1">215,611</td>
+													<td class="td_admin th1">117,228</td>
+													<td class="td_admin th1">79,069</td>
+													<td class="td_admin th1">19,550</td>
+													<td class="td_admin th1">3,568</td>
+													<td class="td_admin th1">818</td>
+													<td class="td_admin th1">212</td>
+													<td class="td_admin th1">58</td>
+													<td class="td_admin th1">81</td>
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+										</tr>
+									
+										<tr>
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+													
+														<td class="td_admin th1" style="display:none;">12</td>
+														<td class="td_admin th1">
+															
+																
+																	충청남도
+																
+																
+																
+															
+														</td>
+					 									
+													
+													<td class="td_admin th1">1,074,490</td>
+													<td class="td_admin th1">492,889</td>
+													<td class="td_admin th1">284,556</td>
+													<td class="td_admin th1">155,218</td>
+													<td class="td_admin th1">108,453</td>
+													<td class="td_admin th1">26,640</td>
+													<td class="td_admin th1">5,095</td>
+													<td class="td_admin th1">1,154</td>
+													<td class="td_admin th1">284</td>
+													<td class="td_admin th1">82</td>
+													<td class="td_admin th1">119</td>
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+										</tr>
+									
+										<tr>
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+													
+														<td class="td_admin th1" style="display:none;">13</td>
+														<td class="td_admin th1">
+															
+																
+																	전북특별자치도
+																
+																
+																
+															
+														</td>
+					 									
+													
+													<td class="td_admin th1">874,467</td>
+													<td class="td_admin th1">409,965</td>
+													<td class="td_admin th1">235,399</td>
+													<td class="td_admin th1">121,052</td>
+													<td class="td_admin th1">80,071</td>
+													<td class="td_admin th1">21,986</td>
+													<td class="td_admin th1">4,441</td>
+													<td class="td_admin th1">1,019</td>
+													<td class="td_admin th1">269</td>
+													<td class="td_admin th1">90</td>
+													<td class="td_admin th1">175</td>
+												
+											
+												
+											
+												
+											
+												
+											
+										</tr>
+									
+										<tr>
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+													
+														<td class="td_admin th1" style="display:none;">14</td>
+														<td class="td_admin th1">
+															
+																
+																	경상북도
+																
+																
+																
+															
+														</td>
+					 									
+													
+													<td class="td_admin th1">1,304,107</td>
+													<td class="td_admin th1">622,759</td>
+													<td class="td_admin th1">361,695</td>
+													<td class="td_admin th1">178,089</td>
+													<td class="td_admin th1">110,104</td>
+													<td class="td_admin th1">25,303</td>
+													<td class="td_admin th1">4,670</td>
+													<td class="td_admin th1">1,017</td>
+													<td class="td_admin th1">242</td>
+													<td class="td_admin th1">82</td>
+													<td class="td_admin th1">146</td>
+												
+											
+												
+											
+												
+											
+										</tr>
+									
+										<tr>
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+													
+														<td class="td_admin th1" style="display:none;">15</td>
+														<td class="td_admin th1">
+															
+																
+																	경상남도
+																
+																
+																
+															
+														</td>
+					 									
+													
+													<td class="td_admin th1">1,559,413</td>
+													<td class="td_admin th1">666,007</td>
+													<td class="td_admin th1">429,048</td>
+													<td class="td_admin th1">251,041</td>
+													<td class="td_admin th1">168,692</td>
+													<td class="td_admin th1">36,536</td>
+													<td class="td_admin th1">6,248</td>
+													<td class="td_admin th1">1,248</td>
+													<td class="td_admin th1">338</td>
+													<td class="td_admin th1">85</td>
+													<td class="td_admin th1">170</td>
+												
+											
+												
+											
+										</tr>
+									
+										<tr>
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												
+											
+												<!-- 행정기관 코드와 일치하는 리스트만 출력 -->
+													
+														<td class="td_admin th1" style="display:none;">16</td>
+														<td class="td_admin th1">
+															
+																
+																	제주특별자치도
+																
+																
+																
+															
+														</td>
+					 									
+													
+													<td class="td_admin th1">317,984</td>
+													<td class="td_admin th1">139,781</td>
+													<td class="td_admin th1">79,998</td>
+													<td class="td_admin th1">49,128</td>
+													<td class="td_admin th1">34,769</td>
+													<td class="td_admin th1">11,158</td>
+													<td class="td_admin th1">2,425</td>
+													<td class="td_admin th1">518</td>
+													<td class="td_admin th1">147</td>
+													<td class="td_admin th1">35</td>
+													<td class="td_admin th1">25</td>
+												
+											
+										</tr>
+									
+								</tbody>
+							</table>
+						</div>
+						<!-- //table -->
+					</div>
+					<!-- //주민등록 현황 -->
+
+				</div>
+				<!-- tab_content -->
+			</div>
+		</div>
+		<!-- //content_main -->
+	</div>
+	<!-- //content_wrap -->		
+</body>
+<script type="text/javascript">
+var nowTable=null;
+function tableResize(){
+	$("#contextTable").css('background-color', 'white');
+	$("#contextTable thead").css('display', 'none');
+	$(".DTFC_LeftBodyLiner").css('height', '490px').css('max-height', '490px');
+}
+
+$(document).ready(function (){
+		
+	selectSidonm();
+	
+	nowTable = $("#contextTable").DataTable({
+		info:false
+		,deferRender:true
+		,scroller:true
+		,scrollY:500
+		,scrollX:true
+		,scrollCollapse:true
+		,lengthChange:false
+		,searching:false
+		,serverside:false
+		,fixedHeader:false
+		,select:{
+			style:'single'
+		}
+		,autoWidth:true
+		,initComplete:function(settings, json) {
+		}
+		,drawCallback:function(settings, json) {
+		}
+	});
+	new $.fn.dataTable.FixedColumns(nowTable, {leftColumns:2});
+	tableResize();
+	nowTable.columns.adjust().draw();
+
+	// 윈도우 사이즈 변경 시 통계표 사이즈 변경
+	$(window).resize(function(){
+		var offsetWidth= document.body.offsetWidth;
+		if(offsetWidth < 221){ // 0~220
+			$(".dataTables_scrollBody").css('max-height', "350px");
+			$(".dataTables_scrollBody").css('height', "350px");
+		}
+		else if(offsetWidth>220 && offsetWidth<782 ){ //221~781
+			$(".dataTables_scrollBody").css('max-height', "450px");
+			$(".dataTables_scrollBody").css('height', "450px");
+		}
+		else if (offsetWidth>781){ //782~
+			$(".dataTables_scrollBody").css('max-height', "500px");
+			$(".dataTables_scrollBody").css('height', "500px");
+		}
+	});
+	
+	$("#contextTable tbody tr").click(function (e){
+		$("#contextTable tbody tr").removeClass('selected');
+		$(this).toggleClass('selected');
+	});
+	$(".DTFC_LeftWrapper table thead tr:first-child th:nth-child(2)").click(function (e){
+		$("div.dataTables_scrollHead table thead tr:first-child th:first-child").trigger('click');
+		tableResize();
+		nowTable.columns.adjust().draw();
+		e.preventDefault();
+	});
+	$(".dataTables_scrollHeadInner table thead tr th").click(function (e){
+		tableResize();
+		nowTable.columns.adjust().draw();
+	});
+	
+	//연간월간 구분
+  	/* $("input[name=searchYearMonth]").change(function(){
+  		var rdoValue=$(this).val();
+  		var nowYear=$("#nowYear").val();
+  		if (rdoValue=="month"){
+  			$("#searchMonthStart").attr("disabled",false);
+  			$("#searchMonthEnd").attr("disabled",false);
+  			if($("#searchYearStart option:eq(0)").val() != nowYear){
+  				$("#searchYearStart").prepend("<option value='"+nowYear+"'>"+nowYear+"년</option>");	  				
+	  			$("#searchYearEnd").prepend("<option value='"+nowYear+"'>"+nowYear+"년</option>");	  				
+  			}
+  		}else{
+  			$("#searchMonthStart").attr("disabled",true);
+  			$("#searchMonthEnd").attr("disabled",true);
+  			$("#searchMonthStart").val(12);
+  			$("#searchMonthEnd").val(12);
+  			$("#searchYearStart option:first").remove();
+  			$("#searchYearEnd option:first").remove();
+  			$("#searchYearStart option:eq(0)").attr("selected","selected");
+  			$("#searchYearEnd option:eq(0)").attr("selected","selected");
+  		}
+  	}); */
+	
+});
+
+//연간월간 구분 변경
+function fnYearMonthChg(yearMonGbn){
+	var rdoValue = yearMonGbn;
+	var nowYear=$("#nowYear").val();
+	if (rdoValue=="month"){
+		$("#searchMonthStart").attr("disabled",false);
+		$("#searchMonthEnd").attr("disabled",false);
+		if($("#searchYearStart option:eq(0)").val() != nowYear){
+			$("#searchYearStart").prepend("<option value='"+nowYear+"'>"+nowYear+"년</option>");	  				
+			$("#searchYearEnd").prepend("<option value='"+nowYear+"'>"+nowYear+"년</option>");	  				
+		}
+	}else{
+		$("#searchMonthStart").attr("disabled",true);
+		$("#searchMonthEnd").attr("disabled",true);
+		$("#searchMonthStart").val(12);
+		$("#searchMonthEnd").val(12);
+		$("#searchYearStart option:first").remove();
+		$("#searchYearEnd option:first").remove();
+		$("#searchYearStart option:eq(0)").attr("selected","selected");
+		$("#searchYearEnd option:eq(0)").attr("selected","selected");
+	}
+}
+
+//초기화 버튼 클릭시
+function goReset(){
+	location.href = 'hsmbHshd.do';
+}
+
+//파일다운로드
+function fnFileDown(downType) {
+	checkStatExcel = $(':radio[name="state"]:checked').val();
+	if(!chkExcel("1")){
+		return false;
+	}
+	
+	alert('통계자료의 양에 따라 소요시간이 10~30초 소요됩니다.\n\n엑셀 파일 [저장] 후 [파일열기]를 권장합니다.');
+	
+	if(checkStatExcel == "1"){
+		$("#formXlsDown").attr("action", "hsmbHshdDown.do?searchYearMonth="+$("input[name=category]").val()+"&xlsStats=1&downType="+downType).submit();
+	}else if(checkStatExcel == "2"){
+		$("#formXlsDown").attr("action", "hsmbHshdDown.do?searchYearMonth="+$("input[name=category]").val()+"&xlsStats=2&downType="+downType).submit();
+	}else if(checkStatExcel == "3"){
+		$("#formXlsDown").attr("action", "hsmbHshdDown.do?searchYearMonth="+$("input[name=category]").val()+"&xlsStats=3&downType="+downType).submit();
+	}
+}
+
+//모바일 파일 다운로드
+function fnMobileDown(downType){
+	checkStatExcelMobile = $('select[name=stateMobile]').val();
+	if(!chkExcel("2")){
+		return false;
+	}
+	alert('통계자료의 양에 따라 소요시간이 10~30초 소요됩니다.\n\n엑셀 파일 [저장] 후 [파일열기]를 권장합니다.');
+	if(checkStatExcelMobile == "1"){
+		$("#formXlsDown").attr("action", "hsmbHshdDown.do?searchYearMonth="+$("input[name=category]").val()+"&xlsStats=1&downType="+downType).submit();
+	}else if(checkStatExcelMobile == "2"){
+		$("#formXlsDown").attr("action", "hsmbHshdDown.do?searchYearMonth="+$("input[name=category]").val()+"&xlsStats=2&downType="+downType).submit();
+	}else if(checkStatExcelMobile == "3"){
+		$("#formXlsDown").attr("action", "hsmbHshdDown.do?searchYearMonth="+$("input[name=category]").val()+"&xlsStats=3&downType="+downType).submit();
+	}
+}
+
+//시도 시군구 선택시 ajax로 지역가져오는 곳
+function selectSidonm(){			
+	$.ajax({
+		type: "post",
+		url : "selectHangkikcdListAjax.do",
+		dataType:"json",
+		contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+		success : function(data) {
+			loadSidonm($("#sltOrgLvl1"), data.locations);
+
+			//changeSearchYearMonth();
+		}
+	});
+}
+
+function loadSidonm(target, data) {
+	var dataArr = [];
+	var inx = 0;
+	target.empty();
+	
+
+	$(data).each( function() {
+		if(this.levels == 1){
+			if("A" == this.hangkikcd){
+				dataArr[inx++] = "<option value='" + this.hangkikcd + "' selected >" + this.sidonm + "</option> ";
+			}else{
+				dataArr[inx++] = "<option value='" + this.hangkikcd + "' >" + this.sidonm + "</option> ";
+			}
+		}
+	});
+	if("A"=='A'){
+		target.append("<option value='A' selected >전국</option>");
+	}
+	else {
+		target.append("<option value='A' >전국</option>");
+	}
+	target.append(dataArr);
+
+	selectSikunkunm();
+
+}
+
+function selectSikunkunm(){
+	$.ajax({
+		type: "post",
+		url : "selectHangkikcdListAjax.do",
+		dataType:"json",
+		success : function(data) {
+			loadSikunkunm($("#sltOrgLvl2"), data.locations);
+		}
+	});
+}
+
+function loadSikunkunm(target, data) {
+	
+	var dataArr = [];
+	var inx = 0;
+	target.empty();
+	$(data).each( function() {
+		if(this.levels == 2){
+
+			if(this.sidonm == $("#sltOrgLvl1 option:selected").text()){ //상위 시군 값으로 구를 찾아온다.
+
+				if("" == this.hangkikcd){
+					dataArr[inx++] = "<option value=" + this.hangkikcd + " selected>" + this.sikunkunm + "</option> ";
+				} else {
+					dataArr[inx++] = "<option value=" + this.hangkikcd + " >" + this.sikunkunm + "</option> ";
+				}
+			}
+		}
+	});
+	target.append("<option value='A' selected='selected'>시·군·구</option>");
+	target.append(dataArr);
+}
+
+//검색
+function goSearch(){
+	var frm = document.searchForm;
+	
+	if ($("#searchYearStart").val() > $("#searchYearEnd").val()) {
+		alert('조회 기간이 잘못 되었습니다.');
+		$("#searchYearStart").focus();
+		return false;
+	}
+
+	if($("#searchYearStart").val() == $("#searchYearEnd").val()){
+		if ($("#searchMonthStart").val() > $("#searchMonthEnd").val()) {
+			alert('조회 기간이 잘못 되었습니다.');
+			$("#searchMonthStart").focus();
+			return false;
+		}
+	}
+	
+	var startDate = new Date($("#searchYearStart").val(),$("#searchMonthStart").val());
+	var endDate = new Date($("#searchYearEnd").val(),$("#searchMonthEnd").val());
+	var startYear = $("#searchYearStart").val();
+	var endYear = $("#searchYearEnd").val();
+	var diffYear = endYear - startYear;
+	var interval = endDate -startDate
+	var month = 24*60*60*1000 * 30;
+	var diffMonth=parseInt(interval/month);
+	<!-- 2023.09.21  전성현 조회기간 검색 제한 START -->
+	var selectYear = $('#searchYearStart option:selected').val();
+	var selectMonth = $('#searchMonthStart option:selected').val();
+	
+	if($("input:radio[name=searchYearMonth]:checked").val() == "year") {
+		window.parent.progressStart();
+		if (diffYear>="10"){
+			alert("주민등록인구통계 시스템의 원활한 서비스 제공을 위해 \n검색기간을 10년과 같이 제한합니다. \n기간 조정 후 다시 검색하여 주시기 바랍니다.");
+			return false;
+		}
+	}else{
+		if (diffMonth>="60"){
+			alert("주민등록인구통계 시스템의 원활한 서비스 제공을 위해 \n검색기간을 60개월과 같이 제한합니다. \n기간 조정 후 다시 검색하여 주시기 바랍니다.");
+			return false;
+		}else if(selectYear == "2022" && selectMonth < "10") {
+			alert("2022년 10월 부터 검색 가능합니다.");
+			frm.searchMonthStart.focus();
+			return false;
+		}
+	}
+	<!-- 2023.09.21  전성현 조회기간 검색 제한 END -->
+	
+	$("#searchForm").submit();
+}
+window.parent.progressEnd();
+//엑셀 출력 제한 체크
+function chkExcel(mobileGbn){
+	var yearDB = '2026';
+	var monthDB = '10';
+	
+	if('month' == 'month'){
+		document.formXlsDown.category.value = 'month'; //시군구이상 월간
+	}else{
+		document.formXlsDown.category.value = 'year'; //시군구이상 연간
+	}
+	
+	if(yearDB == 0001 && monthDB == 01){
+		alert("해당 데이터가 없습니다.");
+		return false;
+	}
+	
+	//전체시군구현황일때
+	if($("input[name='state']:checked").val() == "2") {
+		$("input[name='sltOrgLvl1']").val("1000000000"); //임의값 셋팅
+		$("input[name='sltOrgLvl2']").val("A");
+	}else if($("input[name='state']:checked").val() == "3") {
+		$("input[name='sltOrgLvl1']").val("1000000000"); //임의값 셋팅
+		$("input[name='sltOrgLvl2']").val("1000000000"); //임의값 셋팅
+	}
+
+	var startDate = new Date($("#searchYearStart").val(),$("#searchMonthStart").val());
+	var endDate = new Date($("#searchYearEnd").val(),$("#searchMonthEnd").val());
+	var startYear = $("#searchYearStart").val();
+	var endYear = $("#searchYearEnd").val();
+	var diffYear = endYear - startYear;
+	var interval = endDate -startDate
+	var month = 24*60*60*1000 * 30;
+	var diffMonth=parseInt(interval/month);
+	var radioState = $("input[type='radio'][name='state']:checked").val();
+	var radioMobileState = $("select[name=stateMobile]").val();	
+	var yearMonthGbn = "month";
+	
+	if(yearMonthGbn == "year"){//연간일경우
+		if (mobileGbn == "1" && radioState == "3"){//pc버전이고 전체읍면동현황일경우
+			<!-- 전성현 2023.12.06 3년으로 변경 START -->
+			if (diffYear>="3"){
+				alert("주민등록인구통계 시스템의 원활한 서비스 제공을 위해 \n전체읍면동현황 일 경우 \n검색기간을 3년과 같이 제한합니다. \n기간 조정 후 다시 검색하여 주시기 바랍니다.");
+				return false;
+			}
+			<!-- 전성현 2023.12.06 1년으로 변경 END -->
+		}
+		if (mobileGbn == "2" && radioMobileState == "3"){//mobile 버전이고 전체읍면동현황일경우
+			if (diffYear>="3"){
+				alert("주민등록인구통계 시스템의 원활한 서비스 제공을 위해 \n전체읍면동현황 일 경우 \n검색기간을 3년과 같이 제한합니다. \n기간 조정 후 다시 검색하여 주시기 바랍니다.");
+				return false;
+			}
+		}
+		if (diffYear>="10"){ //pc 현재화면, 전체시군구현황일경우
+			alert("주민등록인구통계 시스템의 원활한 서비스 제공을 위해 \n검색기간을 10년과 같이 제한합니다. \n기간 조정 후 다시 검색하여 주시기 바랍니다.");
+			return false;
+		}
+	}else{//연간이 아닐경우 (월간 및 첫 조회)
+		if (mobileGbn == "1" && radioState == "3"){//pc버전이고 전체읍면동현황일경우
+			<!-- 전성현 2023.12.06 3개월로 변경 START -->
+			if (diffMonth>="3"){
+				alert("주민등록인구통계 시스템의 원활한 서비스 제공을 위해 \n전체읍면동현황 일 경우 \n검색기간을 3개월과 같이 제한합니다. \n기간 조정 후 다시 검색하여 주시기 바랍니다.");
+				return false;
+			}
+			<!-- 전성현 2023.12.06 3개월로 변경 END -->
+		}
+		if (mobileGbn == "1" && radioState == "2"){//pc버전이고 전체시군구현황일경우
+			<!-- 전성현 2023.12.06 36개월로 변경 START -->
+			if (diffMonth>="36"){
+				alert("주민등록인구통계 시스템의 원활한 서비스 제공을 위해 \n검색기간을 36개월과 같이 제한합니다. \n기간 조정 후 다시 검색하여 주시기 바랍니다.");
+				return false;
+			}
+			<!-- 전성현 2023.12.06 36개월로 변경 END -->
+		}
+		<!-- 전성현 2023.12.06 현재화면은 60개월 START -->  //현재화면
+		if (diffMonth>="60"){
+			alert("주민등록인구통계 시스템의 원활한 서비스 제공을 위해 \n검색기간을 60개월과 같이 제한합니다. \n기간 조정 후 다시 검색하여 주시기 바랍니다.");
+			return false;
+		}
+		<!-- 전성현 2023.12.06 현재화면은 60개월 변경 END -->
+		
+		if (mobileGbn == "2" && radioMobileState == "3"){//mobile 버전이고 전체읍면동현황일경우
+			if (diffMonth>="12"){
+				alert("주민등록인구통계 시스템의 원활한 서비스 제공을 위해 \n전체읍면동현황 일 경우 \n검색기간을 12개월과 같이 제한합니다. \n기간 조정 후 다시 검색하여 주시기 바랍니다.");
+				return false;
+			}
+		}
+	}
+	
+	return true;		
+}
+
+//탭 선택
+function fnSelTab(tabGbn){
+	if(tabGbn == "table") { //통계표
+		location.href = "hsmbHshd.do";	
+	}else if(tabGbn == "graph") { //그래프
+		location.href = "hsmbHshdGraph.do";
+	}
+	
+}
+
+</script>
+<style>
+.DTFC_LeftBodyLiner {height:490px; max-height:490px;}
+</style>
+</html>

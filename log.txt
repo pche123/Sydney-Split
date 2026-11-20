@@ -1,0 +1,6 @@
+https://jumin.mois.go.kr/agePpltStus.do 760895
+https://jumin.mois.go.kr/hsmbHshd.do 65407
+https://jumin.mois.go.kr/etcStatOldAge.do 68573
+https://jumin.mois.go.kr/sexdAgeHsld.do 0
+https://jumin.mois.go.kr/js/stat.js 0
+https://jumin.mois.go.kr/ageStatMonth.do 141673
