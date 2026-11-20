@@ -2,22 +2,31 @@ name: Fetch safety data
 on:
   workflow_dispatch:
     inputs:
-      cities: { description: "Cities (space separated, empty = all)", required: false, default: "" }
+      cities: { description: "Cities (space separated) for a single run; empty = all cities in groups", required: false, default: "" }
 permissions: { contents: write }
 jobs:
   fetch:
     runs-on: ubuntu-latest
     timeout-minutes: 340
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { group: jp, cities: "tokyo yokohama osaka kyoto kobe nagoya fukuoka sapporo" }
+          - { group: au, cities: "sydney melbourne brisbane perth adelaide" }
+          - { group: uk, cities: "london manchester birmingham liverpool brighton" }
+          - { group: us, cities: "newyork losangeles chicago sanfrancisco washington austin seattle miami" }
+          - { group: other, cities: "auckland christchurch singapore" }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
       - run: sudo apt-get update -q && sudo apt-get install -y -q osmium-tool
       - run: pip install geopandas pyogrio rasterio requests pandas numpy shapely
-      - run: python pipeline/get_safety.py ${{ github.event.inputs.cities }}
-      - name: Publish results to the safety-data branch
+      - run: python pipeline/get_safety.py ${{ github.event.inputs.cities || matrix.cities }}
+      - name: Publish results to the safety-<group> branch
         if: always()
         run: |
-          cd results/safety && git init -q && git checkout -q -b safety-data && git add -A
+          cd results/safety && mv log.txt log_${{ matrix.group }}.txt; git init -q && git checkout -q -b safety-${{ matrix.group }} && git add -A
           git -c user.name="Prasad Cheema" -c user.email="pche123@users.noreply.github.com" commit -qm "Safety data (run ${{ github.run_id }})"
-          git push -fq "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" safety-data
+          git push -fq "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" safety-${{ matrix.group }}

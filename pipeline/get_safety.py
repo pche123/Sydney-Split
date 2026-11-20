@@ -196,13 +196,23 @@ def ksj_zones(code, prefs, frame):
         z = CACHE / os.path.basename(urls[pref])
         if not z.exists():
             get(urls[pref], z)
+        srcs = []                                   # (zip path, member); unpacks zips inside the zip
         with zipfile.ZipFile(z) as zf:
             names = zf.namelist()
-        members = [m for m in names if m.lower().endswith((".shp", ".geojson"))]
-        log(f"  {code} {pref}: {len(names)} files in zip, readable {members[:6]}")
-        for m in members:
+            for m in names:
+                if m.lower().endswith(".zip"):
+                    inner = CACHE / (z.stem + "__" + os.path.basename(m))
+                    inner.write_bytes(zf.read(m))
+                    with zipfile.ZipFile(inner) as zi:
+                        srcs += [(inner, x) for x in zi.namelist()]
+                else:
+                    srcs.append((z, m))
+        log(f"  {code} {pref}: files {[m for _, m in srcs][:12]}")
+        gj = [(zp, m) for zp, m in srcs if m.lower().endswith(".geojson")]
+        members = gj or [(zp, m) for zp, m in srcs if m.lower().endswith(".shp")]   # one copy of each layer, not both
+        for zp, m in members:
             try:
-                g = gpd.read_file(f"zip://{z}!{m}")
+                g = gpd.read_file(f"zip://{zp}!{m}")
             except Exception as e:  # noqa: BLE001
                 log("  read fail", m, e); continue
             if g.crs is None:
