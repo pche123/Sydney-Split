@@ -304,3 +304,6 @@ body.embed header h1 { font-size: 18px; }
 .claim { display: grid; grid-template-columns: 20px 1fr; gap: 6px; font-size: 13px; line-height: 1.35; }
 .claim .cm { font-weight: 700; text-align: center; }
 .claim .cm.good { color: var(--good); } .claim .cm.gentle { color: var(--gentle); } .claim .cm.meh { color: var(--meh); } .claim .cm.muted { color: var(--muted, #888); }
+
+.sdot { fill: #ffd23f; stroke: #111; stroke-width: 0.6; }
+.sdot:hover { fill: #fff; }

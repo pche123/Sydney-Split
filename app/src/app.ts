@@ -83,6 +83,18 @@ export function start(DATA: CityData, C: CityConfig) {
   let SM = 0;   // smoothing slider position, shared by every view
   const SMOOTH_HINT = "Islands are real: pockets of one side surrounded by the other. Drag to see the overall split. Display only: it doesn't change any test.";
   let mode = "lines", herKind = C.herKinds[0][0], curHer = her.find((h) => h.kind === herKind) || her[0], ovLine = ref;
+
+  // ---------- safety & sights layer (built by pipeline/common/safety_app.py; loaded on demand)
+  type SafeLayer = { id: string; group: string; name: string; kind: "share" | "rate" | "count"; what: string; v: number[];
+    top: [string, number][]; land_pct?: number; people_pct?: number; areas_any?: number; total?: number;
+    latte?: { a: number; b: number; lo: number; hi: number } };
+  type Safe = { sources: string[]; layers: SafeLayer[]; points: Record<string, [number, number, string, string?][]>; s3?: { rho: number; p: number } };
+  let SAFE: Safe | null = null, sLayer: SafeLayer | null = null;
+  const safeReady = fetch(`safety/${__CITY__}.json`).then((r) => (r.ok ? r.json() : null)).then((j: Safe | null) => {
+    SAFE = j && j.layers && j.layers.length ? j : null; if (SAFE) sLayer = SAFE.layers[0];
+    const t = document.getElementById("safeTab"); if (t) t.hidden = !SAFE;
+    return SAFE;
+  }).catch(() => { const t = document.getElementById("safeTab"); if (t) t.hidden = true; return null; });
   const TL = DATA.timeline;
   let tKind = "lines", tLine: TimelineLine = TL.lines[0], tGroup: TimelineGroup = TL.groups[0], tYear = Math.max(0, TL.years.length - 1);
   let playing: ReturnType<typeof setInterval> | null = null;
@@ -115,6 +127,14 @@ export function start(DATA: CityData, C: CityConfig) {
           const b = btn(l.name, "Orange: " + l.a, `<span class="pill ${cls}">${txt}</span>`, () => { location.hash = l.id; }, l === current);
           b.dataset.id = l.id; list.appendChild(b);
         }
+      }
+    } else if (mode === "safety") {
+      if (!SAFE) { head("Loading…"); syncPicker(); return; }
+      let g = "";
+      for (const L of SAFE.layers) {
+        if (L.group !== g) { g = L.group; head(g); }
+        const sub = L.kind === "share" ? `About ${L.people_pct}% of residents live in this zone` : L.kind === "rate" ? `${L.total!.toLocaleString()} across ${City}` : `${L.total} across ${City}`;
+        list.appendChild(btn(L.name, sub, "", () => { sLayer = L; render(); }, L === sLayer));
       }
     } else if (mode === "make") {
       buildMakeControls();
@@ -154,7 +174,7 @@ export function start(DATA: CityData, C: CityConfig) {
       if (el.getAttribute("aria-current") === "true") o.selected = true;
       grp.appendChild(o);
     }
-    $("#mpickLabel").textContent = mode === "lines" ? "Pick a line" : mode === "timeline" ? "Pick what to follow" : "Pick a group";
+    $("#mpickLabel").textContent = mode === "lines" ? "Pick a line" : mode === "timeline" ? "Pick what to follow" : mode === "safety" ? "Pick a map" : "Pick a group";
   }
   msel.addEventListener("change", () => {
     const b = [...list.querySelectorAll<HTMLElement>(".line-btn")][+msel.value];
@@ -165,9 +185,11 @@ export function start(DATA: CityData, C: CityConfig) {
   function setMode(m: string) {
     mode = m; picked = null;
     document.querySelectorAll<HTMLElement>("header > .tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.mode === m)));
-    $("#tagline").textContent = C.tag[m];
-    $(".compare").style.display = m === "heritage" || m === "timeline" || m === "make" ? "none" : "";
-    $("#smoothbox").style.display = "block";
+    $("#tagline").textContent = C.tag[m] ?? `Flood, landslide and tsunami zones, evacuation sites, hospitals and sights across ${City}. Not official advice: check your local hazard map.`;
+    $(".compare").style.display = m === "heritage" || m === "timeline" || m === "make" || m === "safety" ? "none" : "";
+    $("#smoothbox").style.display = m === "safety" ? "none" : "block";
+    $("#mapctl").style.display = m === "safety" ? "none" : "";
+    if (m === "safety" && !SAFE) safeReady.then(() => { if (mode === "safety") render(); });
     if (m !== "make") gDots.innerHTML = "";
     $("#yearbox").style.display = m === "timeline" ? "block" : "none";
     if (m !== "timeline" && playing) { clearInterval(playing); playing = null; $("#play").textContent = "▶ Play"; }
@@ -234,6 +256,7 @@ export function start(DATA: CityData, C: CityConfig) {
   let tipTimer: ReturnType<typeof setTimeout> | null = null;
   function tipText(target: Element): [string, string] | null {
     const el = target as HTMLElement;
+    if (el.dataset && el.dataset.pt !== undefined) return [el.dataset.pt || "(no name)", el.dataset.ptk || ""];
     const emp = el.dataset && el.dataset.empty;
     if (emp) return [emp, "Not mapped: few people live here (parks, industry, airports, bushland or farms)."];
     const iS = el.dataset && el.dataset.i; if (iS === undefined) return null;
@@ -242,6 +265,7 @@ export function start(DATA: CityData, C: CityConfig) {
     if (mode === "timeline") return [a.name, tKind === "lines"
       ? `${TL.years[tYear]}: ${tLine.sides[tYear][i] ? "orange side – " + tLine.a : "blue side – " + tLine.b}`
       : `${TL.years[tYear]}: ${tGroup.lq[tYear][i].toFixed(1)}× the ${City} average`];
+    if (mode === "safety") return sLayer ? [a.name, safeText(sLayer, i)] : [a.name, ""];
     if (mode !== "lines") return [a.name, `${C.herLabel(curHer)}: ${curHer.lq[i].toFixed(1)}× the ${City} average`];
     return [a.name, current.side[i] ? "Orange side: " + current.a : "Blue side: " + current.b];
   }
@@ -298,6 +322,10 @@ export function start(DATA: CityData, C: CityConfig) {
         ? `<div><i style="border-radius:50%;background:var(--side-a);border:1px solid #fff"></i><span class="d1"></span></div><div><i style="border-radius:50%;background:var(--side-b);border:1px solid #fff"></i><span class="d2"></span></div>` : "";
       sidesLegend(MK.aText || "", MK.bText || "", dots);
       if (dots) { el.querySelector(".d1")!.textContent = MK.A + " stores"; el.querySelector(".d2")!.textContent = MK.B + " stores"; }
+    } else if (mode === "safety") {
+      if (!sLayer) { el.innerHTML = GREY; return; }
+      const labs = safeBreaks(sLayer).labels;
+      el.innerHTML = labs.map((t, k) => `<div><i style="background:${SRAMP[k]}"></i><span>${t}</span></div>`).join("") + safeDotsKey() + GREY;
     } else if (mode === "timeline" && tKind === "lines") {
       sidesLegend(tLine.a, tLine.b, `<div><i style="border:2.6px solid var(--ink);background:none"></i><span>${C.movedTitle}, ${Y0}–${Y1}</span></div>`);
     } else if (mode === "lines") {
@@ -324,6 +352,7 @@ export function start(DATA: CityData, C: CityConfig) {
     buildList(); setTimeout(mapLegend, 0); sharpEl.setAttribute("d", "");
     if (mode === "make") return renderMake();
     if (mode === "timeline") return renderTimeline();
+    if (mode === "safety") return renderSafety();
     if (mode !== "lines") return renderHeritage();
     cutEl.style.display = ""; cutEl.setAttribute("class", "cut"); haloEl.setAttribute("d", "");
     const l = current, sd = smoothSide(l.side, l.f);
@@ -705,6 +734,80 @@ export function start(DATA: CityData, C: CityConfig) {
     d.querySelector("h2")!.textContent = mode === "overlay" ? `${C.herLabel(h)} × ${ovLine.name.replace(/^The /, "")}` : C.herLabel(h);
   }
 
+  // ---------- safety & sights
+  const SRAMP = ["#eef1f3", "#c6dbef", "#85bcdb", "#4292c6", "#1f63a8", "#0b3a75"];
+  const pct = (x: number) => (x >= 0.995 ? "100%" : x >= 0.1 ? Math.round(x * 100) + "%" : x > 0 ? (x * 100).toFixed(1) + "%" : "0%");
+  function safeBreaks(L: SafeLayer): { idx: (x: number) => number; labels: string[] } {
+    if (L.kind === "share") {
+      const b = [0, 0.02, 0.1, 0.25, 0.5];
+      return { idx: (x) => (x <= 0 ? 0 : x < b[1] ? 1 : x < b[2] ? 2 : x < b[3] ? 3 : x < b[4] ? 4 : 5),
+        labels: ["None of the land", "Under 2%", "2–10%", "10–25%", "25–50%", "Over half"] };
+    }
+    const pos = L.v.filter((x) => x > 0).sort((a, b) => a - b);
+    const q = (f: number) => pos[Math.min(pos.length - 1, Math.floor(f * pos.length))] ?? 0;
+    const c = [q(0.25), q(0.5), q(0.75), q(0.9)];
+    const f = (x: number) => (L.kind === "count" ? String(Math.round(x)) : x < 1 ? x.toFixed(2) : x.toFixed(1));
+    return { idx: (x) => (x <= 0 ? 0 : x < c[0] ? 1 : x < c[1] ? 2 : x < c[2] ? 3 : x < c[3] ? 4 : 5),
+      labels: ["None", `Under ${f(c[0])}`, `${f(c[0])}–${f(c[1])}`, `${f(c[1])}–${f(c[2])}`, `${f(c[2])}–${f(c[3])}`, `${f(c[3])} or more`] };
+  }
+  function safeText(L: SafeLayer, i: number) {
+    const x = L.v[i];
+    return L.kind === "share" ? `${pct(x)} of the land in the ${L.name.toLowerCase()} zone`
+      : L.kind === "rate" ? `${L.name}: ${x.toFixed(2)} per 1,000 residents` : `${L.name}: ${x}`;
+  }
+  // which points to draw for each map: the thing itself, or (hazards in Japan) the evacuation sites designated for it
+  const HZ: Record<string, string[]> = { flood: ["f", "i"], landslide: ["l"], tsunami: ["t", "s"] };
+  const HZNAME: Record<string, string> = { f: "floods", l: "landslides", s: "storm surges", e: "earthquakes", t: "tsunamis", r: "large fires", i: "inland flooding", v: "volcanoes" };
+  function safePoints(L: SafeLayer): [number, number, string, string?][] {
+    if (!SAFE) return [];
+    if (HZ[L.id]) return (SAFE.points.shelter_jp || []).filter((p) => p[3] && HZ[L.id].some((h) => p[3]!.includes(h)));
+    return SAFE.points[L.id] || [];
+  }
+  function safeDotsKey() {
+    if (!sLayer) return "";
+    const n = safePoints(sLayer).length; if (!n) return "";
+    const what = HZ[sLayer.id] ? `Evacuation sites for ${sLayer.id === "flood" ? "floods" : sLayer.id === "landslide" ? "landslides" : "tsunamis"}` : sLayer.name;
+    return `<div><i style="border-radius:50%;background:#ffd23f;border:1.5px solid #111"></i><span>${what} (${n.toLocaleString()})</span></div>`;
+  }
+  function renderSafety() {
+    cutEl.style.display = "none"; haloEl.setAttribute("d", ""); cut2El.setAttribute("d", ""); $("#agree").innerHTML = ""; gDots.innerHTML = "";
+    const d = $("#detail") as HTMLElement;
+    if (!SAFE || !sLayer) { areaEls.forEach((p) => { p.setAttribute("class", "area h"); p.style.fill = SRAMP[0]; }); d.innerHTML = `<p class="small">Loading the safety map…</p>`; return; }
+    const L = sLayer, br = safeBreaks(L);
+    areaEls.forEach((p, i) => { p.setAttribute("class", "area h"); p.style.fill = SRAMP[br.idx(L.v[i])]; });
+    const pts = safePoints(L), r = String(Math.max(1.6, Math.min(3.2, 2400 / Math.max(pts.length, 1) ** 0.9)));
+    for (const [x, y, nm, hz] of pts) {
+      const c = document.createElementNS(svgNS, "circle"); c.setAttribute("cx", String(x)); c.setAttribute("cy", String(y)); c.setAttribute("r", r);
+      c.setAttribute("class", "dot sdot"); c.dataset.pt = nm;
+      c.dataset.ptk = hz !== undefined ? "Designated evacuation site for " + [...hz].map((h) => HZNAME[h]).filter(Boolean).join(", ") : L.name.replace(/s$/, "");
+      gDots.appendChild(c);
+    }
+    const fact = (t: string) => `<li>${t}</li>`;
+    const facts: string[] = [];
+    if (L.kind === "share") {
+      facts.push(fact(`<b>${L.land_pct}%</b> of ${City}'s mapped land is in the zone.`));
+      facts.push(fact(`About <b>${L.people_pct}%</b> of residents live in it, if people are spread evenly within each ${place}.`));
+      facts.push(fact(`<b>${L.areas_any}</b> of ${N} ${places} have at least 1% of their land in it.`));
+    } else facts.push(fact(`<b>${L.total!.toLocaleString()}</b> across ${City}.`));
+    if (HZ[L.id] && pts.length) facts.push(fact(`<b>${pts.length.toLocaleString()}</b> designated evacuation sites for this hazard (yellow dots).`));
+    if (L.id === "landslide" && SAFE.s3) facts.push(fact(`${places[0].toUpperCase() + places.slice(1)} with more landslide-zone land have ${SAFE.s3.rho > 0.1 && SAFE.s3.p < 0.05 ? "<b>more</b>" : SAFE.s3.rho < -0.1 && SAFE.s3.p < 0.05 ? "<b>fewer</b>" : "about the same number of"} evacuation sites per resident (Spearman ρ = ${SAFE.s3.rho}).`));
+    let lat = "";
+    if (L.latte && ref) {
+      const a = L.latte.a, b = L.latte.b, f = (x: number) => (L.kind === "share" ? pct(x) : x.toFixed(2));
+      const clear = L.latte.lo > 0 || L.latte.hi < 0;
+      lat = `<div class="box"><h3>Across the ${ref.name.replace(/^The /, "")}</h3><p style="margin:0">Average ${L.kind === "share" ? "share of land in the zone" : "per 1,000 residents"}:
+        <b>${f(a)}</b> on the orange side (${ref.a.toLowerCase()}), <b>${f(b)}</b> on the blue side.
+        ${clear ? "The gap is bigger than chance would give, allowing for neighbours being alike." : "The gap could be chance: neighbouring places are alike, so it isn't clear."}</p></div>`;
+    }
+    const top = L.top.length ? `<div class="box"><h3>Highest</h3><ul class="facts">${L.top.map(([n, v]) => `<li><b></b>: ${L.kind === "share" ? pct(v) + " of the land" : L.kind === "rate" ? v.toFixed(2) + " per 1,000" : v}</li>`).join("")}</ul></div>` : "";
+    d.innerHTML = `<div class="warn"><b>Not official advice.</b> For where to go in an emergency, follow your local council and your official hazard map${(CITY_LIST.find((c) => c.id === __CITY__)?.country === "Japan") ? ` (<a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">ハザードマップポータルサイト</a>)` : ""}.</div>
+      <div><h2></h2><p class="note">${L.what}.</p></div>
+      <div class="box"><h3>Facts</h3><ul class="facts">${facts.join("")}</ul></div>${lat}${top}
+      <footer>Sources: ${SAFE.sources.join(" · ")}. Hazard maps are models: a place outside a zone is not guaranteed safe.</footer>`;
+    d.querySelector("h2")!.textContent = L.name;
+    d.querySelectorAll(".facts li b:empty").forEach((b, k) => { b.textContent = L.top[k][0]; });
+  }
+
   // ---------- your place's "line passport"
   function renderPassport() {
     const box = $("#passport") as HTMLElement | null; if (!box) return;
@@ -729,7 +832,14 @@ export function start(DATA: CityData, C: CityConfig) {
       li.querySelector("b")!.textContent = l.name.replace(/^The /, "");
       li.querySelector("span span")!.textContent = on ? l.a : l.b;
       ul.appendChild(li);
-    }    renderTwins(box, picked);
+    }
+    if (SAFE) {
+      const hz = SAFE.layers.filter((L) => L.kind === "share" && L.v[picked!] > 0.01);
+      const p = document.createElement("p"); p.className = "small"; p.style.margin = "8px 0 0";
+      p.textContent = hz.length ? "Hazard zones: " + hz.map((L) => `${L.name.toLowerCase()} ${pct(L.v[picked!])} of the land`).join(", ") + ". Not official advice." : "No mapped flood, landslide or tsunami zone here (not a guarantee of safety).";
+      box.appendChild(p);
+    }
+    renderTwins(box, picked);
   }
 
   // ---------- twin suburbs abroad (precomputed: experiments/suburb_twins.py)
@@ -781,7 +891,7 @@ export function start(DATA: CityData, C: CityConfig) {
     const h = location.hash.slice(1);
     const pl = document.getElementById("pairlink") as HTMLAnchorElement | null;
     if (pl) pl.href = `pair.html?a=${__CITY__}&la=${encodeURIComponent(h)}`;
-    if (["make"].includes(h) || (["heritage", "overlay"].includes(h) && hasHer) || (h === "timeline" && hasTL)) { setMode(h); return; }
+    if (["make", "safety"].includes(h) || (["heritage", "overlay"].includes(h) && hasHer) || (h === "timeline" && hasTL)) { setMode(h); return; }
     current = byId[h] || current || lines[0];
     if (mode !== "lines") setMode("lines"); else render();
   }
