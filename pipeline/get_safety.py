@@ -60,31 +60,38 @@ OSM_KINDS = {
 OVERPASS = ["https://overpass-api.de/api/interpreter", "https://overpass.kumi.systems/api/interpreter",
             "https://overpass.private.coffee/api/interpreter"]
 
-def osm_points(bb):
-    W, S, E, N = bb
-    parts = "".join(f'nwr{q}({S},{W},{N},{E});' for q in OSM_KINDS.values())
-    q = f"[out:json][timeout:600];({parts});out center tags;"
-    for t in range(6):
+def _overpass(q):
+    for t in range(8):
         url = OVERPASS[t % len(OVERPASS)]
         try:
-            r = requests.post(url, data={"data": q}, headers=UA, timeout=900); r.raise_for_status()
-            els = r.json()["elements"]; break
+            r = requests.post(url, data={"data": q}, headers=UA, timeout=400); r.raise_for_status()
+            return r.json()["elements"]
         except Exception as e:  # noqa: BLE001
-            log("  overpass retry", t + 1, url, e); time.sleep(30 * (t + 1))
-    else:
-        return []
-    out = []
-    for e in els:
-        tg = e.get("tags", {}); lat = e.get("lat", e.get("center", {}).get("lat")); lon = e.get("lon", e.get("center", {}).get("lon"))
-        if lat is None:
-            continue
-        if tg.get("emergency") == "assembly_point": k = "assembly"
-        elif tg.get("amenity") == "hospital": k = "hospital"
-        elif tg.get("amenity") == "fire_station": k = "fire"
-        elif "tourism" in tg: k = "sight"
-        else: k = "sight"   # historic sights count as sights
-        nm = tg.get("name:en") or tg.get("name") or ""
-        out.append(dict(k=k, n=nm[:60], lon=round(lon, 5), lat=round(lat, 5)))
+            log("  overpass retry", t + 1, url, str(e)[:120]); time.sleep(20 * (t + 1))
+    return None
+
+def osm_points(bb):
+    W, S, E, N = bb; out = []; seen = set()
+    nx = 2 if E - W > 0.6 else 1; ny = 2 if N - S > 0.6 else 1
+    for k, flt in OSM_KINDS.items():
+        for ix in range(nx):
+            for iy in range(ny):
+                w, e = W + (E - W) * ix / nx, W + (E - W) * (ix + 1) / nx
+                s_, n_ = S + (N - S) * iy / ny, S + (N - S) * (iy + 1) / ny
+                els = _overpass(f"[out:json][timeout:300];nwr{flt}({s_},{w},{n_},{e});out center tags;")
+                if els is None:
+                    log(f"  overpass gave up on {k}"); continue
+                for el in els:
+                    key = (el["type"], el["id"])
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    tg = el.get("tags", {}); lat = el.get("lat", el.get("center", {}).get("lat")); lon = el.get("lon", el.get("center", {}).get("lon"))
+                    if lat is None:
+                        continue
+                    nm = tg.get("name:en") or tg.get("name") or ""
+                    out.append(dict(k="sight" if k == "heritage" else k, n=nm[:60], lon=round(lon, 5), lat=round(lat, 5)))
+                time.sleep(3)
     return out
 
 # ---------------------------------------------------------------- Japan: GSI evacuation sites
@@ -150,8 +157,22 @@ def ksj_links(code):
 PREFS = {"tokyo": ["13", "11", "14"], "yokohama": ["14", "13"], "osaka": ["27", "28"], "kyoto": ["26"], "nagoya": ["23"],
          "kobe": ["28", "27"], "fukuoka": ["40"], "sapporo": ["01"]}
 
+def zone_share(zones, F, res=25.0):
+    """Share of each area's land inside the union of the zone polygons, on a 25 m grid."""
+    from rasterio.features import rasterize
+    from rasterio.transform import from_origin
+    minx, miny, maxx, maxy = F.total_bounds
+    w, h = int((maxx - minx) / res) + 1, int((maxy - miny) / res) + 1
+    tr = from_origin(minx, maxy, res, res)
+    lab = rasterize(((g, i + 1) for i, g in enumerate(F.geometry)), out_shape=(h, w), transform=tr, fill=0, dtype="int32")
+    z = rasterize(((g, 1) for g in zones if g is not None and not g.is_empty), out_shape=(h, w), transform=tr, fill=0, dtype="uint8")
+    ok = lab > 0
+    tot = np.bincount(lab[ok] - 1, minlength=len(F)); hit = np.bincount(lab[ok] - 1, weights=z[ok], minlength=len(F))
+    return np.where(tot > 0, hit / np.maximum(tot, 1), 0.0)
+
 def ksj_zones(code, prefs, frame):
     urls = ksj_links(code); parts = []
+    bb = tuple(frame.to_crs(4326).total_bounds)
     for pref in prefs:
         if pref not in urls:
             log(f"  {code} {pref}: no file"); continue
@@ -159,21 +180,24 @@ def ksj_zones(code, prefs, frame):
         if not z.exists():
             get(urls[pref], z)
         with zipfile.ZipFile(z) as zf:
-            members = [m for m in zf.namelist() if m.lower().endswith((".shp", ".geojson"))]
+            names = zf.namelist()
+        members = [m for m in names if m.lower().endswith((".shp", ".geojson"))]
+        log(f"  {code} {pref}: {len(names)} files in zip, readable {members[:6]}")
         for m in members:
             try:
-                g = gpd.read_file(f"zip://{z}!{m}", bbox=tuple(frame.to_crs(4326).total_bounds))
+                g = gpd.read_file(f"zip://{z}!{m}")
             except Exception as e:  # noqa: BLE001
                 log("  read fail", m, e); continue
-            g = g[g.geometry.type.isin(["Polygon", "MultiPolygon"])]
+            if g.crs is None:
+                g = g.set_crs(6668)
+            g = g[g.geometry.notna()]
+            g = g[g.geometry.type.isin(["Polygon", "MultiPolygon"])].to_crs(4326).cx[bb[0]:bb[2], bb[1]:bb[3]]
+            log(f"    {m}: {len(g)} polygons in frame")
             if len(g):
-                if g.crs is None:
-                    g = g.set_crs(6668)
-                parts.append(g[["geometry"]].to_crs(frame.crs))
-        log(f"  {code} {pref}: {sum(len(p) for p in parts)} polygons so far")
+                parts.append(g.geometry.to_crs(frame.crs))
     if not parts:
         return None
-    return pd.concat(parts).geometry.make_valid().union_all()
+    return pd.concat(parts)
 
 # ---------------------------------------------------------------- JRC river flood, 1-in-100-year
 JRC = "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP100/"
@@ -241,7 +265,7 @@ def city(c):
             try:
                 U = ksj_zones(code, PREFS[c], F)
                 if U is not None:
-                    res["areas"][key] = [round(float(g.intersection(U).area / max(a, 1)), 4) for g, a in zip(F.geometry, land)]
+                    res["areas"][key] = [round(float(x), 4) for x in zone_share(U, F)]
                     res["sources"].append(label)
             except Exception as e:  # noqa: BLE001
                 log(f"  {code} failed:", e)
