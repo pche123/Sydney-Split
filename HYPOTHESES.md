@@ -344,3 +344,18 @@ median split puts only the flooded areas on one side (10–40% of areas), while 
 test is not like for like: San Francisco, with flood land in 11% of its areas, came out "a line" at p = 0.005 for this
 reason alone. S2 is therefore run only where at least half the areas have some flood land; elsewhere it is reported as
 not testable. Runs already made on cities below that bar are discarded, not reported.
+
+## Korea over time: Seoul and Busan 2008–2025 (written 21 Nov 2026, before downloading)
+
+Data: Ministry of the Interior and Safety resident registration counts by administrative neighbourhood (행정동), December
+of each year 2008–2025, ten-year age bands (jumin.mois.go.kr, no login needed); neighbourhood boundaries for each year from
+the open admdongkor project (github.com/vuski/admdongkor), shared by area onto the 2025 neighbourhoods so every year sits
+on the same map. Registration counts, not the census: they include people registered but living elsewhere.
+
+K5. The age front moves outward, as in 18 of 21 cities elsewhere: the slope of the share aged 65+ against distance from
+    the city centre (Seoul City Hall; Busan City Hall) rises between 2008 and 2025 in both cities. Same measure and
+    permutation test as Section 11.4 / 12 of the paper.
+K6. The Grey Line is stable: at least 70% of neighbourhoods are on the same side of the 65+ median in 2008 and 2025,
+    above what random landscapes give (same persistence test as the app's timeline).
+K7. Seoul ageing is uneven: the neighbourhoods that were youngest in 2008 aged fastest (Spearman ρ between the 2008 65+
+    share and its 2008–2025 rise is negative). No prediction for Busan.
