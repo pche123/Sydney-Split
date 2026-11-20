@@ -1,0 +1,22 @@
+=== adelaide
+JRC tiles listed: 271
+  JRC tiles used: ['ID245_S30_E130_RP100_depth_reclass.tif']
+  downloaded australia-latest.osm.pbf: 976 MB
+  OSM points: 492 {'sight': 317, 'fire': 120, 'hospital': 52, 'assembly': 3}
+  wrote adelaide: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 492 points
+=== brisbane
+  JRC tiles used: ['ID261_S20_E150_RP100_depth_reclass.tif']
+  OSM points: 687 {'sight': 493, 'fire': 106, 'hospital': 86, 'assembly': 2}
+  wrote brisbane: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 687 points
+=== melbourne
+  JRC tiles used: ['ID254_S30_E140_RP100_depth_reclass.tif']
+  OSM points: 1674 {'sight': 996, 'fire': 363, 'hospital': 284, 'assembly': 31}
+  wrote melbourne: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 1674 points
+=== perth
+  JRC tiles used: ['ID224_S30_E110_RP100_depth_reclass.tif']
+  OSM points: 815 {'sight': 623, 'fire': 95, 'hospital': 90, 'assembly': 7}
+  wrote perth: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 815 points
+=== sydney
+  JRC tiles used: ['ID262_S30_E150_RP100_depth_reclass.tif']
+  OSM points: 2564 {'sight': 1886, 'fire': 410, 'hospital': 239, 'assembly': 29}
+  wrote sydney: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 2564 points
