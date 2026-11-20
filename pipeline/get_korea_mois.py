@@ -1,6 +1,6 @@
-"""Download resident registration counts by neighbourhood and ten-year age band (MOIS, jumin.mois.go.kr), December of each
+"""Download resident registration counts by neighbourhood and five-year age band (MOIS, jumin.mois.go.kr), December of each
 year, for every administrative neighbourhood in Korea; and the matching neighbourhood boundaries (github.com/vuski/admdongkor).
-Runs on GitHub Actions (workflow "Fetch Korea over time"). Output: results/korea_time/mois_age_<year>12.csv, emd_<year>.parquet
+Runs on GitHub Actions (workflow "Fetch Korea over time"). Output: results/korea_time/mois_age5_<year>12.csv, emd_<year>.parquet
 """
 import os, subprocess, sys, time
 from pathlib import Path
@@ -10,12 +10,12 @@ OUT = Path("results/korea_time"); OUT.mkdir(parents=True, exist_ok=True)
 S = requests.Session(); S.headers["User-Agent"] = "Mozilla/5.0 (Sydney-Split research, github.com/pche123/Sydney-Split)"
 S.get("https://jumin.mois.go.kr/ageStatMonth.do", timeout=60)
 for y in range(2008, 2026):
-    f = OUT / f"mois_age_{y}12.csv"
+    f = OUT / f"mois_age5_{y}12.csv"
     if f.exists() and f.stat().st_size > 10000:
         continue
     form = dict(sltOrgType="1", sltOrgLvl1="1000000000", sltOrgLvl2="1000000000", gender="gender", sum="sum", sltUndefType="",
                 searchYearStart=str(y), searchMonthStart="12", searchYearEnd=str(y), searchMonthEnd="12",
-                sltOrderType="1", sltOrderValue="ASC", sltArgTypes="10", sltArgTypeA="0", sltArgTypeB="100", category="month")
+                sltOrderType="1", sltOrderValue="ASC", sltArgTypes="5", sltArgTypeA="0", sltArgTypeB="100", category="month")
     for t in range(4):
         try:
             r = S.post("https://jumin.mois.go.kr/downloadCsvAge.do?searchYearMonth=month&xlsStats=3", data=form, timeout=300)
