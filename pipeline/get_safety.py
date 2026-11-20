@@ -60,38 +60,55 @@ OSM_KINDS = {
 OVERPASS = ["https://overpass-api.de/api/interpreter", "https://overpass.kumi.systems/api/interpreter",
             "https://overpass.private.coffee/api/interpreter"]
 
-def _overpass(q):
-    for t in range(8):
-        url = OVERPASS[t % len(OVERPASS)]
-        try:
-            r = requests.post(url, data={"data": q}, headers=UA, timeout=400); r.raise_for_status()
-            return r.json()["elements"]
-        except Exception as e:  # noqa: BLE001
-            log("  overpass retry", t + 1, url, str(e)[:120]); time.sleep(20 * (t + 1))
-    return None
+GF = "https://download.geofabrik.de"
+OSM_EXTRA = {"auckland": "australia-oceania/new-zealand", "christchurch": "australia-oceania/new-zealand",
+             "austin": "north-america/us/texas", "chicago": "north-america/us/illinois", "miami": "north-america/us/florida",
+             "newyork": "north-america/us/new-york", "seattle": "north-america/us/washington",
+             "washington": "north-america/us/district-of-columbia", "losangeles": "north-america/us/california/socal",
+             "sanfrancisco": "north-america/us/california/norcal", "singapore": "asia/malaysia-singapore-brunei"}
+FILTER = ["nwr/emergency=assembly_point", "nwr/amenity=hospital,fire_station",
+          "nwr/tourism=attraction,museum,gallery,viewpoint,zoo,aquarium,theme_park",
+          "nwr/historic=castle,monument,ruins,archaeological_site,fort,city_gate"]
 
-def osm_points(bb):
-    W, S, E, N = bb; out = []; seen = set()
-    nx = 2 if E - W > 0.6 else 1; ny = 2 if N - S > 0.6 else 1
-    for k, flt in OSM_KINDS.items():
-        for ix in range(nx):
-            for iy in range(ny):
-                w, e = W + (E - W) * ix / nx, W + (E - W) * (ix + 1) / nx
-                s_, n_ = S + (N - S) * iy / ny, S + (N - S) * (iy + 1) / ny
-                els = _overpass(f"[out:json][timeout:300];nwr{flt}({s_},{w},{n_},{e});out center tags;")
-                if els is None:
-                    log(f"  overpass gave up on {k}"); continue
-                for el in els:
-                    key = (el["type"], el["id"])
-                    if key in seen:
-                        continue
-                    seen.add(key)
-                    tg = el.get("tags", {}); lat = el.get("lat", el.get("center", {}).get("lat")); lon = el.get("lon", el.get("center", {}).get("lon"))
-                    if lat is None:
-                        continue
-                    nm = tg.get("name:en") or tg.get("name") or ""
-                    out.append(dict(k="sight" if k == "heritage" else k, n=nm[:60], lon=round(lon, 5), lat=round(lat, 5)))
-                time.sleep(3)
+def osm_url(c):
+    return CITIES.get(c, {}).get("osm") or f"{GF}/{OSM_EXTRA[c]}-latest.osm.pbf"
+
+def osm_filtered(url):
+    """Download a Geofabrik extract once, keep only the objects we map (as GeoJSON lines), then delete the big file."""
+    import subprocess
+    out = CACHE / (os.path.basename(url).replace(".osm.pbf", "") + "_safety.geojsonseq")
+    if out.exists():
+        return out
+    pbf = CACHE / os.path.basename(url); flt = CACHE / ("f_" + os.path.basename(url))
+    get(url, pbf); log(f"  downloaded {pbf.name}: {pbf.stat().st_size / 1e6:.0f} MB")
+    subprocess.run(["osmium", "tags-filter", "--overwrite", "-o", str(flt), str(pbf), *FILTER], check=True)
+    pbf.unlink()
+    subprocess.run(["osmium", "export", "--overwrite", "-f", "geojsonseq", "-o", str(out), str(flt)], check=True)
+    flt.unlink()
+    return out
+
+def osm_points(c, bb):
+    W, S, E, N = bb; out = []
+    from shapely.geometry import shape
+    with open(osm_filtered(osm_url(c)), encoding="utf-8") as f:
+        for line in f:
+            line = line.strip().lstrip("\x1e")
+            if not line:
+                continue
+            ft = json.loads(line); tg = ft.get("properties", {})
+            try:
+                pt = shape(ft["geometry"]).representative_point()
+            except Exception:  # noqa: BLE001
+                continue
+            if not (W <= pt.x <= E and S <= pt.y <= N):
+                continue
+            if tg.get("emergency") == "assembly_point": k = "assembly"
+            elif tg.get("amenity") == "hospital": k = "hospital"
+            elif tg.get("amenity") == "fire_station": k = "fire"
+            elif tg.get("tourism") or tg.get("historic"): k = "sight"
+            else: continue
+            nm = tg.get("name:en") or tg.get("name") or ""
+            out.append(dict(k=k, n=nm[:60], lon=round(pt.x, 5), lat=round(pt.y, 5)))
     return out
 
 # ---------------------------------------------------------------- Japan: GSI evacuation sites
@@ -256,7 +273,7 @@ def city(c):
         res["sources"].append("River flood: JRC/Copernicus CEMS global river flood hazard map v2.1, 1-in-100-year return period (~90 m)")
     except Exception as e:  # noqa: BLE001
         log("  flood failed:", e)
-    pts = osm_points(bb); log("  OSM points:", len(pts), pd.Series([p["k"] for p in pts]).value_counts().to_dict() if pts else {})
+    pts = osm_points(c, bb); log("  OSM points:", len(pts), pd.Series([p["k"] for p in pts]).value_counts().to_dict() if pts else {})
     if pts:
         res["sources"].append("Assembly points, hospitals, fire stations and sights: © OpenStreetMap contributors")
     if c in PREFS:
@@ -294,8 +311,12 @@ def city(c):
 
 if __name__ == "__main__":
     todo = sys.argv[1:] or sorted(p.name.replace("_areas.geojson", "") for p in (ROOT / "app/public/downloads").glob("*_areas.geojson"))
-    for c in todo:
+    todo = sorted(todo, key=lambda c: (osm_url(c), c))
+    for i, c in enumerate(todo):
         try:
             city(c)
         except Exception as e:  # noqa: BLE001
             log(f"!! {c} failed: {e}")
+        if i + 1 == len(todo) or osm_url(todo[i + 1]) != osm_url(c):
+            for f in CACHE.glob("*_safety.geojsonseq"):
+                f.unlink()
