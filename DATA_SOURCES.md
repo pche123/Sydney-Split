@@ -199,3 +199,46 @@ Wine vs sake in Tokyo has enough venues on both sides for a line; a whisky line 
 | Spain | INE Censo 2021, indicadores por sección censal | INE secciones censales, 1 Jan 2021 | INE terms: cite "INE, www.ine.es" as the source |
 
 Berlin's borough outlines come from [funkeinteraktiv/Berlin-Geodaten](https://github.com/funkeinteraktiv/Berlin-Geodaten); the 1961–89 border inside Mitte and Friedrichshain-Kreuzberg is approximated by a polyline through Bornholmer Straße, Bernauer Straße, the Reichstag, Brandenburger Tor, Potsdamer Platz, Checkpoint Charlie and the Spree to Treptower Park (experiments/phase2_germany.py), which is exact enough for 1 km cells.
+
+## Korea over time: Seoul and Busan, 2008–2025 (fetched 21 Nov 2026)
+
+**Where the numbers come from.** The Ministry of the Interior and Safety (행정안전부) publishes the resident registration count for every administrative neighbourhood (행정동) every month at [jumin.mois.go.kr](https://jumin.mois.go.kr/ageStatMonth.do) (연령별 인구현황), free and without a login. `pipeline/get_korea_mois.py` asks that page's own CSV download (`downloadCsvAge.do`, "전체읍면동현황", five-year age bands, both sexes, all registration types) for December of each year, 2008 to 2025: the same file anyone gets by pressing the CSV button on that page. It ran on GitHub Actions (workflow "Fetch Korea over time"); the 18 raw files, exactly as downloaded, are kept on this repository's `korea-data` branch (commit `eaf28fcb2700`), so every number can be checked against the source.
+
+**Boundaries.** Neighbourhood boundaries for each year come from the open [vuski/admdongkor](https://github.com/vuski/admdongkor) project (yearly 행정동 boundaries since 1975, matched on the same 10-digit 행정기관코드 that MOIS uses). The last file of each year is used; for 2016, 2017, 2018, 2020, 2021 and 2022 that file is dated earlier than December (Feb 2016, Oct 2017, Nov 2018, Oct 2020, Jul 2021, Oct 2022). Each year's counts are shared by area onto the 427 Seoul and 206 Busan neighbourhoods of December 2025, so every year sits on one map.
+
+**How complete it is** (`results/korea_time/coverage.csv`). Every neighbourhood row matched a boundary of its year except one in Seoul in 2022 (17,318 people) and two in Busan in 2014 (16,633 people). In every year the people placed on the 2025 map are 99.1–100% of the city total that MOIS itself reports (Seoul 10,200,827 in Dec 2008 and 9,299,548 in Dec 2025; Busan 3,564,577 and 3,241,600). The share aged 65+ comes out at 8.7% → 20.4% for Seoul and 10.2% → 25.3% for Busan.
+
+**What it is and isn't.** These are *registrations*, not a census: they count Korean nationals registered at an address, including people whose whereabouts are unknown (거주불명자, from 2010) and registered Koreans living abroad (재외국민, from 2015), and they leave out foreign residents. Someone who has moved without re-registering is counted at the old address. For the age pattern of whole neighbourhoods this matters little, but these figures will not match census counts exactly. Seoul and Busan here are the two cities themselves (서울특별시, 부산광역시), not their wider metro areas, unlike the 2024 SGIS grid used in Section 12.
+
+| December of | SHA-256 of the raw file (first 16 hex) |
+|---|---|
+| 2008 | `ddece8aac214c2f1` |
+| 2009 | `a84cc6f887a4f7eb` |
+| 2010 | `a8b146c8e976a606` |
+| 2011 | `3d645710c753b4f0` |
+| 2012 | `8a949a3a7e073d9b` |
+| 2013 | `3e8e81904ce2c777` |
+| 2014 | `bba05ae7ac916eeb` |
+| 2015 | `1b8997dd34719f1e` |
+| 2016 | `81aeb350680d2a95` |
+| 2017 | `1eeffc6b573c0076` |
+| 2018 | `eb4b2a817b137672` |
+| 2019 | `27f8e4480c8d531b` |
+| 2020 | `4b2250e4bc079f51` |
+| 2021 | `3fe65d9c0f396089` |
+| 2022 | `c18750ab9d518be6` |
+| 2023 | `3356e13caacb9852` |
+| 2024 | `3a1bd2d8d1dd0e0e` |
+| 2025 | `0d6684b51581edd8` |
+
+## Safety and sights layer (fetched 20 Nov 2026)
+
+All fetched by `pipeline/get_safety.py` on GitHub Actions (workflow "Fetch safety data"); logs of each run are in `results/safety/log_*.txt`.
+
+| What | Source | Coverage | Licence |
+|---|---|---|---|
+| River flood zones | JRC / Copernicus Emergency Management Service, global river flood hazard maps v2.1, 1-in-100-year return period, categorised depth ([jeodpp.jrc.ec.europa.eu](https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/)) | All 29 cities, ~90 m; a model that ignores flood defences | CC BY 4.0 |
+| Landslide warning zones (土砂災害警戒区域) | MLIT National Land Numerical Information A33, 2025 edition ([nlftp.mlit.go.jp](https://nlftp.mlit.go.jp/ksj/)) | 8 Japanese cities | MLIT terms (credit the source) |
+| Tsunami inundation zones (津波浸水想定) | MLIT National Land Numerical Information A40 (prefecture editions 2016–2023) | Not Tokyo Bay or Kobe's Inland Sea coast: those prefecture files don't cover them, so Tokyo and Kobe show no tsunami map | MLIT terms |
+| Designated emergency evacuation sites (指定緊急避難場所) | GSI national list, [hinanmap.gsi.go.jp](https://hinanmap.gsi.go.jp/hinanjocp/hinanbasho/koukaidate.html) (mergeFromCity_2.csv), 115,948 sites nationally | 8 Japanese cities (19,230 sites inside them) | GSI content terms |
+| Hospitals, fire stations, assembly points, sights | OpenStreetMap via Geofabrik extracts (download.geofabrik.de); duplicates within 40–200 m merged | All cities but Nagoya (download refused); coverage depends on volunteer mapping | ODbL, © OpenStreetMap contributors |

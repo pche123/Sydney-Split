@@ -240,3 +240,16 @@ Caveats: the global flood map ignores defences (central London, behind the Thame
 ## Japanese place names (correction, 20 Nov 2026)
 
 Neighbourhood and ward names in the eight Japanese cities were guessed from the kanji (pykakasi) and many were wrong (上郷町 "Kamisatocho" is Kamigocho; 中京区 "Chukyo" is Nakagyo). They now use Japan Post's official readings (`pipeline/common/jp_kana.py`, `pipeline/tokyo/romaji.py`); 1,269 names changed, listed in `results/jp_name_fixes.tsv`. Japan Post itself misreads 六角橋 (Rokkakubashi), fixed by hand. No result depends on the names.
+
+## Korea over time: Seoul and Busan 2008–2025 (pre-registered 21 Nov 2026, K5–K7)
+
+`pipeline/get_korea_mois.py` → `experiments/korea_time.py` → `results/korea_time/{coverage.csv, slopes.csv, k_results.json, panel.csv.gz, fig_korea_age_front.png}`. Resident registrations by neighbourhood (MOIS, December of each year, five-year age bands), shared onto the 2025 neighbourhoods (Seoul 427, Busan 206); where the data come from and how complete they are is in DATA_SOURCES.md. Deviation: none (the first download had ten-year bands, which can't give 65+; it was redone with five-year bands before any analysis).
+
+| | Seoul | Busan |
+|---|---|---|
+| Share aged 65+, 2008 → 2025 | 8.7% → 20.4% | 10.2% → 25.3% |
+| K5: 65+ share against distance from City Hall (Spearman), 2008 → 2025 | −0.60 → +0.06; change +0.65 (95% CI 0.42 to 0.79), p < 0.001 | +0.19 → +0.19; change 0.00 (−0.31 to 0.25), p = 0.97 |
+| K6: neighbourhoods on the same side of the 65+ median in 2008 and 2025 | 62% (random maps 53%), p = 0.003 | 61% (random 53%), p = 0.017 |
+| K7: 2008 65+ share against its rise to 2025 (Spearman) | 0.01, p = 0.86 | 0.11, p = 0.12 |
+
+K5 holds for Seoul and fails for Busan. In 2008 Seoul's older residents were concentrated in the centre; by 2025 they are as common on the edge as in the middle, and the turn was steady (the slope rose every year from 2010). Busan's older residents were already a little more common away from the centre in 2008, and the pattern did not move. K6 holds only in part: the Grey Line is more stable than random maps in both cities, but below the 70% predicted. K7 fails: in Seoul, how old a neighbourhood was in 2008 says nothing about how fast it aged. Seoul now joins the 18 of 21 cities elsewhere whose age front moved outward; Busan joins the three that did not. Cross-check: the 2025 Seoul slope (+0.06) agrees with the 2024 SGIS grid (+0.01, Section 12) despite different areas and sources.

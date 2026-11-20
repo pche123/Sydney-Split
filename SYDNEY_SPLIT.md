@@ -94,6 +94,10 @@ All written down before looking, so no cherry-picking:
 
 In 18 of 21 cities with census data over time (the US since 1990, Italy since 1991, Germany, the Netherlands, Sweden and São Paulo), over-65s have shifted from the centre towards the edge. People who bought suburban houses decades ago have grown old in them. Where people rent or live alone has barely moved: those follow the buildings.
 
+**Seoul too, but not Busan.** Korea's interior ministry publishes how many people are registered in each neighbourhood, by age, every month since 2008, free and without a login (exactly where and how I got it is in [DATA_SOURCES.md](DATA_SOURCES.md)). In 2008 Seoul's over-65s were concentrated in the middle of the city. By 2025 they were spread right out to the edge, shifting a little further every year since 2010. Over the same years the share of Seoulites aged 65+ went from 9% to 20%. Busan's older residents were already a bit more common away from the centre in 2008, and that hasn't changed. These are registrations, not a census: they leave out foreign residents and count people at the address where they're registered.
+
+![Seoul's age front](results/korea_time/fig_korea_age_front.png)
+
 ## Do cities have a grammar? No, and that's a result
 
 Give every suburb a four-letter "word": which side it sits on for work, inner city, age and nightlife. Do neighbouring suburbs' words follow rules, like a language? Against random cities that copy each line on its own, 19 of 26 cities seem to have a grammar. But once the random cities also keep the big gradients the lines share (the inner city is the same inner city for every line), only 1 of 26 does (Auckland), about what chance alone would give. The "grammar" was one big map underneath, read four ways.
