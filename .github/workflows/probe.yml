@@ -1,0 +1,18 @@
+name: Probe Korean open data
+on: { workflow_dispatch: {} }
+permissions: { contents: write }
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          mkdir out && cd out
+          UA="Mozilla/5.0 (Sydney-Split research)"
+          for u in https://jumin.mois.go.kr/ https://jumin.mois.go.kr/statGrapB.do https://jumin.mois.go.kr/ageStatMonth.do https://jumin.mois.go.kr/statMonth.do https://jumin.mois.go.kr/etcStatUpDown.do \
+                   https://www.data.go.kr/data/15097974/fileData.do https://www.data.go.kr/data/15099158/fileData.do https://www.data.go.kr/data/15108071/fileData.do; do
+            f=$(echo "$u" | sed 's#https://##; s#[/?=&]#_#g'); curl -sSL -A "$UA" -c cj -b cj --max-time 60 "$u" -o "$f.html" || echo "fail $u" >> log.txt
+            echo "$u $(wc -c < "$f.html" 2>/dev/null)" >> log.txt
+          done
+          git init -q && git checkout -q -b probe && git add -A
+          git -c user.name="Prasad Cheema" -c user.email="pche123@users.noreply.github.com" commit -qm probe
+          git push -fq "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" probe
