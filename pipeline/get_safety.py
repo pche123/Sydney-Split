@@ -243,6 +243,13 @@ def _ksj_one(code, pref, url, bb, frame, PLANE, parts):
                 g = g.set_crs(6668 + PLANE.get(pref, 9), allow_override=True)
             elif g.crs is None:
                 g = g.set_crs(6668)
+            if len(g):                                      # some older files store latitude first
+                x0, y0, x1, y1 = g.total_bounds
+                if 20 <= x0 <= 50 and 20 <= x1 <= 50 and 120 <= y0 <= 155 and 120 <= y1 <= 155:
+                    from shapely.ops import transform as _tf
+                    g = g.set_geometry(g.geometry.map(lambda q: _tf(lambda a, b, *z: (b, a), q))).set_crs(6668, allow_override=True)
+                    log(f"    {m}: swapped latitude/longitude")
+                log(f"    {m}: bounds {np.round(g.to_crs(4326).total_bounds, 2).tolist()}")
             g = g[g.geometry.type.isin(["Polygon", "MultiPolygon"])].to_crs(4326).cx[bb[0]:bb[2], bb[1]:bb[3]]
             log(f"    {m}: {len(g)} polygons in frame")
             if len(g):
