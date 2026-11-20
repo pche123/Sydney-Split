@@ -1,0 +1,24 @@
+=== yokohama
+JRC tiles listed: 271
+  JRC tiles used: ['ID241_N40_E130_RP100_depth_reclass.tif']
+  downloaded kanto-latest.osm.pbf: 525 MB
+  OSM points: 2650 {'sight': 1503, 'hospital': 570, 'fire': 340, 'assembly': 237}
+KSJ A33: 56 prefectures, e.g. [('00', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-25/A33-25_00_GML.zip'), ('01', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-25/A33-25_01_GML.zip')]
+  A33 14: 3 files in zip, readable []
+  A33 13: 3 files in zip, readable []
+KSJ A40: 39 prefectures, e.g. [('01', 'https://nlftp.mlit.go.jp/ksj/gml/data/A40/A40-23/A40-23_01_GML.zip'), ('02', 'https://nlftp.mlit.go.jp/ksj/gml/data/A40/A40-21/A40-21_02_GML.zip')]
+  A40 14: 8 files in zip, readable ['A40-20_14.GML/A40-20_14.geojson', 'A40-20_14.GML/A40-20_14.shp']
+    A40-20_14.GML/A40-20_14.geojson: 28870 polygons in frame
+    A40-20_14.GML/A40-20_14.shp: 28870 polygons in frame
+  A40 13: 8 files in zip, readable ['A40-23_13_GML/A40-23_13.geojson', 'A40-23_13_GML/A40-23_13.shp']
+    A40-23_13_GML/A40-23_13.geojson: 0 polygons in frame
+    A40-23_13_GML/A40-23_13.shp: 0 polygons in frame
+GSI columns: ['NO', '共通ID', '都道府県名及び市町村名', '施設・場所名', '住所', '洪水', '崖崩れ、土石流及び地滑り', '高潮', '地震', '津波', '大規模な火事', '内水氾濫', '火山現象', '指定避難所との住所同一', '緯度', '経度', '備考']
+GSI sites: 115948 hazard columns: {'flood': '洪水', 'landslide': '崖崩れ、土石流及び地滑り', 'storm_surge': '高潮', 'earthquake': '地震', 'tsunami': '津波', 'fire': '大規模な火事', 'inland_flood': '内水氾濫', 'volcano': '火山現象'}
+  GSI sites in frame: 2580
+  wrote yokohama: layers ['flood', 'tsunami', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight', 'n_shelter_jp'], 5230 points
+=== sydney
+  JRC tiles used: ['ID262_S30_E150_RP100_depth_reclass.tif']
+  downloaded australia-latest.osm.pbf: 976 MB
+  OSM points: 2564 {'sight': 1886, 'fire': 410, 'hospital': 239, 'assembly': 29}
+  wrote sydney: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 2564 points

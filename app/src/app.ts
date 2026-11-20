@@ -185,7 +185,7 @@ export function start(DATA: CityData, C: CityConfig) {
   function setMode(m: string) {
     mode = m; picked = null;
     document.querySelectorAll<HTMLElement>("header > .tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.mode === m)));
-    $("#tagline").textContent = C.tag[m] ?? `Flood, landslide and tsunami zones, evacuation sites, hospitals and sights across ${City}. Not official advice: check your local hazard map.`;
+    $("#tagline").textContent = C.tag[m] ?? safeTag();
     $(".compare").style.display = m === "heritage" || m === "timeline" || m === "make" || m === "safety" ? "none" : "";
     $("#smoothbox").style.display = m === "safety" ? "none" : "block";
     $("#mapctl").style.display = m === "safety" ? "none" : "";
@@ -769,7 +769,13 @@ export function start(DATA: CityData, C: CityConfig) {
     const what = HZ[sLayer.id] ? `Evacuation sites for ${sLayer.id === "flood" ? "floods" : sLayer.id === "landslide" ? "landslides" : "tsunamis"}` : sLayer.name;
     return `<div><i style="border-radius:50%;background:#ffd23f;border:1.5px solid #111"></i><span>${what} (${n.toLocaleString()})</span></div>`;
   }
+  function safeTag() {
+    const ns = SAFE ? SAFE.layers.map((L) => L.name.toLowerCase()) : ["river flooding", "hospitals", "sights"];
+    const list = ns.length > 1 ? ns.slice(0, -1).join(", ") + " and " + ns[ns.length - 1] : ns[0];
+    return `${list[0].toUpperCase() + list.slice(1)} across ${City}. Not official advice: check your local hazard map.`;
+  }
   function renderSafety() {
+    $("#tagline").textContent = safeTag();
     cutEl.style.display = "none"; haloEl.setAttribute("d", ""); cut2El.setAttribute("d", ""); $("#agree").innerHTML = ""; gDots.innerHTML = "";
     const d = $("#detail") as HTMLElement;
     if (!SAFE || !sLayer) { areaEls.forEach((p) => { p.setAttribute("class", "area h"); p.style.fill = SRAMP[0]; }); d.innerHTML = `<p class="small">Loading the safety map…</p>`; return; }

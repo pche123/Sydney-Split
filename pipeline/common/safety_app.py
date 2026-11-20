@@ -90,6 +90,9 @@ def block_boot(v, side, xy, B=2000, k=20, seed=7):
     lo, hi = np.percentile(ds, [2.5, 97.5])
     return float(d0), float(lo), float(hi)
 
+# MLIT's tsunami files (A40) don't cover these coasts: Tokyo's file is the outer islands only, Hyogo's is the Sea of Japan side only
+SKIP = {("tokyo", "tsunami"), ("kobe", "tsunami")}
+
 def city(c, rows):
     R = json.load(open(ROOT / f"results/safety/{c}.json", encoding="utf-8"))
     A = gpd.read_file(ROOT / f"app/public/downloads/{c}_areas.geojson")
@@ -113,7 +116,7 @@ def city(c, rows):
             out["points"].setdefault(p["k"], []).append(rec)
     for lid, grp, name, kind, what in LAYERS:
         if kind == "share":
-            if lid not in R["areas"]:
+            if lid not in R["areas"] or (c, lid) in SKIP:
                 continue
             v = np.array(R["areas"][lid], float)
         else:

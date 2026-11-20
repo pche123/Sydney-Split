@@ -338,3 +338,9 @@ S5. Are more people moving into hazard zones, or out of them? For every city wit
     share of land in it) against growth outside. Same for the share aged 65+ (are hazard zones ageing faster?).
     No directional prediction. Reported per city with a spatial-block bootstrap interval; pooled with Stouffer.
     Japan's official tsunami and landslide zones and the global river-flood model are reported separately.
+
+**Deviation, S2 (recorded 20 Nov 2026, after the first runs).** The flood map is mostly zeros in most cities. Then the
+median split puts only the flooded areas on one side (10–40% of areas), while every random landscape splits 50/50, so the
+test is not like for like: San Francisco, with flood land in 11% of its areas, came out "a line" at p = 0.005 for this
+reason alone. S2 is therefore run only where at least half the areas have some flood land; elsewhere it is reported as
+not testable. Runs already made on cities below that bar are discarded, not reported.

@@ -25,8 +25,10 @@ for c in cities:
         continue
     R = json.load(open(ROOT / f"results/safety/{c}.json", encoding="utf-8"))
     f = np.array(R["areas"].get("flood", []), float)
-    if len(f) == 0 or (f > 0).mean() < 0.05:
-        rows.append(dict(city=c, share_any=float((f > 0).mean()) if len(f) else 0, p=None, note="too little flood land to test"))
+    if len(f) == 0 or (f > 0).mean() < 0.5:
+        # Deviation (recorded in HYPOTHESES.md): with most areas at exactly zero the median split is not a 50/50 split,
+        # while every random landscape is; the test is then unfair (it called San Francisco a line at p = 0.005 for this reason).
+        rows.append(dict(city=c, share_any=round(float((f > 0).mean()), 3) if len(f) else 0, p=None, note="under half the areas have any flood land: no fair line test"))
         pd.DataFrame(rows).to_csv(OUT, index=False); continue
     D = json.load(open(ROOT / f"app/data/{c}.json", encoding="utf-8")); mk = D["make"]
     A = gpd.read_file(ROOT / f"app/public/downloads/{c}_areas.geojson").to_crs(CITIES[c]["crs"])
