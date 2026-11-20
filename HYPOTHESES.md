@@ -330,3 +330,11 @@ S4. Sights: tourist sights per resident follow the café side of the Latte Line 
 Descriptive only, never a fairness or safety judgement about the people who live anywhere. Heritage, ethnicity and
 nationality are not scored against any of these. None of this replaces local hazard maps or official evacuation
 advice; the app says so wherever the layer appears.
+
+### Added 20 Nov 2026, before computing: change over time in hazard zones
+
+S5. Are more people moving into hazard zones, or out of them? For every city with censuses over time (Japan
+    2000–2020 on today's areas; Australia 2011–2021), population growth inside each zone (areas weighted by their
+    share of land in it) against growth outside. Same for the share aged 65+ (are hazard zones ageing faster?).
+    No directional prediction. Reported per city with a spatial-block bootstrap interval; pooled with Stouffer.
+    Japan's official tsunami and landslide zones and the global river-flood model are reported separately.

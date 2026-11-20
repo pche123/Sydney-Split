@@ -80,7 +80,16 @@ def osm_filtered(url):
     if out.exists():
         return out
     pbf = CACHE / os.path.basename(url); flt = CACHE / ("f_" + os.path.basename(url))
-    get(url, pbf, tries=8); log(f"  downloaded {pbf.name}: {pbf.stat().st_size / 1e6:.0f} MB")
+    import subprocess as sp
+    for t in range(4):
+        r = sp.run(["curl", "-sSfL", "--retry", "3", "--max-redirs", "50", "-c", str(CACHE / "cj"), "-b", str(CACHE / "cj"),
+                    "-A", UA["User-Agent"], "-o", str(pbf), url])
+        if r.returncode == 0 and pbf.exists() and pbf.stat().st_size > 1e6:
+            break
+        log(f"  curl retry {t + 1} {url} rc={r.returncode}"); time.sleep(60 * (t + 1))
+    else:
+        raise RuntimeError(f"failed: {url}")
+    log(f"  downloaded {pbf.name}: {pbf.stat().st_size / 1e6:.0f} MB")
     subprocess.run(["osmium", "tags-filter", "--overwrite", "-o", str(flt), str(pbf), *FILTER], check=True)
     pbf.unlink()
     subprocess.run(["osmium", "export", "--overwrite", "-f", "geojsonseq", "-o", str(out), str(flt)], check=True)
@@ -165,9 +174,8 @@ def ksj_links(code):
             m = re.search(rf"{code}-(\d\d)_(\d\d)", path)
             if m:
                 y, pref = m.groups()
-                if pref not in found or y > found[pref][0]:
-                    found[pref] = (y, KSJ + path)
-    _links[code] = {p: u for p, (y, u) in found.items()}
+                found.setdefault(pref, set()).add((y, KSJ + path))
+    _links[code] = {p: [u for y, u in sorted(v, reverse=True)] for p, v in found.items()}
     log(f"KSJ {code}: {len(_links[code])} prefectures, e.g.", list(_links[code].items())[:2])
     return _links[code]
 
@@ -190,12 +198,22 @@ def zone_share(zones, F, res=25.0):
 def ksj_zones(code, prefs, frame):
     urls = ksj_links(code); parts = []
     bb = tuple(frame.to_crs(4326).total_bounds)
+    PLANE = {"01": 12, "13": 9, "14": 9, "11": 9, "23": 7, "26": 6, "27": 6, "28": 5, "40": 2}
     for pref in prefs:
         if pref not in urls:
             log(f"  {code} {pref}: no file"); continue
-        z = CACHE / os.path.basename(urls[pref])
+        for url in urls[pref]:
+            got = _ksj_one(code, pref, url, bb, frame, PLANE, parts)
+            if got:
+                break
+    if not parts:
+        return None
+    return pd.concat(parts)
+
+def _ksj_one(code, pref, url, bb, frame, PLANE, parts):
+        z = CACHE / os.path.basename(url)
         if not z.exists():
-            get(urls[pref], z)
+            get(url, z)
         srcs = []                                   # (zip path, member); unpacks zips inside the zip
         with zipfile.ZipFile(z) as zf:
             names = zf.namelist()
@@ -210,21 +228,26 @@ def ksj_zones(code, prefs, frame):
         log(f"  {code} {pref}: files {[m for _, m in srcs][:12]}")
         gj = [(zp, m) for zp, m in srcs if m.lower().endswith(".geojson")]
         members = gj or [(zp, m) for zp, m in srcs if m.lower().endswith(".shp")]   # one copy of each layer, not both
+        if not members:                                # newest years ship only JPGIS GML; try GDAL on it
+            members = [(zp, m) for zp, m in srcs if m.lower().endswith(".xml") and "META" not in m.upper()
+                       and os.path.basename(m.replace("\\", "/")).startswith(code)]
+        read_ok = False
         for zp, m in members:
             try:
                 g = gpd.read_file(f"zip://{zp}!{m}")
             except Exception as e:  # noqa: BLE001
                 log("  read fail", m, e); continue
-            if g.crs is None:
-                g = g.set_crs(6668)
             g = g[g.geometry.notna()]
+            read_ok = read_ok or bool(g.geometry.type.isin(["Polygon", "MultiPolygon"]).any())
+            if len(g) and abs(g.total_bounds[0]) > 180:     # plane rectangular coordinates without a .prj
+                g = g.set_crs(6668 + PLANE.get(pref, 9), allow_override=True)
+            elif g.crs is None:
+                g = g.set_crs(6668)
             g = g[g.geometry.type.isin(["Polygon", "MultiPolygon"])].to_crs(4326).cx[bb[0]:bb[2], bb[1]:bb[3]]
             log(f"    {m}: {len(g)} polygons in frame")
             if len(g):
                 parts.append(g.geometry.to_crs(frame.crs))
-    if not parts:
-        return None
-    return pd.concat(parts)
+        return read_ok
 
 # ---------------------------------------------------------------- JRC river flood, 1-in-100-year
 JRC = "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/RP100/"
