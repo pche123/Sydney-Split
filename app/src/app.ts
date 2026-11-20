@@ -792,14 +792,33 @@ export function start(DATA: CityData, C: CityConfig) {
     if (Number.isInteger(qa) && qa >= 0 && qa < DATA.areas.length && new URLSearchParams(location.search).has("area")) {
       pick(qa); const a = DATA.areas[qa]; view.focus(a.cx, a.cy, DATA.w / 3.5); } }
 
+  // ---------- map settings drawer: folds to one tab; remembers the choice
+  {
+    const box = $("#mapctl") as HTMLElement, tab = $("#ctlTab") as HTMLElement;
+    const set = (open: boolean, save: boolean) => {
+      box.classList.toggle("shut", !open); tab.setAttribute("aria-expanded", String(open));
+      ($("#ctlChev") as HTMLElement).textContent = open ? "◂ Hide" : "Show ▸";
+      if (save) { try { localStorage.setItem("split_ctl", open ? "open" : "shut"); } catch { /* private mode */ } }
+    };
+    let st: string | null = null; try { st = localStorage.getItem("split_ctl"); } catch { /* private mode */ }
+    const wide = (($("main") as HTMLElement).getBoundingClientRect().width || innerWidth) >= 900;
+    set(st ? st === "open" : wide, false);
+    tab.onclick = () => set(box.classList.contains("shut"), true);
+    const key = $("#maplegend") as HTMLElement; key.title = "Show or hide the key";
+    try { if (!isPhone() && localStorage.getItem("split_key") === "shut") key.classList.add("shut"); } catch { /* private mode */ }
+    key.onclick = () => { if (isPhone()) return; key.classList.toggle("shut"); try { localStorage.setItem("split_key", key.classList.contains("shut") ? "shut" : "open"); } catch { /* private mode */ } };
+  }
+
   // ---------- intro
   const intro = $("#intro") as HTMLElement;
-  const openIntro = () => { intro.hidden = false; $("#introLatte").focus(); };
+  const hdr = () => document.documentElement.style.setProperty("--hdr", `${Math.round(($("header") as HTMLElement).getBoundingClientRect().bottom)}px`);
+  hdr(); addEventListener("resize", hdr);
+  const openIntro = () => { hdr(); intro.hidden = false; $("#introLatte").focus(); };
   const closeIntro = () => { intro.hidden = true; try { localStorage.setItem("split_intro_seen", "1"); } catch { /* private mode */ } };
   $("#introLatte").onclick = () => { closeIntro(); location.hash = ref.id; route(); };
   $("#introSuburb").onclick = () => { closeIntro(); if (mode !== "lines") { location.hash = ref.id; route(); } $("#suburb").focus(); };
   $("#introPlay").onclick = () => { closeIntro(); location.hash = "make"; };
-  $("#introClose").onclick = closeIntro; $("#helpbtn").onclick = openIntro;
+  $("#introClose").onclick = closeIntro; $("#introX").onclick = closeIntro; $("#helpbtn").onclick = openIntro;
   intro.addEventListener("click", (e) => { if (e.target === intro) closeIntro(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !intro.hidden) closeIntro(); });
   const EMBED = new URLSearchParams(location.search).has("embed"); if (EMBED) document.body.classList.add("embed");

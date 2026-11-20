@@ -11,6 +11,7 @@
 <body>
 <div class="intro" id="intro" role="region" aria-labelledby="introTitle" hidden>
   <div class="introcard">
+    <button class="introx" id="introX" aria-label="Close">✕</button>
     <h2 id="introTitle"></h2>
     <ol id="introList"></ol>
     <div class="introbtns">
@@ -54,7 +55,8 @@
   </div>
   <main>
     <svg id="map" role="img"></svg>
-    <div class="mapctl">
+    <div class="mapctl" id="mapctl">
+    <button class="ctltab" id="ctlTab" aria-expanded="true" aria-controls="mapctl"><span>⚙ Map settings</span><b id="ctlChev">◂ Hide</b></button>
     <div class="compare">
       <label for="cmp">Compare with another line</label>
       <select id="cmp"><option value="">None</option></select>

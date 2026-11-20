@@ -145,9 +145,12 @@ footer { font-size: 12px; color: var(--muted); }
 .facts b { font-variant-numeric: tabular-nums; }
 .area.h { stroke-width: 0.4; }
 .helpbtn { border: 1px solid var(--rule); background: var(--panel); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-weight: 600; }
-.intro { position: fixed; right: 16px; bottom: 16px; z-index: 50; pointer-events: none; }   /* a corner card: the map stays visible and usable */
-.intro[hidden] { display: none; }
-.introcard { pointer-events: auto; background: var(--panel); border: 1px solid var(--rule); border-radius: 16px; max-width: 420px; max-height: 80vh; overflow-y: auto; padding: 20px 22px 14px; box-shadow: 0 12px 40px rgba(0,0,0,.18); }
+/* intro: a side drawer over the right-hand column, so the map stays clear */
+#intro { position: fixed; right: 0; top: var(--hdr, 110px); bottom: 0; width: 360px; z-index: 50; transform: translateX(0); transition: transform .25s ease; }
+#intro[hidden] { display: block; transform: translateX(105%); visibility: hidden; transition: transform .25s ease, visibility 0s .25s; }
+.introcard { position: relative; height: 100%; overflow-y: auto; background: var(--panel); border-left: 1px solid var(--rule); padding: 20px 22px 18px; box-shadow: -10px 0 30px rgba(0,0,0,.18); }
+.introx { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--rule); background: var(--paper); color: var(--ink); cursor: pointer; font-size: 15px; }
+.introcard h2 { padding-right: 36px; }
 .introcard h2 { font: 800 22px/1.15 var(--display); margin: 0 0 10px; }
 .introcard ol { margin: 0 0 14px; padding-left: 20px; display: grid; gap: 8px; font-size: 14.5px; }
 .introbtns { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -228,8 +231,9 @@ footer { font-size: 12px; color: var(--muted); }
   .box { padding: 12px; }
   .ctrl select, .ctrl button { min-height: 44px; font-size: 16px; }
   .kinds button { min-height: 38px; }
-  .intro { left: 12px; right: 12px; bottom: 12px; }
-  .introcard { padding: 16px 16px 12px; max-height: 60svh; overflow-y: auto; max-width: none; }
+  #intro { left: 0; right: 0; top: auto; bottom: 0; width: auto; max-height: 62svh; }
+  #intro[hidden] { transform: translateY(105%); }
+  .introcard { padding: 16px 16px 12px; height: auto; max-height: 62svh; border-left: none; border-top: 1px solid var(--rule); border-radius: 16px 16px 0 0; box-shadow: 0 -10px 30px rgba(0,0,0,.18); }
   .introcard h2 { font-size: 25px; }
   .introcard ol { font-size: 15px; }
   .introbtns button { flex: 1 1 100%; min-height: 46px; }
@@ -239,6 +243,18 @@ footer { font-size: 12px; color: var(--muted); }
 /* top-left map controls stack: compare / year / smoothing */
 .mapctl { position: absolute; left: 14px; top: 14px; width: 310px; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
 .mapctl > * { position: static !important; width: auto !important; pointer-events: auto; }
+/* the settings stack folds away to one tab so the map is clear */
+.ctltab { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 7px 12px; border-radius: 10px; border: 1px solid var(--rule); background: var(--panel); color: var(--ink); font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,.15); }
+.ctltab b { font-size: 12px; color: var(--muted); font-weight: 600; }
+.mapctl { z-index: 6; max-height: calc(100% - 28px); overflow-y: auto; }
+@media (min-width: 761px) {
+#maplegend { cursor: pointer; }
+#maplegend:not(.shut)::before { content: "Key · click to hide"; font-size: 11px; color: var(--muted); }
+#maplegend.shut > * { display: none; }
+#maplegend.shut::before { content: "Key ▸"; font-weight: 700; }
+}
+.mapctl.shut { width: auto !important; right: auto !important; }
+.mapctl.shut > :not(.ctltab) { display: none !important; }
 .smoothbox .small { font-size: 11.5px; }
 @media (max-width: 760px) {
   .mapctl { left: 8px; right: 90px; top: 8px; width: auto; gap: 6px; }
@@ -265,7 +281,7 @@ footer { font-size: 12px; color: var(--muted); }
 .cmplink .short { display: none; }
 @media (max-width: 760px) { .cmplink { order: 3; } .cmplink .long { display: none; } .cmplink .short { display: inline; } }
 /* embedded in the side-by-side page: no intro card, compact header */
-body.embed .intro, body.embed #helpbtn, body.embed .cmplink, body.embed #dlmenu, body.embed header p { display: none !important; }
+body.embed #intro, body.embed #helpbtn, body.embed .cmplink, body.embed #dlmenu, body.embed header p { display: none !important; }
 body.embed header { padding: 8px 12px; gap: 4px 10px; }
 body.embed header h1 { font-size: 18px; }
 
