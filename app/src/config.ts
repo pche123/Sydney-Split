@@ -48,6 +48,7 @@ export interface CityConfig {
 // How to cite the work behind the site, and an optional support link (leave SUPPORT_URL empty to hide it).
 export const CITATION = "Cheema, P. (2026). Is that line real? Calibrated tests for informal urban divides. Manuscript in preparation. https://pche123.github.io/Sydney-Split/";
 export const SUPPORT_URL = "";
+export const BYLINE = `Made by Prasad Cheema at the National Institute of Informatics (NII), Tokyo, in the group of <a href="https://www-nc.nii.ac.jp/en/faculty/informatics/sugiyama_mahito/" target="_blank" rel="noopener">Mahito Sugiyama</a>. Supported by JST CREST grant JPMJCR22D3. <a href="https://github.com/pche123/Sydney-Split/blob/main/PAPER.md" target="_blank" rel="noopener">Read the research paper</a>.`;
 
 // Every city on the site, grouped by country for the city picker.
 export const CITY_LIST: { id: string; name: string; country: string }[] = [

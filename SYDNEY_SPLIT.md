@@ -1,6 +1,6 @@
 # Sydney Split: the invisible lines that divide cities
 
-*Prasad Cheema · November 2026 · [interactive maps](https://pche123.github.io/Sydney-Split/) · [full research paper with proofs and background](PAPER.md)*
+*Prasad Cheema, National Institute of Informatics (NII), Tokyo, in the group of [Mahito Sugiyama](https://www-nc.nii.ac.jp/en/faculty/informatics/sugiyama_mahito/) · November 2026 · [interactive maps](https://pche123.github.io/Sydney-Split/) · [full research paper with proofs and background](PAPER.md)*
 
 Sydney has a joke called the **Latte Line**: cafés to the north-east, fast food to the south-west. It ended up on Wikipedia. I wanted to know which of these "lines" are real, so I tested them properly. The test asks: if Sydney were random, but just as smooth as the real city, how often would it draw a border this clean? Then I took the same test to 41 cities in 12 countries.
 

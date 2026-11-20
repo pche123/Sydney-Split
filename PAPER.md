@@ -2,6 +2,8 @@
 
 Nov 13, 2026 · @Prasad
 
+Prasad Cheema, National Institute of Informatics (NII), Tokyo · in the group of [Mahito Sugiyama](https://www-nc.nii.ac.jp/en/faculty/informatics/sugiyama_mahito/), Principles of Informatics Research Division, NII
+
 *This is the long master version. It splits into two submissions: the methods paper for GIScience 2027 (Sections 1–8, the test parts of 10.7 and 10.8, Figures 3–4, Appendix A) and a findings paper for CUPUM 2027 (Sections 9.5, 10 and the Latte Line), drafted separately as [The Latte Line on trial](https://claude.ai/artifact/K3uoSfau6w13mXT6JyijzV).*
 
 ## Abstract
@@ -787,6 +789,10 @@ The line also mattered beyond coffee. In 2021 the councils placed under the stri
 Two structural results matter as much as any single line. First, cities have no grammar beyond their gradients: neighbouring areas' four-letter words (work, inner city, age, nightlife) look rule-bound in 19 of 26 cities against nulls that copy each line alone, but in only 1 of 26 once the nulls keep the gradients the lines share (Section 10.8), and most "if A and B then C" rules are the correlation table seen from another angle (Section 10.5). A symbolic description of a city is only as informative as the null it is judged against. Second, cities do have family resemblances: a city's nearest sister, by how age, living alone and renting change from centre to edge, is in its own country 59% of the time (p = 0.001; Section 12), so national housing systems leave a fingerprint, while surprises such as Amsterdam–Washington, Hamburg–Seattle and (on the two slopes Korea has) Seoul–Ottawa show that the fingerprint is not the whole story.
 
 The tests are a small Python library (`linetests/`) that needs only area polygons and either a map or its records. The app at pche123.github.io/Sydney-Split maps every line in all 29 cities, draws gentle patterns as slopes, and puts the Latte Line's claims next to the evidence. Ten European cities are next, against predictions already on record.
+
+## Acknowledgements
+
+This work was carried out at the National Institute of Informatics, Tokyo, in the group of [Mahito Sugiyama](https://www-nc.nii.ac.jp/en/faculty/informatics/sugiyama_mahito/) (Principles of Informatics Research Division), and was supported by JST CREST grant JPMJCR22D3, "Machine Learning That Connects to Symbolic Reasoning". The grammar result of Section 10.8 speaks directly to that programme: a symbolic description of a city is only as informative as the null it is tested against.
 
 ## References
 
