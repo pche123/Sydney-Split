@@ -101,7 +101,7 @@ def kana_romaji(k, kanji=""):
     r = r.replace("ou", "o").replace("uu", "u").replace("'", "")
     if keep:
         r = r.replace("#", "uchi")
-    r = re.sub(r"^oo", "o", r).replace("doori", "dori")       # 大 Okubo, 通 dori (but Toyooka keeps both o's)
+    r = re.sub(r"^oo", "o", r).replace("doori", "dori").replace("ooo", "oo")   # 上大岡 Kamiooka       # 大 Okubo, 通 dori (but Toyooka keeps both o's)
     return r if re.fullmatch(r"[a-z]+", r) else None
 
 def _jo(k, kanji="", sib=()):
