@@ -102,6 +102,22 @@ The same goes for rules like "where over-65s are few and houses are few, people 
 
 Why it matters: any AI or "symbolic" model that claims to learn the rules of cities has to beat this baseline first. Ours shows how easy it is to be fooled.
 
+## Floods, landslides and sights
+
+The maps now have a **Safety & sights** tab for all 29 cities. It shows river flood zones, hospitals, fire stations and sights. Japanese cities also get official landslide and tsunami zones and about 19,000 designated evacuation sites, each marked with the hazards it's meant for. It's a map, not official advice.
+
+![Osaka's flood zones](results/safety/fig_osaka_flood.png)
+
+*Osaka: the darker the blue, the more of the neighbourhood a once-in-100-years river flood would cover. Yellow dots are evacuation sites designated for floods. The pale strip down the middle is the Uemachi plateau.*
+
+- **Some cities sit on a floodplain.** By the global flood model, about a third of the people in Nagoya and Osaka live in the river flood zone, and about a fifth in Sapporo, Brisbane and Tokyo. In Birmingham, Brighton and San Francisco it's well under 1%. (The model ignores levees and flood walls, so central London shows up too.)
+- **Floods don't pick a side of the Latte Line.** In four cities the café side floods more, in four the fast-food side does, and in the rest there's no clear difference. Rivers run through rich and poor areas alike.
+- **Flood risk is a slope, except in Osaka.** Osaka's flood map is the one that looks like a real edge (p = 0.01), where the low delta meets the plateau. That's borderline once you allow for the six cities tested.
+- **Sights follow the cafés everywhere.** In all 28 cities with data there are more sights per resident on the café side of the Latte Line.
+- **People are leaving Japan's landslide zones.** From 2000 to 2020, neighbourhoods on landslide-prone slopes grew more slowly than the rest of their city in six of seven Japanese cities, and in five they also aged faster. Taken together, both patterns are very unlikely to be chance. In Fukuoka the slopes grew 11% while the rest of the city grew 22%. Yokohama's waterfront went the other way: its flood-zone neighbourhoods grew faster and stayed younger, thanks to the new towers at Musashi-Kosugi and Minato Mirai.
+
+![Japan's landslide zones over time](results/safety/fig_landslide_time.png)
+
 ## Sister cities
 
 ![Sister cities](results/phase3/fig_sisters.png)
@@ -112,4 +128,4 @@ On the [interactive maps](https://pche123.github.io/Sydney-Split/), tap any subu
 
 ---
 
-*Data: ABS Census 2021 and earlier, OpenStreetMap, NSW Health, NSW Liquor & Gaming, and national statistics offices of 12 countries. Methods, every number and the code: [the full paper](PAPER.md) and [GitHub](https://github.com/pche123/Sydney-Split).*
+*Data: ABS Census 2021 and earlier, OpenStreetMap, NSW Health, NSW Liquor & Gaming, national statistics offices of 12 countries, the JRC/Copernicus global flood map, Japan's MLIT hazard zones and GSI evacuation sites. Methods, every number and the code: [the full paper](PAPER.md) and [GitHub](https://github.com/pche123/Sydney-Split).*

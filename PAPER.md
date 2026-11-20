@@ -18,6 +18,7 @@ We then use the test in four ways.
 - **The Latte Line on trial.** Of 11 claims from Wikipedia and the press, three hold, seven hold in part and one fails. The strongest: the 2021 lockdown's councils of concern lay on the line's fast-food side (p = 0.005, and 0.03 after correcting across the claims, on the exact council boundaries), though a jobs line matches them at least as well. The Delta wave's confirmed cases followed the line too: 22 per 1,000 residents on the fast-food side against 7 on the café side (Spearman ρ = −0.63 between case rate and the line, p = 0.003 against random Sydneys), and the jobs line predicts them better still (ρ = 0.74). That the line runs north-east against south-west through Parramatta is likely but not proven once we correct (p = 0.03 alone, 0.08 corrected). Money falls the same way but as a slope, and the divide did not harden between 2001 and 2021.
 - **Countries and slopes.** Some lines exist only at country level: the Factory Line is real across Australia (p = 0.008 after correction) although none of Melbourne, Brisbane, Perth or Adelaide shows it alone. Money, apparent "grammars" of neighbouring areas and most divides turn out to be broad gradients. Even a step of three standard deviations across a border is detected only 17–54% of the time, so a gentle slope is not proof that no line exists.
 - **Change over time and new countries.** Following 21 cities through their censuses (the US since 1990, Italy since 1991, Germany, the Netherlands, Sweden and São Paulo), older residents are moving outward in 18, while where people rent or live alone barely moves: lines tied to housing stay put, the age line is a moving front. A city's closest sister, by how its neighbourhoods sort, is in the same country 59% of the time (p = 0.001). The one cultural border tested, poutine across the Ottawa River, is unmistakable (7.7% of fast food in Gatineau against 1.3% in Ottawa).
+- **Hazards and sights.** For all 29 cities we map river flood zones, hospitals and sights, and in Japan the official landslide and tsunami zones and 19,230 designated evacuation sites. Floods take no side of the Latte Line, and flood risk is a slope everywhere we could test it except Osaka (p = 0.01, 0.06 corrected), while sights follow the café side in all 28 cities with data. Over 2000–2020, Japan's landslide zones lost people and aged faster than the rest of their cities (pooled Z = −4.8 and 5.2), while Yokohama's flood-prone waterfront grew and got younger.
 
 Everything is open: the tests as a Python library, the data, and an app that maps every line in every city.
 
@@ -233,7 +234,6 @@ Everywhere else the line is a slope along its whole length. The app draws sharp 
 We judge each test on two things: how often it says "line" when there is none (should be 5%), and how often it notices a real step. The simulated maps are realistic random landscapes over Sydney's suburbs, with a step of chosen size added along a realistic border.
 
 *Interactive chart in the online version: Simulations on the Sydney graph: random landscapes mixing 2, 8 and 25 km scales plus noise, with a step of the given size along a realistic border (median split of another landscape); 60 maps per point, 199 null draws each*
-
 With no step, the old test calls two maps in three a line, so its verdicts carry no information. The landscape line test never exceeds its 5% budget by much, but it rarely notices steps: smooth landscapes already draw short borders, so a step changes the border length only a little. The edge test is the one to use for sharpness. It stays quiet with no step and catches 43% of 1 SD steps and 98% of 1.5 SD steps.
 
 The same pattern holds for false alarms on the other designs we tried. On area-averaged random landscapes at single scales of 1, 3 and 10 km, and on mixtures, the landscape line test said "line" 0–3% of the time (100 maps each). The record-level tests said it 1–15% of the time before the double bootstrap, and the double bootstrap removes that excess by construction.
@@ -460,7 +460,6 @@ The double-check matters. Before it, Melbourne's Hi-Vis and Degree lines and Osa
 Work lines are fixed features of a city; the Grey Line is fixed in Australia but not in Japan. The test (A.10) asks what share of areas sit on the same side of a line at the first and last census, against random lines of the same smoothness, which keep 52–57%.
 
 *Interactive chart in the online version: Pipeline output (build\_app.py timeline step), 15 Nov 2026 · ABS Time Series Profile 2011–2021; e-Stat small areas 2000–2020 shared onto 2020 areas · permutation p ≤ 0.003 for every Hi-Vis row*
-
 The Hi-Vis Line keeps 83–95% of areas on the same side in all 11 cities (p ≤ 0.003 each). The Living Alone and Tower lines in Japan behave the same way (83–93%). The Grey Line keeps 77–83% in Australia, but in Japan it ranges from 52% in Kyoto (p = 0.75) and 54% in Sapporo (p = 0.36) to 64% in Yokohama–Kawasaki. Tokyo's "Grey Flip" (section 9.4) is therefore a Japanese pattern, not a Tokyo one. In Australia the Grey Line is still the least stable line in every city: Factory, Degree, Living Alone and Flats vs Houses keep 87–99% of suburbs on their side over 2011–2021, against 77–83% for Grey. Age is the one thing that moves fastest everywhere; Japan is the case where it moves all the way to chance.
 
 The Japanese window is 20 years against Australia's 10, which by itself makes reshuffling more likely. It does not explain the gap: the Hi-Vis Line stays above 83% over the same 20 years. A likely mechanism is ageing in place: older areas in Japan lose residents, while newer suburbs built for families in the 1970s–90s age as a block and cross over. This needs testing on 2010–2020 alone before it is claimed.
@@ -485,7 +484,6 @@ Chains are the one finding that reverses with size. A chain's stores follow its 
 A city with 20 lines does not have 20 divides; it has about four. Correlating every pair of line scores within each city and averaging over cities, the lines cluster into four families: work and class, the inner city, age, and the night out.
 
 *Interactive chart in the online version: Pipeline output, 15 Nov 2026 · Pearson correlation of rank-normal line scores, averaged over the 16 cities that have them (Sydney and Tokyo use a different line set) · boxes = average-linkage clusters on 1 − |r|*
-
 The families are stable from city to city. The Hi-Vis and Degree lines are near mirror images everywhere (r between −0.78 and −0.97 in all 16 cities), as are No Car and Renters (0.74 to 0.92). Two links vary and are worth reading city by city. The Latte Line ties to Degree at 0.70 in some cities and 0.19 in others, so it is a class line in some places and a going-out line in others. The Grey Line runs against renting strongly in England (−0.87 in Manchester) but weakly elsewhere. For planners, the practical reading is to pick one line per family before comparing cities, because two lines from the same family are largely the same evidence counted twice.
 
 **Do a family's lines share one border?** Lines in a family are correlated, so they will often fall on the same side. The question is whether they also change at the same borders more than that correlation implies, which would mean one hard divide rather than several soft ones. We count the share of changing borders where two or more of the family's lines change together, and compare it with simulated cities where each line has its own landscape and the lines are mixed to their real correlations (Appendix A.13).
@@ -741,9 +739,45 @@ All three meme-line predictions hold: nothing is a line, and every Holm-adjusted
 
 No line passes (K1 holds). Living alone falls outward in both (K2), clearly in Seoul and barely in Busan. The over-65 slope is positive in both (K3 holds on sign) but close to zero: Korean cities have no clear age front. K4 fails: on the two slopes every city in the study has (Grey and Living Alone), Seoul's nearest city is Ottawa (distance 0.04), then Montreal and Kobe, and Busan's is Yokohama. On these two slopes alone the nearest sister shares a country for only 20% of 40 cities (permutation p = 0.10), so the national fingerprint of Q5 needs the renting slope to show clearly.
 
-## 13 Discussion
+## 13 Hazards, evacuation sites and sights
 
-### 13.1 What generalises
+A reader in Yokohama asked whether the same maps could help with disaster preparedness. They can, and the question also gives the line test a new kind of map to try. River floods follow valleys and coasts, not cafés, so they make a useful contrast: a hazard map is drawn by water and rock, not by people sorting themselves. The predictions S1 to S5 were written down before any of these data were downloaded (HYPOTHESES.md, 20 November 2026).
+
+### 13.1 Data
+
+For all 29 cities we use the JRC/Copernicus global river flood map for a 1-in-100-year flood (about 90 m cells; it does not count levees or flood walls), and hospitals, fire stations, assembly points and sights (museums, galleries, viewpoints, landmarks and historic sites) from OpenStreetMap. For the eight Japanese cities we add three official sources: MLIT's landslide warning zones (土砂災害警戒区域, 2025), MLIT's tsunami inundation zones for a maximum-class tsunami (津波浸水想定), and the Geospatial Information Authority's list of designated emergency evacuation sites (指定緊急避難場所; 19,230 in our cities), each marked with the hazards it is designated for. Each area gets the share of its land in each zone, measured on a 25 m grid so that overlapping zones are never counted twice, and its number of each kind of place per 1,000 residents. MLIT's tsunami files leave out Tokyo Bay and Kobe's Inland Sea coast, so those two cities have no tsunami map, and Nagoya has no OpenStreetMap layers because the download was refused.
+
+The share of residents in the river flood zone, if people are spread evenly within each area, ranges from about a third in Nagoya (36%) and Osaka (30%), through about a fifth in Sapporo, Brisbane and Tokyo, to under 1% in Birmingham, Brighton and San Francisco. The official maximum-class tsunami would reach areas holding 18% of Nagoya's residents, 15% of Osaka's and 11% of Yokohama–Kawasaki's.
+
+### 13.2 What we found
+
+**S1. Floods do not pick a side of the Latte Line.** The café side has more flood land in four cities (Austin, Birmingham, Brighton, Manchester), the fast-food side in four (Chicago, Los Angeles, Sydney, Tokyo), and the other 21 show no clear gap (spatial-block bootstrap); pooled over 29 cities, Z = 0.45 (p = 0.65). Rivers and harbours run past rich and poor areas alike.
+
+**S2. Flood risk is a slope, except perhaps in Osaka.** The line test needs a map that splits into two halves. Where most areas have no flood land at all, the median split puts only the flooded areas on one side while every random landscape splits 50/50, so the comparison is unfair (San Francisco, with flood land in 11% of its areas, came out as a line at p = 0.005 for this reason alone). We therefore test only the six cities where at least half the areas have some flood land, a deviation recorded before the results were read. Brisbane (p = 0.66), Miami (0.59), Perth (0.88), Sapporo (0.17) and Nagoya (0.10) are slopes. Osaka is the exception (p = 0.01 with 200 refits, 0.06 after Holm across the six): its low delta and sea-level west meet the Uemachi plateau along an edge that the map shows plainly (Figure 9).
+
+![Figure 9](results/safety/fig_osaka_flood.png)
+
+*Figure 9. Osaka in the app's Safety & sights view: share of each neighbourhood's land that a 1-in-100-year river flood would cover (darker is more), with the evacuation sites designated for floods as dots. The pale band down the middle is the Uemachi plateau.*
+
+**S3. More landslide land does not mean more evacuation sites per resident.** The prediction (Spearman ρ > 0) holds in Tokyo (ρ = 0.38, p < 0.001) and Yokohama–Kawasaki (0.13, p = 0.02), is flat in Fukuoka, Sapporo, Kobe and Kyoto, and reverses in Nagoya (−0.14, p = 0.04) and Osaka (−0.39, p < 0.001), where sites follow the dense lowland population more than the slopes.
+
+**S4. Sights follow the café side, everywhere.** Sights per 1,000 residents are higher on the café side of the Latte Line in all 28 cities with sights data, clearly so in 19 (pooled Z = 12). The Latte Line is also a line of things to visit.
+
+**S5. People are leaving Japan's landslide zones, and those zones are ageing.** Using the censuses from 2000 to 2020, re-cut to today's areas, we compare population growth in each zone (areas weighted by their share of land in it) with growth everywhere else, in seven Japanese cities (Tokyo's older areas could not be matched), and in the five Australian cities from 2011 to 2021. Landslide-zone land grew more slowly in six of seven Japanese cities (pooled Z = −4.8, p < 0.001) and its share of over-65s rose faster in five (Z = 5.2, p < 0.001): in Fukuoka the slopes grew 11% while the rest of the city grew 22%, and their share of over-65s rose 12.7 points against 7.6 (Figure 10). Tsunami zones show no difference in growth (Z = 0.3) but are getting younger (Z = −2.5, p = 0.01), and river flood zones show no difference in either, in Japan or Australia (Z = 0.7 and 0.0). The waterfront of Yokohama–Kawasaki is the clearest case the other way: its flood-zone land grew 22% against 13% (difference 9.1 points, 95% interval 4.3 to 15.1) and aged far less, the towers of Musashi-Kosugi, Minato Mirai and the bay.
+
+![Figure 10](results/safety/fig_landslide_time.png)
+
+*Figure 10. Population change (left) and the rise in the share aged 65+ (right), 2000 to 2020, in neighbourhood land inside a landslide warning zone and everywhere else, for seven Japanese cities.*
+
+**Intuition:** a landslide zone is a hillside, and hillsides in Japanese cities are where the post-war suburbs climbed. Those homes are now old, hard to reach on foot and expensive to rebuild under modern rules, so people leave and the ones who stay grow older. A flood zone is a valley floor or a waterfront, which is exactly where cities are rebuilding with towers. The hazard map stays the same while the people move.
+
+### 13.3 Caveats
+
+The global flood map is a model at 90 m that ignores defences, so central London behind the Thames Barrier shows as flood land; national maps are better wherever they exist, and the app points to them. Populations for 2000 to 2015 are shared to today's areas by area, and 2020 is the app's own count, so small areas carry some error. OpenStreetMap's coverage of hospitals and sights is uneven between countries, which is why the app only shows a layer once at least 30 places are mapped (10 for hospitals and fire stations). All of this describes places, not the people in them, and none of it replaces local hazard maps or official evacuation advice; the app says so wherever the layer appears.
+
+## 14 Discussion
+
+### 14.1 What generalises
 
 The failure of MSR is not specific to our cities. Any map that is averaged over areas of uneven size and dominated by large-scale variation will have a spectrum that is steep within its first band, and band shuffling will flatten it. Census and administrative maps are exactly like this. Related problems have been found for spatial nulls in brain imaging, where variogram-matching surrogates were proposed for the same reason (Burt et al., 2020; Markello and Misic, 2021). Our landscape null is the area-averaged, multi-scale analogue for urban maps, with a record-level layer for counts.
 
@@ -766,7 +800,7 @@ The practical rules are short:
 - Correct for the number of lines tried, re-running the whole search if there was one.
 - Ask separately whether the line is a cliff.
 
-### 13.2 Limitations
+### 14.2 Limitations
 
 - **Stationarity.** The landscape model assumes the same mix of scales everywhere. A city with a dense core and a sparse fringe may have local roughness that varies; a non-stationary version is future work.
 - **The joint null for searches** assumes principal components are spatially independent of each other. This keeps overall correlation between signals but not scale-specific cross-correlation.
@@ -776,17 +810,19 @@ The practical rules are short:
 - **Proxies for claims.** The census has no house prices or school results, so Section 9.5 uses mortgage repayments and degrees instead; each proxy is stated where it is used. The lockdown test uses the exact council boundaries.
 - **Found, not confirmed.** Country lines for Australia and England, and every result from the first 18 cities, come from the cities in which they were found. Only the held-out cities test them. A third phase in Europe is pre-registered (HYPOTHESES.md).
 
-### 13.3 Ethics
+### 14.3 Ethics
 
 Lines that follow income, work or housing can harden into labels for places and the people in them. We name lines after what changes, not who lives there, keep ancestry, language and religion out of line-finding, and show heritage only descriptively. A calibrated test is part of this: it stops a fun map from claiming a divide the data cannot support.
 
-## 14 Conclusion
+## 15 Conclusion
 
 Most informal lines are real patterns but not real lines. With a calibrated test, few lines pass anywhere (4–7%), almost none has a sharp edge, and most that look general in one set of cities fail in the next. The Latte Line is the exception: it is probably where people say it is, it appears in every city we tested, and it holds in the held-out cities and in southern Europe, though not in northern Europe or Canada. Most of what is said about it holds, as long as it is read as a slope rather than a wall. The change from the earlier, sunnier verdicts is not in the data but in what we compare against: a random city just as smooth, built in real space, averaged over real areas, and replayed from the records when the map comes from counts.
 
 The line also mattered beyond coffee. In 2021 the councils placed under the strictest lockdown lay mostly on its fast-food side, and Delta's confirmed cases were three times as common there as on the café side, more sharply than in 997 of 999 random Sydneys. The jobs line, which marks where work cannot be done from home, fits both better still. A divide that began as a joke also marked, in 2021, where both the strictest rules and most of the confirmed cases fell; the data cannot say why, but it says clearly where.
 
 Two structural results matter as much as any single line. First, cities have no grammar beyond their gradients: neighbouring areas' four-letter words (work, inner city, age, nightlife) look rule-bound in 19 of 26 cities against nulls that copy each line alone, but in only 1 of 26 once the nulls keep the gradients the lines share (Section 10.8), and most "if A and B then C" rules are the correlation table seen from another angle (Section 10.5). A symbolic description of a city is only as informative as the null it is judged against. Second, cities do have family resemblances: a city's nearest sister, by how age, living alone and renting change from centre to edge, is in its own country 59% of the time (p = 0.001; Section 12), so national housing systems leave a fingerprint, while surprises such as Amsterdam–Washington, Hamburg–Seattle and (on the two slopes Korea has) Seoul–Ottawa show that the fingerprint is not the whole story.
+
+Hazard maps give the same test a different kind of map, one drawn by rivers and rock. Floods take no side of the Latte Line and are slopes in every city we could test fairly but Osaka, yet over twenty years people have been moving: out of Japan's landslide-prone hillsides, which are ageing, and, in Yokohama, into the flood-prone waterfront. A hazard map is fixed, but who lives on it is not (Section 13).
 
 The tests are a small Python library (`linetests/`) that needs only area polygons and either a map or its records. The app at pche123.github.io/Sydney-Split maps every line in all 29 cities, draws gentle patterns as slopes, and puts the Latte Line's claims next to the evidence. Ten European cities are next, against predictions already on record.
 

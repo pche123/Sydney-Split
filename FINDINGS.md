@@ -208,3 +208,35 @@ Once the jobs divide is known, the café divide adds nothing about where Delta c
 ## Suburb twins (app feature, 19 Nov 2026)
 
 `experiments/suburb_twins.py` → `app/public/twins/`. Every area in 28 cities (Singapore lacks the census lines) gets its three nearest areas in other cities, one per city, on eight within-city normal scores (Hi-Vis, Degree, Grey, Living Alone, Flats vs Houses, Renters, Train vs Car, Latte), needing ≥ 6 shared lines. Twins sit on the same side of their city's middle on 91% of shared lines on average (median 100%, 5th percentile 75%; Sydney, London, Tokyo). Examples: Surry Hills ↔ Tenjin (Fukuoka), Barons Court (London); Mount Druitt ↔ Farnworth North (Manchester); Bondi Beach ↔ Daita (Tokyo).
+
+## Safety and sights: hazards, evacuation sites and sights (pre-registered 20 Nov 2026)
+
+`pipeline/get_safety.py` (runs on GitHub Actions, workflow "Fetch safety data") → `pipeline/common/safety_app.py` → `app/public/safety/<city>.json`, `results/safety/findings.csv`; `experiments/safety_lines.py` → `results/safety/s2_flood_lines.csv`; `experiments/safety_time.py` → `results/safety/s5_time.csv`.
+
+Data, all 29 cities: river flood (JRC/Copernicus global map, 1-in-100-year flood, ~90 m, no levees or flood walls), and hospitals, fire stations, assembly points and sights from OpenStreetMap (Geofabrik extracts; duplicates within 40–200 m merged). Japan also has MLIT landslide warning zones (A33, 2025), MLIT tsunami zones (A40) and GSI's designated emergency evacuation sites (115,948 nationally, 19,230 in our eight cities), each with the hazards it is designated for. Gaps: MLIT's tsunami files leave out Tokyo Bay and Kobe's Inland Sea coast, so Tokyo and Kobe have no tsunami map; Nagoya has no OSM layers (the download was refused twice). A point layer is shown only with ≥ 30 mapped points (hospitals and fire stations ≥ 10), which drops assembly points outside Japan, San Francisco and Seattle.
+
+**How much of each city floods (share of residents, if spread evenly within each area).** Nagoya 36%, Osaka 30%, Sapporo 23%, Brisbane 21%, Tokyo 19%, Kobe 16%, Los Angeles 13%, Washington 12%, Kyoto 12%, Perth 11%, Yokohama 11% … Birmingham, Brighton, San Francisco 0.2%. Tsunami (official, max-class): Nagoya 18%, Osaka 15%, Yokohama 11%, Fukuoka 0.3%. Landslide zones: Kobe 4.7%, Yokohama 4.8%, Kyoto 3.0%, Fukuoka 2.9%.
+
+**S1. Flood risk and the Latte Line: no consistent side.** Orange (café) minus blue (fast food) mean flood share, spatial-block bootstrap: clearly higher on the café side in 4 cities (Austin, Birmingham, Brighton, Manchester), clearly higher on the fast-food side in 4 (Chicago, Los Angeles, Sydney, Tokyo), unclear in 21; pooled Z = 0.45 (p = 0.65). Rivers and harbours run through rich and poor areas alike.
+
+**S2. Is flood risk a line? Mostly a slope; Osaka is the exception.** Run only where at least half the areas have some flood land (deviation recorded in HYPOTHESES.md). Calibrated landscape test: Brisbane p = 0.66, Miami 0.59, Perth 0.88, Sapporo 0.17, Nagoya 0.10 (R = 200), Osaka **0.01** (R = 200; 0.06 after Holm over the six). Osaka's lowland belt (the Yodo delta and the sea-level west) against the Uemachi plateau and the hills is the one flood map that looks like a real edge. The other 23 cities can't be tested fairly this way.
+
+**S3. Japan: more landslide land, more evacuation sites per resident? Not as a rule.** Spearman ρ: Tokyo +0.38 (p < 0.001), Yokohama +0.13 (p = 0.02), Fukuoka +0.10, Sapporo +0.08, Kobe −0.01, Kyoto −0.01, Nagoya −0.14 (p = 0.04), Osaka −0.39 (p < 0.001). The prediction holds in Tokyo and Yokohama and reverses in Osaka and Nagoya, where sites follow people (dense lowland) more than slopes.
+
+**S4. Sights follow the café side. Holds everywhere.** Sights per 1,000 residents are higher on the café side of the Latte Line in all 28 cities with sights data, clearly so in 19; pooled Z = 12.1. Prediction held.
+
+**S5. Over time: people are leaving Japan's landslide zones, and those zones are ageing.** Population growth inside each zone (areas weighted by their share of land in it) against outside; Japan 2000–2020 on today's areas (7 cities; Tokyo's areas couldn't be matched), Australia 2011–2021 (5 cities).
+
+| Hazard | Cities | Growth, zone minus rest (pooled) | Ageing, zone minus rest (pooled) |
+|---|---|---|---|
+| Landslide (Japan) | 7 | Z = −4.8, p < 0.001 (lower in 6 of 7; Nagoya the exception) | Z = +5.2, p < 0.001 (faster in 5 of 7; not Kobe or Nagoya) |
+| Tsunami (Japan) | 4 | Z = 0.3, p = 0.75 | Z = −2.5, p = 0.01 (zones getting younger) |
+| River flood (Japan + Australia) | 12 | Z = 0.7, p = 0.47 | Z = 0.0, p = 0.97 |
+
+Examples: Fukuoka's landslide zones grew 11% while the rest grew 22%, and their share of over-65s rose 12.7 points against 7.6. Sapporo: 0.5% against 9.1%. The waterfront goes the other way in Yokohama–Kawasaki: flood-zone areas grew 22% against 13% (difference 9.1 points, 95% interval 4.3 to 15.1) and aged far less (+5.7 points of over-65s against +9.9), the new towers of Musashi-Kosugi, Minato Mirai and the bay. Australia shows no clear difference in any city.
+
+Caveats: the global flood map ignores defences (central London, behind the Thames Barrier, shows as flood land); 2000–2015 Japanese populations are re-cut to today's areas by area weighting, 2020 is the app's own count; all of this is descriptive, and none of it says anything about the people living in these places or replaces local hazard maps.
+
+## Japanese place names (correction, 20 Nov 2026)
+
+Neighbourhood and ward names in the eight Japanese cities were guessed from the kanji (pykakasi) and many were wrong (上郷町 "Kamisatocho" is Kamigocho; 中京区 "Chukyo" is Nakagyo). They now use Japan Post's official readings (`pipeline/common/jp_kana.py`, `pipeline/tokyo/romaji.py`); 1,269 names changed, listed in `results/jp_name_fixes.tsv`. Japan Post itself misreads 六角橋 (Rokkakubashi), fixed by hand. No result depends on the names.
