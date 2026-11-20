@@ -305,3 +305,28 @@ Committed before any Korean statistic was computed. The file (Statistics Korea /
 | K2 | Living alone falls from centre to edge | negative Spearman slope with distance in both cities |
 | K3 | The age front | over-65 share rises from centre to edge (positive slope) in both cities |
 | K4 | Seoul's sister is East Asian | Seoul's nearest city by the (Grey, Living Alone) slope profile is Japanese |
+
+## Safety and sights layer (flood, landslide, tsunami, shelters, sights), written 20 Nov 2026
+
+Written before any of these data were downloaded. This layer is mainly a practical map (where are the official
+evacuation sites, which neighbourhoods sit in hazard zones, where are the sights); the questions below are the
+only ones we will report as findings.
+
+Data: river flood zones from the JRC/Copernicus global flood hazard map (1-in-100-year return period, ~90 m) for all
+29 cities; in Japan also MLIT landslide warning zones (A33), MLIT tsunami inundation zones (A40) and GSI designated
+emergency evacuation sites; everywhere, OpenStreetMap assembly points, hospitals, fire stations and sights.
+Measures per area: share of land in each hazard zone; evacuation sites, hospitals and sights per 1,000 residents.
+
+S1. Hazard and the Latte Line. Is the fast-food side of each city's Latte Line more flood-prone than the café side?
+    No directional prediction: rich and poor areas both sit on rivers and harbours. Reported as the difference in mean
+    flood share between the two sides, with a spatial-block bootstrap interval, per city; pooled over cities with
+    Stouffer only if at least 10 cities have any flood land.
+S2. Is "flood risk" itself a line? Run on the flood share exactly as on every other signal (MultiScaleNull landscape
+    test, 199 draws). Prediction: a smooth slope (rivers are long, thin features), not a line.
+S3. Japan: do neighbourhoods with more landslide-zone land have more designated evacuation sites per resident?
+    Prediction: yes (Spearman rho > 0), because municipalities designate sites near hazards.
+S4. Sights: tourist sights per resident follow the café side of the Latte Line (prediction: yes, positive, in most cities).
+
+Descriptive only, never a fairness or safety judgement about the people who live anywhere. Heritage, ethnicity and
+nationality are not scored against any of these. None of this replaces local hazard maps or official evacuation
+advice; the app says so wherever the layer appears.

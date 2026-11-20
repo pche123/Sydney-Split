@@ -1,0 +1,19 @@
+name: Fetch safety data
+on:
+  workflow_dispatch:
+    inputs:
+      cities: { description: "Cities (space separated, empty = all)", required: false, default: "" }
+permissions: { contents: read }
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install geopandas pyogrio rasterio requests pandas numpy shapely
+      - run: python pipeline/get_safety.py ${{ github.event.inputs.cities }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: safety, path: results/safety }
