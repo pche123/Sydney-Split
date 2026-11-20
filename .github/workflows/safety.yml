@@ -2,7 +2,7 @@ name: Fetch safety data
 on:
   workflow_dispatch:
     inputs:
-      cities: { description: "Cities (space separated) for a single run; empty = all cities in groups", required: false, default: "" }
+      groups: { description: "Which groups to fetch", required: false, default: "jp au uk us other" }
 permissions: { contents: write }
 jobs:
   fetch:
@@ -19,13 +19,18 @@ jobs:
           - { group: other, cities: "auckland christchurch singapore" }
     steps:
       - uses: actions/checkout@v4
+        if: contains(github.event.inputs.groups || 'jp au uk us other', matrix.group)
       - uses: actions/setup-python@v5
+        if: contains(github.event.inputs.groups || 'jp au uk us other', matrix.group)
         with: { python-version: "3.12" }
       - run: sudo apt-get update -q && sudo apt-get install -y -q osmium-tool
+        if: contains(github.event.inputs.groups || 'jp au uk us other', matrix.group)
       - run: pip install geopandas pyogrio rasterio requests pandas numpy shapely
-      - run: python pipeline/get_safety.py ${{ github.event.inputs.cities || matrix.cities }}
+        if: contains(github.event.inputs.groups || 'jp au uk us other', matrix.group)
+      - run: python pipeline/get_safety.py ${{ matrix.cities }}
+        if: contains(github.event.inputs.groups || 'jp au uk us other', matrix.group)
       - name: Publish results to the safety-<group> branch
-        if: always()
+        if: always() && contains(github.event.inputs.groups || 'jp au uk us other', matrix.group)
         run: |
           cd results/safety && mv log.txt log_${{ matrix.group }}.txt; git init -q && git checkout -q -b safety-${{ matrix.group }} && git add -A
           git -c user.name="Prasad Cheema" -c user.email="pche123@users.noreply.github.com" commit -qm "Safety data (run ${{ github.run_id }})"

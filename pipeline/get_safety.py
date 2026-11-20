@@ -80,7 +80,7 @@ def osm_filtered(url):
     if out.exists():
         return out
     pbf = CACHE / os.path.basename(url); flt = CACHE / ("f_" + os.path.basename(url))
-    get(url, pbf); log(f"  downloaded {pbf.name}: {pbf.stat().st_size / 1e6:.0f} MB")
+    get(url, pbf, tries=8); log(f"  downloaded {pbf.name}: {pbf.stat().st_size / 1e6:.0f} MB")
     subprocess.run(["osmium", "tags-filter", "--overwrite", "-o", str(flt), str(pbf), *FILTER], check=True)
     pbf.unlink()
     subprocess.run(["osmium", "export", "--overwrite", "-f", "geojsonseq", "-o", str(out), str(flt)], check=True)
@@ -283,7 +283,11 @@ def city(c):
         res["sources"].append("River flood: JRC/Copernicus CEMS global river flood hazard map v2.1, 1-in-100-year return period (~90 m)")
     except Exception as e:  # noqa: BLE001
         log("  flood failed:", e)
-    pts = osm_points(c, bb); log("  OSM points:", len(pts), pd.Series([p["k"] for p in pts]).value_counts().to_dict() if pts else {})
+    try:
+        pts = osm_points(c, bb)
+    except Exception as e:  # noqa: BLE001
+        log("  OSM failed:", e); pts = []
+    log_pts = pts; log("  OSM points:", len(pts), pd.Series([p["k"] for p in pts]).value_counts().to_dict() if pts else {})
     if pts:
         res["sources"].append("Assembly points, hospitals, fire stations and sights: © OpenStreetMap contributors")
     if c in PREFS:
