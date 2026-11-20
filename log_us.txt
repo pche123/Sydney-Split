@@ -1,0 +1,41 @@
+=== sanfrancisco
+JRC tiles listed: 271
+  JRC tiles used: ['ID18_N40_W130_RP100_depth_reclass.tif']
+  downloaded norcal-latest.osm.pbf: 657 MB
+  OSM points: 1378 {'sight': 1056, 'fire': 195, 'assembly': 78, 'hospital': 49}
+  wrote sanfrancisco: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 1378 points
+=== losangeles
+  JRC tiles used: ['ID23_N40_W120_RP100_depth_reclass.tif']
+  downloaded socal-latest.osm.pbf: 673 MB
+  OSM points: 2712 {'sight': 1711, 'fire': 715, 'hospital': 284, 'assembly': 2}
+  wrote losangeles: layers ['flood', 'n_hospital', 'n_fire', 'n_sight'], 2712 points
+=== washington
+  JRC tiles used: ['ID55_N40_W80_RP100_depth_reclass.tif']
+  downloaded district-of-columbia-latest.osm.pbf: 21 MB
+  OSM points: 521 {'sight': 432, 'fire': 67, 'hospital': 22}
+  wrote washington: layers ['flood', 'n_hospital', 'n_fire', 'n_sight'], 521 points
+=== miami
+  JRC tiles used: ['ID46_N30_W90_RP100_depth_reclass.tif']
+  downloaded florida-latest.osm.pbf: 662 MB
+  OSM points: 540 {'sight': 337, 'fire': 143, 'hospital': 59, 'assembly': 1}
+  wrote miami: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 540 points
+=== chicago
+  JRC tiles used: ['ID44_N50_W90_RP100_depth_reclass.tif']
+  downloaded illinois-latest.osm.pbf: 364 MB
+  OSM points: 1504 {'sight': 906, 'fire': 476, 'hospital': 122}
+  wrote chicago: layers ['flood', 'n_hospital', 'n_fire', 'n_sight'], 1504 points
+=== newyork
+  JRC tiles used: ['ID54_N50_W80_RP100_depth_reclass.tif']
+  downloaded new-york-latest.osm.pbf: 499 MB
+  OSM points: 2166 {'sight': 1480, 'fire': 526, 'hospital': 159, 'assembly': 1}
+  wrote newyork: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 2166 points
+=== austin
+  JRC tiles used: ['ID37_N40_W100_RP100_depth_reclass.tif']
+  downloaded texas-latest.osm.pbf: 729 MB
+  OSM points: 394 {'sight': 195, 'fire': 144, 'hospital': 54, 'assembly': 1}
+  wrote austin: layers ['flood', 'n_hospital', 'n_fire', 'n_sight'], 394 points
+=== seattle
+  JRC tiles used: ['ID17_N50_W130_RP100_depth_reclass.tif']
+  downloaded washington-latest.osm.pbf: 366 MB
+  OSM points: 572 {'sight': 395, 'fire': 101, 'assembly': 56, 'hospital': 20}
+  wrote seattle: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 572 points
