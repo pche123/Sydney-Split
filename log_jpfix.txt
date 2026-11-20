@@ -1,0 +1,95 @@
+=== nagoya
+JRC tiles listed: 271
+  JRC tiles used: ['ID241_N40_E130_RP100_depth_reclass.tif']
+  curl retry 1 https://download.geofabrik.de/asia/japan/chubu-latest.osm.pbf rc=7
+  curl retry 2 https://download.geofabrik.de/asia/japan/chubu-latest.osm.pbf rc=7
+  curl retry 3 https://download.geofabrik.de/asia/japan/chubu-latest.osm.pbf rc=7
+  curl retry 4 https://download.geofabrik.de/asia/japan/chubu-latest.osm.pbf rc=7
+  OSM failed: failed: https://download.geofabrik.de/asia/japan/chubu-latest.osm.pbf
+  OSM points: 0 {}
+KSJ A33: 56 prefectures, e.g. [('00', ['https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-25/A33-25_00_SHP.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-25/A33-25_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-25/A33-25_00_GEOJSON.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-24/A33-24_00_SHP.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-24/A33-24_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-24/A33-24_00_GEOJSON.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-23/A33-23_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-22/A33-22_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-21/A33-21_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-20/A33-20_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-19/A33-19_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-18/A33-18_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-17/A33-17_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-16/A33-16_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-15/A33-15_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-13/A33-13_00_GML.zip']), ('01', ['https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-25/A33-25_01_SHP.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-25/A33-25_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-25/A33-25_01_GEOJSON.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-24/A33-24_01_SHP.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-24/A33-24_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-24/A33-24_01_GEOJSON.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-23/A33-23_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-22/A33-22_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-21/A33-21_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-20/A33-20_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-19/A33-19_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-18/A33-18_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-17/A33-17_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-16/A33-16_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-15/A33-15_01_GML.zip'])]
+  A33 23: files ['データ利用時の注意事項\\23_愛知県_データ利用時の注意事項.txt', 'メタデータ\\KS-META-A33-25_23.xml', 'A33-25_23Polygon.dbf', 'A33-25_23Polygon.prj', 'A33-25_23Polygon.shp', 'A33-25_23Polygon.shx']
+    A33-25_23Polygon.shp: bounds [136.83, 34.58, 137.82, 35.42]
+    A33-25_23Polygon.shp: 795 polygons in frame
+KSJ A40: 39 prefectures, e.g. [('01', ['https://nlftp.mlit.go.jp/ksj/gml/data/A40/A40-23/A40-23_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A40/A40-21/A40-21_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A40/A40-17/A40-17_01_GML.zip']), ('02', ['https://nlftp.mlit.go.jp/ksj/gml/data/A40/A40-21/A40-21_02_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A40/A40-16/A40-16_02_GML.zip'])]
+  A40 23: files ['A40-22_23_GML/A40-22_23.dbf', 'A40-22_23_GML/A40-22_23.geojson', 'A40-22_23_GML/A40-22_23.prj', 'A40-22_23_GML/A40-22_23.shp', 'A40-22_23_GML/A40-22_23.shx', 'A40-22_23_GML/A40-22_23.xml', 'A40-22_23_GML/KS-META-A40-22_23.xml']
+    A40-22_23_GML/A40-22_23.geojson: bounds [136.67, 34.58, 137.48, 35.21]
+    A40-22_23_GML/A40-22_23.geojson: 24949 polygons in frame
+GSI columns: ['NO', '共通ID', '都道府県名及び市町村名', '施設・場所名', '住所', '洪水', '崖崩れ、土石流及び地滑り', '高潮', '地震', '津波', '大規模な火事', '内水氾濫', '火山現象', '指定避難所との住所同一', '緯度', '経度', '備考']
+GSI sites: 115948 hazard columns: {'flood': '洪水', 'landslide': '崖崩れ、土石流及び地滑り', 'storm_surge': '高潮', 'earthquake': '地震', 'tsunami': '津波', 'fire': '大規模な火事', 'inland_flood': '内水氾濫', 'volcano': '火山現象'}
+  GSI sites in frame: 2463
+  wrote nagoya: layers ['flood', 'landslide', 'tsunami', 'n_shelter_jp'], 2463 points
+=== kobe
+  JRC tiles used: ['ID241_N40_E130_RP100_depth_reclass.tif']
+  curl retry 1 https://download.geofabrik.de/asia/japan/kansai-latest.osm.pbf rc=7
+  curl retry 2 https://download.geofabrik.de/asia/japan/kansai-latest.osm.pbf rc=7
+  curl retry 3 https://download.geofabrik.de/asia/japan/kansai-latest.osm.pbf rc=7
+  curl retry 4 https://download.geofabrik.de/asia/japan/kansai-latest.osm.pbf rc=7
+  OSM failed: failed: https://download.geofabrik.de/asia/japan/kansai-latest.osm.pbf
+  OSM points: 0 {}
+  A33 28: files ['データ利用時の注意事項\\28_兵庫県_データ利用時の注意事項.txt', 'メタデータ\\KS-META-A33-25_28.xml', 'A33-25_28Polygon.dbf', 'A33-25_28Polygon.prj', 'A33-25_28Polygon.shp', 'A33-25_28Polygon.shx']
+    A33-25_28Polygon.shp: bounds [134.27, 34.16, 135.47, 35.67]
+    A33-25_28Polygon.shp: 5379 polygons in frame
+  A33 27: files ['データ利用時の注意事項\\27_大阪府_データ利用時の注意事項.txt', 'メタデータ\\KS-META-A33-25_27.xml', 'A33-25_27Polygon.dbf', 'A33-25_27Polygon.prj', 'A33-25_27Polygon.shp', 'A33-25_27Polygon.shx']
+    A33-25_27Polygon.shp: bounds [135.09, 34.28, 135.74, 35.04]
+    A33-25_27Polygon.shp: 379 polygons in frame
+  A40 28: files ['A40-18_28.dbf', 'A40-18_28.geojson', 'A40-18_28.prj', 'A40-18_28.shp', 'A40-18_28.shx', 'A40-18_28.xml', 'KS-META-A40-18_28.xml']
+    A40-18_28.geojson: bounds [134.37, 35.53, 134.87, 35.67]
+    A40-18_28.geojson: 0 polygons in frame
+  A40 27: files ['A40-23_27_GML/', 'A40-23_27_GML/A40-23_27.dbf', 'A40-23_27_GML/A40-23_27.geojson', 'A40-23_27_GML/A40-23_27.prj', 'A40-23_27_GML/A40-23_27.shp', 'A40-23_27_GML/A40-23_27.shx', 'A40-23_27_GML/A40-23_27.xml', 'A40-23_27_GML/KS-META-A40-23_27.xml']
+    A40-23_27_GML/A40-23_27.geojson: bounds [135.09, 34.31, 135.62, 34.81]
+    A40-23_27_GML/A40-23_27.geojson: 10198 polygons in frame
+  GSI sites in frame: 2158
+  wrote kobe: layers ['flood', 'landslide', 'tsunami', 'n_shelter_jp'], 2158 points
+=== osaka
+  JRC tiles used: ['ID241_N40_E130_RP100_depth_reclass.tif']
+  curl retry 1 https://download.geofabrik.de/asia/japan/kansai-latest.osm.pbf rc=7
+  curl retry 2 https://download.geofabrik.de/asia/japan/kansai-latest.osm.pbf rc=7
+  curl retry 3 https://download.geofabrik.de/asia/japan/kansai-latest.osm.pbf rc=7
+  curl retry 4 https://download.geofabrik.de/asia/japan/kansai-latest.osm.pbf rc=7
+  OSM failed: failed: https://download.geofabrik.de/asia/japan/kansai-latest.osm.pbf
+  OSM points: 0 {}
+  A33 27: files ['データ利用時の注意事項\\27_大阪府_データ利用時の注意事項.txt', 'メタデータ\\KS-META-A33-25_27.xml', 'A33-25_27Polygon.dbf', 'A33-25_27Polygon.prj', 'A33-25_27Polygon.shp', 'A33-25_27Polygon.shx']
+    A33-25_27Polygon.shp: bounds [135.09, 34.28, 135.74, 35.04]
+    A33-25_27Polygon.shp: 8141 polygons in frame
+  A33 28: files ['データ利用時の注意事項\\28_兵庫県_データ利用時の注意事項.txt', 'メタデータ\\KS-META-A33-25_28.xml', 'A33-25_28Polygon.dbf', 'A33-25_28Polygon.prj', 'A33-25_28Polygon.shp', 'A33-25_28Polygon.shx']
+    A33-25_28Polygon.shp: bounds [134.27, 34.16, 135.47, 35.67]
+    A33-25_28Polygon.shp: 267 polygons in frame
+  A40 27: files ['A40-23_27_GML/', 'A40-23_27_GML/A40-23_27.dbf', 'A40-23_27_GML/A40-23_27.geojson', 'A40-23_27_GML/A40-23_27.prj', 'A40-23_27_GML/A40-23_27.shp', 'A40-23_27_GML/A40-23_27.shx', 'A40-23_27_GML/A40-23_27.xml', 'A40-23_27_GML/KS-META-A40-23_27.xml']
+    A40-23_27_GML/A40-23_27.geojson: bounds [135.09, 34.31, 135.62, 34.81]
+    A40-23_27_GML/A40-23_27.geojson: 32488 polygons in frame
+  A40 28: files ['A40-18_28.dbf', 'A40-18_28.geojson', 'A40-18_28.prj', 'A40-18_28.shp', 'A40-18_28.shx', 'A40-18_28.xml', 'KS-META-A40-18_28.xml']
+    A40-18_28.geojson: bounds [134.37, 35.53, 134.87, 35.67]
+    A40-18_28.geojson: 0 polygons in frame
+  GSI sites in frame: 5686
+  wrote osaka: layers ['flood', 'landslide', 'tsunami', 'n_shelter_jp'], 5686 points
+=== tokyo
+  JRC tiles used: ['ID241_N40_E130_RP100_depth_reclass.tif']
+  curl retry 1 https://download.geofabrik.de/asia/japan/kanto-latest.osm.pbf rc=7
+  curl retry 2 https://download.geofabrik.de/asia/japan/kanto-latest.osm.pbf rc=7
+  curl retry 3 https://download.geofabrik.de/asia/japan/kanto-latest.osm.pbf rc=7
+  curl retry 4 https://download.geofabrik.de/asia/japan/kanto-latest.osm.pbf rc=7
+  OSM failed: failed: https://download.geofabrik.de/asia/japan/kanto-latest.osm.pbf
+  OSM points: 0 {}
+  A33 13: files ['データ利用時の注意事項\\13_東京都_データ利用時の注意事項.txt', 'メタデータ\\KS-META-A33-25_13.xml', 'A33-25_13Polygon.dbf', 'A33-25_13Polygon.prj', 'A33-25_13Polygon.shp', 'A33-25_13Polygon.shx']
+    A33-25_13Polygon.shp: bounds [138.99, 26.63, 142.22, 36.64]
+    A33-25_13Polygon.shp: 17364 polygons in frame
+  A33 11: files ['データ利用時の注意事項\\11_埼玉県_データ利用時の注意事項.txt', 'メタデータ\\KS-META-A33-25_11.xml', 'A33-25_11Polygon.dbf', 'A33-25_11Polygon.prj', 'A33-25_11Polygon.shp', 'A33-25_11Polygon.shx']
+    A33-25_11Polygon.shp: bounds [138.77, 35.76, 139.83, 36.22]
+    A33-25_11Polygon.shp: 220 polygons in frame
+  A33 14: files ['データ利用時の注意事項\\14_神奈川県_データ利用時の注意事項.txt', 'メタデータ\\KS-META-A33-25_14.xml', 'A33-25_14Polygon.dbf', 'A33-25_14Polygon.prj', 'A33-25_14Polygon.shp', 'A33-25_14Polygon.shx']
+    A33-25_14Polygon.shp: bounds [138.98, 35.13, 139.74, 35.66]
+    A33-25_14Polygon.shp: 11318 polygons in frame
+  A40 13: files ['A40-23_13_GML/', 'A40-23_13_GML/A40-23_13.dbf', 'A40-23_13_GML/A40-23_13.geojson', 'A40-23_13_GML/A40-23_13.prj', 'A40-23_13_GML/A40-23_13.shp', 'A40-23_13_GML/A40-23_13.shx', 'A40-23_13_GML/A40-23_13.xml', 'A40-23_13_GML/KS-META-A40-23_13.xml']
+    A40-23_13_GML/A40-23_13.geojson: bounds [139.12, 26.6, 142.25, 34.8]
+    A40-23_13_GML/A40-23_13.geojson: 0 polygons in frame
+  A40 11: no file
+  A40 14: files ['A40-20_14.GML/', 'A40-20_14.GML/A40-20_14.dbf', 'A40-20_14.GML/A40-20_14.geojson', 'A40-20_14.GML/A40-20_14.prj', 'A40-20_14.GML/A40-20_14.shp', 'A40-20_14.GML/A40-20_14.shx', 'A40-20_14.GML/A40-20_14.xml', 'A40-20_14.GML/KS-META-A40-20_14.xml']
+    A40-20_14.GML/A40-20_14.geojson: bounds [139.11, 35.13, 139.8, 35.54]
+    A40-20_14.GML/A40-20_14.geojson: 5739 polygons in frame
+  GSI sites in frame: 3906
+  wrote tokyo: layers ['flood', 'landslide', 'tsunami', 'n_shelter_jp'], 3906 points
+=== yokohama
+  JRC tiles used: ['ID241_N40_E130_RP100_depth_reclass.tif']
+  curl retry 1 https://download.geofabrik.de/asia/japan/kanto-latest.osm.pbf rc=7
+  curl retry 2 https://download.geofabrik.de/asia/japan/kanto-latest.osm.pbf rc=7
