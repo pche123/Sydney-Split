@@ -1,5 +1,10 @@
-"""Japanese place names -> readable romaji (no macrons). Municipalities by hand; neighbourhoods via pykakasi + fixes."""
-import re
+"""Japanese place names -> readable romaji (no macrons).
+
+Town names use their official readings from Japan Post's postcode data (pipeline/data/jp_town_kana.csv.gz,
+built by pipeline/common/jp_kana.py) whenever the city is known: kanji readings are too irregular to guess
+(上郷町 is Kamigocho, not Kamisatocho). Anything not in that table falls back to pykakasi + hand fixes.
+"""
+import csv, gzip, os, re, unicodedata
 import pykakasi
 _k = pykakasi.kakasi()
 CITY = {"千代田区": "Chiyoda", "中央区": "Chuo", "港区": "Minato", "新宿区": "Shinjuku", "文京区": "Bunkyo", "台東区": "Taito", "墨田区": "Sumida",
@@ -24,7 +29,7 @@ FIX = {"月島": "Tsukishima", "勝どき": "Kachidoki", "晴海": "Harumi", "�
        "赤羽": "Akabane", "王子": "Oji", "十条": "Jujo", "日暮里": "Nippori", "町屋": "Machiya", "高島平": "Takashimadaira", "練馬": "Nerima",
        "光が丘": "Hikarigaoka", "大泉": "Oizumi", "石神井": "Shakujii", "千住": "Senju", "北千住": "Kita-Senju", "綾瀬": "Ayase", "竹ノ塚": "Takenotsuka",
        "西新井": "Nishiarai", "柴又": "Shibamata", "金町": "Kanamachi", "亀有": "Kameari", "葛西": "Kasai", "小岩": "Koiwa", "瑞江": "Mizue",
-       "吉祥寺": "Kichijoji", "葛西": "Kasai", "深大寺": "Jindaiji", "成増": "Narimasu", "赤塚": "Akatsuka", "大森": "Omori", "田無": "Tanashi", "高幡": "Takahata", "聖蹟桜ヶ丘": "Seiseki-Sakuragaoka", "府中": "Fuchu", "国立": "Kunitachi", "立川": "Tachikawa", "八王子": "Hachioji", "町田": "Machida", "調布": "Chofu", "三鷹": "Mitaka", "武蔵": "Musashi", "小平": "Kodaira", "日野": "Hino", "東村山": "Higashimurayama", "清瀬": "Kiyose", "狛江": "Komae", "多摩": "Tama", "稲城": "Inagi", "羽村": "Hamura", "福生": "Fussa", "青梅": "Ome", "昭島": "Akishima", "万願寺": "Manganji", "新宿": "Shinjuku", "渋谷": "Shibuya", "品川": "Shinagawa", "目黒": "Meguro", "世田谷": "Setagaya", "中野": "Nakano", "杉並": "Suginami", "板橋": "Itabashi", "足立": "Adachi", "葛飾": "Katsushika", "江戸川": "Edogawa", "東雲": "Shinonome", "南陽台": "Nanyodai", "新橋": "Shinbashi", "新川": "Shinkawa", "新富": "Shintomi", "築地": "Tsukiji", "銀座": "Ginza", "京橋": "Kyobashi", "八丁堀": "Hatchobori", "人形町": "Ningyocho", "南砂": "Minamisuna", "東陽": "Toyo", "東日本橋": "Higashi-Nihonbashi", "東麻布": "Higashi-Azabu", "南青山": "Minami-Aoyama", "北青山": "Kita-Aoyama", "西麻布": "Nishi-Azabu", "元麻布": "Moto-Azabu", "東中野": "Higashi-Nakano", "西荻北": "Nishiogi-Kita", "西荻南": "Nishiogi-Minami", "正光寺": "Shokoji", "曙町": "Akebonocho", "聖ケ丘": "Hijirigaoka", "百草": "Mogusa", "大字": "", "字": ""}
+       "吉祥寺": "Kichijoji", "葛西": "Kasai", "深大寺": "Jindaiji", "成増": "Narimasu", "赤塚": "Akatsuka", "大森": "Omori", "田無": "Tanashi", "高幡": "Takahata", "聖蹟桜ヶ丘": "Seiseki-Sakuragaoka", "府中": "Fuchu", "国立": "Kunitachi", "立川": "Tachikawa", "八王子": "Hachioji", "町田": "Machida", "調布": "Chofu", "三鷹": "Mitaka", "武蔵": "Musashi", "小平": "Kodaira", "日野": "Hino", "東村山": "Higashimurayama", "清瀬": "Kiyose", "狛江": "Komae", "多摩": "Tama", "稲城": "Inagi", "羽村": "Hamura", "福生": "Fussa", "青梅": "Ome", "昭島": "Akishima", "万願寺": "Manganji", "新宿": "Shinjuku", "渋谷": "Shibuya", "品川": "Shinagawa", "目黒": "Meguro", "世田谷": "Setagaya", "中野": "Nakano", "杉並": "Suginami", "板橋": "Itabashi", "足立": "Adachi", "葛飾": "Katsushika", "江戸川": "Edogawa", "東雲": "Shinonome", "南陽台": "Nanyodai", "新橋": "Shinbashi", "新川": "Shinkawa", "新富": "Shintomi", "築地": "Tsukiji", "銀座": "Ginza", "京橋": "Kyobashi", "八丁堀": "Hatchobori", "人形町": "Ningyocho", "南砂": "Minamisuna", "東陽": "Toyo", "東日本橋": "Higashi-Nihonbashi", "東麻布": "Higashi-Azabu", "南青山": "Minami-Aoyama", "北青山": "Kita-Aoyama", "西麻布": "Nishi-Azabu", "元麻布": "Moto-Azabu", "東中野": "Higashi-Nakano", "西荻北": "Nishiogi-Kita", "西荻南": "Nishiogi-Minami", "正光寺": "Shokoji", "曙町": "Akebonocho", "聖ケ丘": "Hijirigaoka", "百草": "Mogusa", "大字": "", "字": "", "六角橋": "Rokkakubashi"}
 PRE = ("nishi", "higashi", "minami", "kita", "naka", "shin", "kami", "shimo", "moto", "oo")
 SUF = ("honcho", "minami", "kita", "higashi", "nishi", "naka", "machi", "cho", "dai", "gaoka")
 
@@ -34,8 +39,12 @@ def _kana(s):
     return r
 
 DIR = {"東": "Higashi", "西": "Nishi", "南": "Minami", "北": "Kita"}
-def place(name):
-    """町 name (丁目 removed) -> 'Koenji-Minami' style."""
+def place(name, city_name=None):
+    """町 name (丁目 removed) -> 'Koenji-Minami' style; official reading when the city is given and known."""
+    if city_name:
+        o = official(name, city_name)
+        if o:
+            return o
     s = re.sub(r"^大字|^字", "", str(name or "").strip())
     s = re.sub(r"[ケヶが]丘", "がおか", s)
     if len(s) >= 3 and s[0] in DIR and not any(s.startswith(k) for k in FIX):
@@ -66,3 +75,118 @@ def place(name):
     return out or s
 
 def city(name): return CITY.get(name, _kana(name).capitalize())
+
+
+# ---------------------------------------------------------------- official readings (Japan Post)
+_TAB = None
+def _table():
+    global _TAB
+    if _TAB is None:
+        f = os.path.join(os.path.dirname(__file__), "..", "data", "jp_town_kana.csv.gz")
+        towns, cities = {}, {}
+        with gzip.open(f, "rt", encoding="utf-8") as fh:
+            for r in csv.DictReader(fh):
+                towns[(r["city"], r["town"])] = r["town_kana"]; cities[r["city"]] = r["city_kana"]
+        _TAB = (towns, cities)
+    return _TAB
+
+def kana_romaji(k, kanji=""):
+    """Katakana reading -> 'kamigocho' (Hepburn, long vowels written short). None if the reading has anything else."""
+    if not k or re.search(r"[^\u30a0-\u30ffー]", k):
+        return None
+    r = "".join(x["hepburn"] for x in _k.convert(k)).lower()
+    keep = "内" in kanji and "uchi" in r                     # 丸の内 Marunouchi: the u of uchi is not a long vowel
+    if keep:
+        r = r.replace("uchi", "#")
+    r = r.replace("ou", "o").replace("uu", "u").replace("'", "")
+    if keep:
+        r = r.replace("#", "uchi")
+    r = re.sub(r"^oo", "o", r).replace("doori", "dori")       # 大 Okubo, 通 dori (but Toyooka keeps both o's)
+    return r if re.fullmatch(r"[a-z]+", r) else None
+
+def _jo(k, kanji="", sib=()):
+    """Sapporo grid names: 南十九条西 / ミナミ19ジョウニシ -> 'Minami 19-jo Nishi', as on the street signs."""
+    m = re.fullmatch(r"(\D*?)(\d+)ジョウ(\D*)", unicodedata.normalize("NFKC", k or ""))
+    if not m:
+        return None
+    mk = re.fullmatch(r"(.*?)[一二三四五六七八九十〇]+条(.*)", kanji or "")
+    parts = []
+    for i, x in ((1, m.group(1)), (2, m.group(3))):
+        if x:
+            r = kana_romaji(x)
+            if r is None:
+                return None
+            parts.append(_style(mk.group(i), r, sib) if mk and mk.group(i) else r.capitalize())
+        if i == 1:
+            parts.append(m.group(2) + "-jo")
+    return " ".join(parts)
+
+LEAD = {"東": "higashi", "西": "nishi", "南": "minami", "北": "kita", "上": "kami", "下": "shimo", "中": "naka", "新": "shin", "元": "moto"}
+TAIL = {"東": "higashi", "西": "nishi", "南": "minami", "北": "kita", "本町": "honcho", "中央": "chuo"}
+def _style(kanji, r, sib=()):
+    """Hyphens around direction/position words only when the rest is a place in its own right, i.e. the same
+    city also has it with another direction or bare: 北寺尾 Kita-Terao (there is a 東寺尾), 山田西 Yamada-Nishi
+    (山田東), 上末吉 Kami-Sueyoshi (下末吉); but 上郷町 Kamigocho, 中野島 Nakanoshima, 西宮浜 Nishinomiyahama."""
+    sib = set(sib)
+    def known(rest, swap):
+        return bool(rest) and (rest in sib or rest + "町" in sib or any(x + rest in sib for x in swap) or any(rest + x in sib for x in swap))
+    k, head, tail = kanji, "", ""
+    base = re.sub(r"町$", "", k)
+    for kt, rt in TAIL.items():
+        if base.endswith(kt) and r.endswith(rt) and len(r) > len(rt) + 2 and not k.endswith("町"):
+            rest = k[: -len(kt)]
+            if known(rest, [x for x in TAIL if x != kt]):
+                tail, k, r = "-" + rt.capitalize(), rest, r[: -len(rt)]; break
+    p = LEAD.get(k[:1])
+    if p and r.startswith(p) and len(r) > len(p) + 2 and known(k[1:], [x for x in LEAD if x != k[:1]]):
+        head, r = p.capitalize() + "-", re.sub(r"^oo", "o", r[len(p):])
+    return head + r.capitalize() + tail
+
+_SIB = {}
+def _siblings(city):
+    if city not in _SIB:
+        _SIB[city] = {t for (c, t) in _table()[0] if c == city}
+    return _SIB[city]
+
+def _stems(city):
+    """Kanji names a town might start with: the city and the ward (横浜市鶴見区 -> 横浜, 鶴見; 西宮市 -> 西宮)."""
+    return [x for x in re.split(r"[市区町村郡]", city or "") if len(x) >= 2]
+
+def _town_key(name):
+    s = re.sub(r"^大字|^字", "", str(name or "").strip())
+    return s.replace("ヶ", "ケ").replace("ヵ", "カ")
+
+def official(name, city):
+    """Official romaji of a town in a city ('上郷町', '横浜市栄区' -> 'Kamigocho'), or None if not in Japan Post's list."""
+    towns, _ = _table(); t = _town_key(name)
+    if FIX.get(t):
+        return FIX[t]
+    k = towns.get((city, t))
+    if k is None and t.endswith("町"):
+        k = towns.get((city, t[:-1]))
+    if k and _jo(k, t, _siblings(city)):
+        return _jo(k, t, _siblings(city))
+    r = kana_romaji(k, t) if k else None
+    if not r:
+        return None
+    return _style(t, r, _siblings(city))
+
+def ward_official(city_name):
+    """'横浜市鶴見区' -> 'Tsurumi', '吹田市' -> 'Suita', '中京区' style wards read officially (Nakagyo, not Chukyo)."""
+    _, cities = _table(); k = cities.get(city_name)
+    if not k:
+        return None
+    m = re.match(r"(.+?市)(.+区)$", city_name)
+    if m:
+        sib = [cities[c] for c in cities if c.startswith(m.group(1)) and c.endswith("区")]
+        pre = os.path.commonprefix(sib) if len(sib) > 1 else ""
+        stem, kanji = k[len(pre):], m.group(2)
+        stem = stem[:-1] if stem.endswith("ク") else stem
+        kanji = kanji[:-1]
+    else:
+        kanji = re.sub(r"^.+?郡", "", city_name); stem = re.sub(r"^.+?グン", "", k)
+        for a, b in (("シ", "市"), ("チョウ", "町"), ("マチ", "町"), ("ムラ", "村"), ("ソン", "村")):
+            if stem.endswith(a) and kanji.endswith(b):
+                stem, kanji = stem[: -len(a)], kanji[:-1]; break
+    r = kana_romaji(stem)
+    return _style(kanji, r) if r else None
