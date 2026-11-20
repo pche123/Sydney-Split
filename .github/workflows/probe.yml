@@ -8,8 +8,7 @@ jobs:
       - run: |
           mkdir out && cd out
           UA="Mozilla/5.0 (Sydney-Split research)"
-          for u in https://jumin.mois.go.kr/ https://jumin.mois.go.kr/statGrapB.do https://jumin.mois.go.kr/ageStatMonth.do https://jumin.mois.go.kr/statMonth.do https://jumin.mois.go.kr/etcStatUpDown.do \
-                   https://www.data.go.kr/data/15097974/fileData.do https://www.data.go.kr/data/15099158/fileData.do https://www.data.go.kr/data/15108071/fileData.do; do
+          for u in https://jumin.mois.go.kr/agePpltStus.do https://jumin.mois.go.kr/hsmbHshd.do https://jumin.mois.go.kr/etcStatOldAge.do https://jumin.mois.go.kr/sexdAgeHsld.do https://jumin.mois.go.kr/js/stat.js https://jumin.mois.go.kr/ageStatMonth.do; do
             f=$(echo "$u" | sed 's#https://##; s#[/?=&]#_#g'); curl -sSL -A "$UA" -c cj -b cj --max-time 60 "$u" -o "$f.html" || echo "fail $u" >> log.txt
             echo "$u $(wc -c < "$f.html" 2>/dev/null)" >> log.txt
           done
