@@ -101,7 +101,7 @@ def kana_romaji(k, kanji=""):
     r = r.replace("ou", "o").replace("uu", "u").replace("'", "")
     if keep:
         r = r.replace("#", "uchi")
-    r = re.sub(r"^oo", "o", r).replace("doori", "dori").replace("ooo", "oo")   # 上大岡 Kamiooka       # 大 Okubo, 通 dori (but Toyooka keeps both o's)
+    r = re.sub(r"^oo", "o", r).replace("doori", "dori").replace("toori", "tori").replace("ooo", "oo")   # 上大岡 Kamiooka       # 大 Okubo, 通 dori (but Toyooka keeps both o's)
     return r if re.fullmatch(r"[a-z]+", r) else None
 
 def _jo(k, kanji="", sib=()):
@@ -153,9 +153,11 @@ def _stems(city):
     return [x for x in re.split(r"[市区町村郡]", city or "") if len(x) >= 2]
 
 def _town_key(name):
-    s = re.sub(r"^大字|^字", "", str(name or "").strip())
+    s = re.sub(r"^大字|^字", "", str(name or "").strip()).replace("彌", "弥")
     if "大字" in s:                       # 富田町大字千音寺 -> 富田町千音寺; 有松町大字有松字往還南 -> 有松町有松 (Japan Post's form)
         s = s.replace("大字", "").split("字")[0]
+    elif "字" in s[1:]:                   # 鳴海町字京田 -> 鳴海町 (the 字 is a field name inside the town, not on Japan Post's list)
+        s = s[0] + s[1:].split("字")[0]
     return s.replace("ヶ", "ケ").replace("ヵ", "カ")
 
 def official(name, city):
