@@ -154,6 +154,8 @@ def _stems(city):
 
 def _town_key(name):
     s = re.sub(r"^大字|^字", "", str(name or "").strip())
+    if "大字" in s:                       # 富田町大字千音寺 -> 富田町千音寺; 有松町大字有松字往還南 -> 有松町有松 (Japan Post's form)
+        s = s.replace("大字", "").split("字")[0]
     return s.replace("ヶ", "ケ").replace("ヵ", "カ")
 
 def official(name, city):
@@ -169,7 +171,12 @@ def official(name, city):
     r = kana_romaji(k, t) if k else None
     if not r:
         return None
-    return _style(t, r, _siblings(city))
+    out = _style(t, r, _siblings(city))
+    if "大字" in str(name) and "町" in t:      # town + village, as on the map: Tomidacho-Sennonji, Arimatsucho-Arimatsu
+        k = out.lower().find("cho") + 3 if "cho" in out.lower() else out.lower().find("machi") + 5
+        if 3 < k < len(out):
+            out = out[:k] + "-" + out[k:].capitalize()
+    return out
 
 def ward_official(city_name):
     """'横浜市鶴見区' -> 'Tsurumi', '吹田市' -> 'Suita', '中京区' style wards read officially (Nakagyo, not Chukyo)."""
