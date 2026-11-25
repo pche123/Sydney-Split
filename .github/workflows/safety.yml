@@ -18,20 +18,21 @@ jobs:
           - { group: us, cities: "newyork losangeles chicago sanfrancisco washington austin seattle miami" }
           - { group: other, cities: "auckland christchurch singapore" }
           - { group: jpfix, cities: "nagoya kobe osaka tokyo yokohama" }
+          - { group: nagoya, cities: "nagoya" }
     steps:
       - uses: actions/checkout@v4
-        if: contains(format(' {0} ', github.event.inputs.groups || 'jp au uk us other'), format(' {0} ', matrix.group)) && (matrix.group != 'jpfix' || contains(github.event.inputs.groups, 'jpfix'))
+        if: contains(format(' {0} ', github.event.inputs.groups || 'jp au uk us other'), format(' {0} ', matrix.group)) && ((matrix.group != 'jpfix' && matrix.group != 'nagoya') || contains(github.event.inputs.groups, matrix.group))
       - uses: actions/setup-python@v5
-        if: contains(format(' {0} ', github.event.inputs.groups || 'jp au uk us other'), format(' {0} ', matrix.group)) && (matrix.group != 'jpfix' || contains(github.event.inputs.groups, 'jpfix'))
+        if: contains(format(' {0} ', github.event.inputs.groups || 'jp au uk us other'), format(' {0} ', matrix.group)) && ((matrix.group != 'jpfix' && matrix.group != 'nagoya') || contains(github.event.inputs.groups, matrix.group))
         with: { python-version: "3.12" }
       - run: sudo apt-get update -q && sudo apt-get install -y -q osmium-tool
-        if: contains(format(' {0} ', github.event.inputs.groups || 'jp au uk us other'), format(' {0} ', matrix.group)) && (matrix.group != 'jpfix' || contains(github.event.inputs.groups, 'jpfix'))
+        if: contains(format(' {0} ', github.event.inputs.groups || 'jp au uk us other'), format(' {0} ', matrix.group)) && ((matrix.group != 'jpfix' && matrix.group != 'nagoya') || contains(github.event.inputs.groups, matrix.group))
       - run: pip install geopandas pyogrio rasterio requests pandas numpy shapely
-        if: contains(format(' {0} ', github.event.inputs.groups || 'jp au uk us other'), format(' {0} ', matrix.group)) && (matrix.group != 'jpfix' || contains(github.event.inputs.groups, 'jpfix'))
+        if: contains(format(' {0} ', github.event.inputs.groups || 'jp au uk us other'), format(' {0} ', matrix.group)) && ((matrix.group != 'jpfix' && matrix.group != 'nagoya') || contains(github.event.inputs.groups, matrix.group))
       - run: python pipeline/get_safety.py ${{ matrix.cities }}
-        if: contains(format(' {0} ', github.event.inputs.groups || 'jp au uk us other'), format(' {0} ', matrix.group)) && (matrix.group != 'jpfix' || contains(github.event.inputs.groups, 'jpfix'))
+        if: contains(format(' {0} ', github.event.inputs.groups || 'jp au uk us other'), format(' {0} ', matrix.group)) && ((matrix.group != 'jpfix' && matrix.group != 'nagoya') || contains(github.event.inputs.groups, matrix.group))
       - name: Publish results to the safety-<group> branch
-        if: always() && contains(format(' {0} ', github.event.inputs.groups || 'jp au uk us other'), format(' {0} ', matrix.group)) && (matrix.group != 'jpfix' || contains(github.event.inputs.groups, 'jpfix'))
+        if: always() && contains(format(' {0} ', github.event.inputs.groups || 'jp au uk us other'), format(' {0} ', matrix.group)) && ((matrix.group != 'jpfix' && matrix.group != 'nagoya') || contains(github.event.inputs.groups, matrix.group))
         run: |
           cd results/safety && mv log.txt log_${{ matrix.group }}.txt; git init -q && git checkout -q -b safety-${{ matrix.group }} && git add -A
           git -c user.name="Prasad Cheema" -c user.email="pche123@users.noreply.github.com" commit -qm "Safety data (run ${{ github.run_id }})"

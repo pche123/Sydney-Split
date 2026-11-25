@@ -73,6 +73,8 @@ FILTER = ["nwr/emergency=assembly_point", "nwr/amenity=hospital,fire_station",
 def osm_url(c):
     return CITIES.get(c, {}).get("osm") or f"{GF}/{OSM_EXTRA[c]}-latest.osm.pbf"
 
+MIRROR = {"chubu-latest.osm.pbf": "https://download.openstreetmap.fr/extracts/asia/japan/chubu-latest.osm.pbf"}
+
 def osm_filtered(url):
     """Download a Geofabrik extract once, keep only the objects we map (as GeoJSON lines), then delete the big file."""
     import subprocess
@@ -81,7 +83,8 @@ def osm_filtered(url):
         return out
     pbf = CACHE / os.path.basename(url); flt = CACHE / ("f_" + os.path.basename(url))
     import subprocess as sp
-    for t in range(4):
+    urls = [url] * 3 + ([MIRROR[os.path.basename(url)]] * 2 if os.path.basename(url) in MIRROR else [])
+    for t, url in enumerate(urls):
         r = sp.run(["curl", "-sSfL", "--retry", "3", "--max-redirs", "50", "-c", str(CACHE / "cj"), "-b", str(CACHE / "cj"),
                     "-A", UA["User-Agent"], "-o", str(pbf), url])
         if r.returncode == 0 and pbf.exists() and pbf.stat().st_size > 1e6:
