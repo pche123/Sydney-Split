@@ -1,0 +1,41 @@
+=== yokohama
+JRC tiles listed: 271
+  JRC tiles used: ['ID241_N40_E130_RP100_depth_reclass.tif']
+  downloaded kanto-latest.osm.pbf: 525 MB
+  OSM points: 2650 {'sight': 1503, 'hospital': 570, 'fire': 340, 'assembly': 237}
+KSJ A33: 56 prefectures, e.g. [('00', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-25/A33-25_00_GML.zip'), ('01', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-25/A33-25_01_GML.zip')]
+  A33 14: 3 files in zip, readable []
+  A33 13: 3 files in zip, readable []
+KSJ A40: 39 prefectures, e.g. [('01', 'https://nlftp.mlit.go.jp/ksj/gml/data/A40/A40-23/A40-23_01_GML.zip'), ('02', 'https://nlftp.mlit.go.jp/ksj/gml/data/A40/A40-21/A40-21_02_GML.zip')]
+  A40 14: 8 files in zip, readable ['A40-20_14.GML/A40-20_14.geojson', 'A40-20_14.GML/A40-20_14.shp']
+    A40-20_14.GML/A40-20_14.geojson: 28870 polygons in frame
+    A40-20_14.GML/A40-20_14.shp: 28870 polygons in frame
+  A40 13: 8 files in zip, readable ['A40-23_13_GML/A40-23_13.geojson', 'A40-23_13_GML/A40-23_13.shp']
+    A40-23_13_GML/A40-23_13.geojson: 0 polygons in frame
+    A40-23_13_GML/A40-23_13.shp: 0 polygons in frame
+GSI columns: ['NO', '共通ID', '都道府県名及び市町村名', '施設・場所名', '住所', '洪水', '崖崩れ、土石流及び地滑り', '高潮', '地震', '津波', '大規模な火事', '内水氾濫', '火山現象', '指定避難所との住所同一', '緯度', '経度', '備考']
+GSI sites: 115948 hazard columns: {'flood': '洪水', 'landslide': '崖崩れ、土石流及び地滑り', 'storm_surge': '高潮', 'earthquake': '地震', 'tsunami': '津波', 'fire': '大規模な火事', 'inland_flood': '内水氾濫', 'volcano': '火山現象'}
+  GSI sites in frame: 2580
+  wrote yokohama: layers ['flood', 'tsunami', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight', 'n_shelter_jp'], 5230 points
+=== sydney
+  JRC tiles used: ['ID262_S30_E150_RP100_depth_reclass.tif']
+  downloaded australia-latest.osm.pbf: 976 MB
+  OSM points: 2564 {'sight': 1886, 'fire': 410, 'hospital': 239, 'assembly': 29}
+  wrote sydney: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 2564 points
+=== nagoya
+JRC tiles listed: 271
+  JRC tiles used: ['ID241_N40_E130_RP100_depth_reclass.tif']
+  downloaded chubu-latest.osm.pbf: 523 MB
+  OSM points: 1086 {'sight': 651, 'hospital': 257, 'fire': 170, 'assembly': 8}
+KSJ A33: 56 prefectures, e.g. [('00', ['https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-25/A33-25_00_SHP.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-25/A33-25_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-25/A33-25_00_GEOJSON.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-24/A33-24_00_SHP.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-24/A33-24_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-24/A33-24_00_GEOJSON.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-23/A33-23_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-22/A33-22_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-21/A33-21_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-20/A33-20_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-19/A33-19_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-18/A33-18_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-17/A33-17_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-16/A33-16_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-15/A33-15_00_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-13/A33-13_00_GML.zip']), ('01', ['https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-25/A33-25_01_SHP.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-25/A33-25_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-25/A33-25_01_GEOJSON.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-24/A33-24_01_SHP.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-24/A33-24_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-24/A33-24_01_GEOJSON.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-23/A33-23_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-22/A33-22_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-21/A33-21_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-20/A33-20_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-19/A33-19_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-18/A33-18_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-17/A33-17_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-16/A33-16_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A33/A33-15/A33-15_01_GML.zip'])]
+  A33 23: files ['データ利用時の注意事項\\23_愛知県_データ利用時の注意事項.txt', 'メタデータ\\KS-META-A33-25_23.xml', 'A33-25_23Polygon.dbf', 'A33-25_23Polygon.prj', 'A33-25_23Polygon.shp', 'A33-25_23Polygon.shx']
+    A33-25_23Polygon.shp: bounds [136.83, 34.58, 137.82, 35.42]
+    A33-25_23Polygon.shp: 795 polygons in frame
+KSJ A40: 39 prefectures, e.g. [('01', ['https://nlftp.mlit.go.jp/ksj/gml/data/A40/A40-23/A40-23_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A40/A40-21/A40-21_01_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A40/A40-17/A40-17_01_GML.zip']), ('02', ['https://nlftp.mlit.go.jp/ksj/gml/data/A40/A40-21/A40-21_02_GML.zip', 'https://nlftp.mlit.go.jp/ksj/gml/data/A40/A40-16/A40-16_02_GML.zip'])]
+  A40 23: files ['A40-22_23_GML/A40-22_23.dbf', 'A40-22_23_GML/A40-22_23.geojson', 'A40-22_23_GML/A40-22_23.prj', 'A40-22_23_GML/A40-22_23.shp', 'A40-22_23_GML/A40-22_23.shx', 'A40-22_23_GML/A40-22_23.xml', 'A40-22_23_GML/KS-META-A40-22_23.xml']
+    A40-22_23_GML/A40-22_23.geojson: bounds [136.67, 34.58, 137.48, 35.21]
+    A40-22_23_GML/A40-22_23.geojson: 24949 polygons in frame
+GSI columns: ['NO', '共通ID', '都道府県名及び市町村名', '施設・場所名', '住所', '洪水', '崖崩れ、土石流及び地滑り', '高潮', '地震', '津波', '大規模な火事', '内水氾濫', '火山現象', '指定避難所との住所同一', '緯度', '経度', '備考']
+GSI sites: 116022 hazard columns: {'flood': '洪水', 'landslide': '崖崩れ、土石流及び地滑り', 'storm_surge': '高潮', 'earthquake': '地震', 'tsunami': '津波', 'fire': '大規模な火事', 'inland_flood': '内水氾濫', 'volcano': '火山現象'}
+  GSI sites in frame: 2463
+  wrote nagoya: layers ['flood', 'landslide', 'tsunami', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight', 'n_shelter_jp'], 3549 points

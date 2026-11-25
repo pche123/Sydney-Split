@@ -1,0 +1,30 @@
+city,share_any,p,note,p_raw,cleanness,null_mean,ell_km,R
+adelaide,0.291,,under half the areas have any flood land: no fair line test,,,,,
+auckland,0.309,,under half the areas have any flood land: no fair line test,,,,,
+austin,0.204,,under half the areas have any flood land: no fair line test,,,,,
+birmingham,0.152,,under half the areas have any flood land: no fair line test,,,,,
+brighton,0.042,,under half the areas have any flood land: no fair line test,,,,,
+brisbane,0.735,0.659,,0.43,0.559,0.568,3.5,40.0
+chicago,0.329,,under half the areas have any flood land: no fair line test,,,,,
+christchurch,0.492,,under half the areas have any flood land: no fair line test,,,,,
+fukuoka,0.226,,under half the areas have any flood land: no fair line test,,,,,
+kobe,0.398,,under half the areas have any flood land: no fair line test,,,,,
+kyoto,0.256,,under half the areas have any flood land: no fair line test,,,,,
+liverpool,0.328,,under half the areas have any flood land: no fair line test,,,,,
+london,0.266,,under half the areas have any flood land: no fair line test,,,,,
+losangeles,0.403,,under half the areas have any flood land: no fair line test,,,,,
+manchester,0.411,,under half the areas have any flood land: no fair line test,,,,,
+melbourne,0.43,,under half the areas have any flood land: no fair line test,,,,,
+miami,0.599,0.585,,0.455,0.693,0.693,7.1,40.0
+nagoya,0.548,0.104,,0.09,0.279,0.439,7.8,200.0
+newyork,0.469,,under half the areas have any flood land: no fair line test,,,,,
+osaka,0.664,0.01,,0.025,0.287,0.445,4.0,200.0
+perth,0.625,0.878,,0.74,0.756,0.699,4.7,40.0
+sanfrancisco,0.107,,under half the areas have any flood land: no fair line test,,,,,
+sapporo,0.518,0.171,,0.09,0.236,0.373,7.0,40.0
+seattle,0.48,,under half the areas have any flood land: no fair line test,,,,,
+singapore,0.153,,under half the areas have any flood land: no fair line test,,,,,
+sydney,0.387,,under half the areas have any flood land: no fair line test,,,,,
+tokyo,0.355,,under half the areas have any flood land: no fair line test,,,,,
+washington,0.389,,under half the areas have any flood land: no fair line test,,,,,
+yokohama,0.273,,under half the areas have any flood land: no fair line test,,,,,

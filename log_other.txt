@@ -1,0 +1,15 @@
+=== singapore
+JRC tiles listed: 271
+  JRC tiles used: ['ID211_N10_E100_RP100_depth_reclass.tif']
+  downloaded malaysia-singapore-brunei-latest.osm.pbf: 253 MB
+  OSM points: 1166 {'sight': 973, 'hospital': 124, 'fire': 60, 'assembly': 9}
+  wrote singapore: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 1166 points
+=== auckland
+  JRC tiles used: ['ID270_S30_E170_RP100_depth_reclass.tif']
+  downloaded new-zealand-latest.osm.pbf: 406 MB
+  OSM points: 914 {'sight': 700, 'hospital': 116, 'fire': 74, 'assembly': 24}
+  wrote auckland: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 914 points
+=== christchurch
+  JRC tiles used: ['ID271_S40_E170_RP100_depth_reclass.tif']
+  OSM points: 291 {'sight': 222, 'hospital': 38, 'fire': 27, 'assembly': 4}
+  wrote christchurch: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 291 points

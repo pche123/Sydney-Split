@@ -1,0 +1,23 @@
+=== birmingham
+JRC tiles listed: 271
+  JRC tiles used: ['ID106_N60_W10_RP100_depth_reclass.tif']
+  downloaded england-latest.osm.pbf: 1717 MB
+  OSM points: 771 {'sight': 532, 'hospital': 159, 'fire': 78, 'assembly': 2}
+  wrote birmingham: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 771 points
+=== brighton
+  JRC tiles used: ['ID106_N60_W10_RP100_depth_reclass.tif']
+  OSM points: 243 {'sight': 216, 'hospital': 19, 'fire': 7, 'assembly': 1}
+  wrote brighton: layers ['flood', 'n_hospital', 'n_fire', 'n_sight'], 243 points
+=== liverpool
+  JRC tiles used: ['ID106_N60_W10_RP100_depth_reclass.tif']
+  OSM points: 768 {'sight': 514, 'hospital': 154, 'fire': 70, 'assembly': 30}
+  wrote liverpool: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 768 points
+=== manchester
+  JRC tiles used: ['ID106_N60_W10_RP100_depth_reclass.tif']
+  OSM points: 1030 {'sight': 750, 'hospital': 135, 'fire': 129, 'assembly': 16}
+  wrote manchester: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 1030 points
+=== london
+  JRC tiles used: ['ID106_N60_W10_RP100_depth_reclass.tif', 'ID113_N60_W0_RP100_depth_reclass.tif']
+  downloaded greater-london-latest.osm.pbf: 130 MB
+  OSM points: 2485 {'sight': 1918, 'hospital': 341, 'fire': 216, 'assembly': 10}
+  wrote london: layers ['flood', 'n_assembly', 'n_hospital', 'n_fire', 'n_sight'], 2485 points
