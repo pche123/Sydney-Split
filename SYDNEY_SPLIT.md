@@ -117,7 +117,7 @@ The maps now have a **Safety & sights** tab for all 29 cities. It shows river fl
 - **Some cities sit on a floodplain.** By the global flood model, about a third of the people in Nagoya and Osaka live in the river flood zone, and about a fifth in Sapporo, Brisbane and Tokyo. In Birmingham, Brighton and San Francisco it's well under 1%. (The model ignores levees and flood walls, so central London shows up too.)
 - **Floods don't pick a side of the Latte Line.** In four cities the café side floods more, in four the fast-food side does, and in the rest there's no clear difference. Rivers run through rich and poor areas alike.
 - **Flood risk is a slope, except in Osaka.** Osaka's flood map is the one that looks like a real edge (p = 0.01), where the low delta meets the plateau. That's borderline once you allow for the six cities tested.
-- **Sights follow the cafés everywhere.** In all 28 cities with data there are more sights per resident on the café side of the Latte Line.
+- **Sights follow the cafés everywhere.** In all 29 cities there are more sights per resident on the café side of the Latte Line.
 - **People are leaving Japan's landslide zones.** From 2000 to 2020, neighbourhoods on landslide-prone slopes grew more slowly than the rest of their city in six of seven Japanese cities, and in five they also aged faster. Taken together, both patterns are very unlikely to be chance. In Fukuoka the slopes grew 11% while the rest of the city grew 22%. Yokohama's waterfront went the other way: its flood-zone neighbourhoods grew faster and stayed younger, thanks to the new towers at Musashi-Kosugi and Minato Mirai.
 
 ![Japan's landslide zones over time](results/safety/fig_landslide_time.png)

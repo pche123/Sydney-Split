@@ -47,6 +47,7 @@ nagoya,S1/S4 flood: orange minus blue,0.0337,-0.1261,0.2041
 nagoya,S1/S4 landslide: orange minus blue,-0.0004,-0.0025,0.0018
 nagoya,S1/S4 tsunami: orange minus blue,0.0137,-0.0788,0.1133
 nagoya,S1/S4 shelter_jp: orange minus blue,-0.0625,-0.3399,0.1708
+nagoya,S1/S4 sight: orange minus blue,0.1183,-0.0194,0.2745
 nagoya,"S3 landslide share vs sites per 1,000 (Spearman)",-0.144,0.0418,
 newyork,S1/S4 flood: orange minus blue,0.0241,-0.0164,0.0604
 newyork,S1/S4 sight: orange minus blue,0.1591,0.0405,0.2754
